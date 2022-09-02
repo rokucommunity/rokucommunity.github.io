@@ -1,0 +1,23 @@
+{
+  "name": "rokucommunity.github.io",
+  "version": "1.0.0",
+  "description": "The repository for https://rokucommunity.github.io",
+  "main": "index.js",
+  "scripts": {
+    "build": "statigen -s ./src -o ./dist",
+    "watch": "npm run build -- --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rokucommunity/rokucommunity.github.io.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rokucommunity/rokucommunity.github.io/issues"
+  },
+  "homepage": "https://github.com/rokucommunity/rokucommunity.github.io#readme",
+  "devDependencies": {
+    "statigen": "^0.4.5"
+  }
+}
