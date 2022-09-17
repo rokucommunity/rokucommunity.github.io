@@ -18,6 +18,12 @@
   },
   "homepage": "https://github.com/rokucommunity/rokucommunity.github.io#readme",
   "devDependencies": {
+    "cz-conventional-changelog": "^3.3.0",
     "statigen": "^0.4.5"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
