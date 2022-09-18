@@ -4,8 +4,10 @@
   "description": "The repository for https://rokucommunity.github.io",
   "main": "index.js",
   "scripts": {
-    "build": "statigen -s ./src -o ./dist",
-    "watch": "npm run build -- --watch"
+    "build:statigen": "statigen",
+    "build:tw": "npx tailwindcss -i ./src/tailwind.css -o ./dist/tailwind-out.css",
+    "build": "npm run build:statigen && npm run build:tw",
+    "watch": "npm run build:statigen -- --watch & npm run build:tw -- --watch"
   },
   "repository": {
     "type": "git",

@@ -1,0 +1,69 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.common-link {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: #F3558E;
+    font-size: 32px;
+}
+
+.vscode-plugin-title {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 70px;
+    margin: 0;
+    text-align: center;
+    background: linear-gradient(91.48deg, #00D1FF 1.88%, #BD00FF 100.15%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.vscode-plugin--section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 60px 0px 30px 0px;
+    padding: 0 55px;
+}
+
+.vscode-plugin--section:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.vscode-plugin--section:nth-child(odd) > .vscode-plugin--section--text {
+    margin-right: 65px;
+}
+
+.vscode-plugin--section:nth-child(even) > .vscode-plugin--section--text > p {
+    text-align: right;
+}
+
+.vscode-plugin--section--text > p {
+    font-family: 'Roboto', sans-serif;
+    color: #FDFDFD;
+    margin: 0;
+    font-size: 20px;
+    width: 456px;
+}
+
+.vscode-plugin--section--text > p:nth-child(1) {
+    opacity: 0.5;
+    text-transform: uppercase;
+}
+
+.vscode-plugin--section--text > p:nth-child(2) {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 50px;
+}
+
+.vscode-plugin--section--text > p:nth-child(3) {
+    line-height: 23px;
+    opacity: 0.8;
+}

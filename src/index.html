@@ -11,51 +11,55 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet"> 
     <link rel="stylesheet" href="./style.css" />
+    <link href="./tailwind-out.css" rel="stylesheet">
 </head>
 
 <body>
-    <div class="hero-container">
-        <div class="hero-navbar">
-            <h1 class="hero-text page-title">Roku Community</h1>
-            <div class="hero-navbar--buttons">
-                <a class="hero-text hero-navbar--whats-new" href="#">
+    <div
+        class="flex flex-col justify-between px-14 pt-11 pb-2.5"
+        style="background: radial-gradient(166.56% 296.11% at 1.84% 4.24%, #581B98 5.71%, #D600C0 100%); min-height: 668px;"
+    >
+        <div class="flex flex-row justify-between items-end h-12 w-full">
+            <h1 class="font-['Poppins'] text-3xl font-bold w-max text-white">Roku Community</h1>
+            <div class="flex flex-row align-center justify-between w-80">
+                <a class="text-white text-2xl font-['Poppins']" href="#">
                     What's new?
                 </a>
                 <a href="#">
-                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663447840/slack_mono_white_ifc44z.png" alt="Slack logo"/>
+                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663447840/rokucommunity.github.io/slack_mono_white_ifc44z.png" alt="Slack logo"/>
                 </a>
                 <a href="#">
-                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663447957/github-mono-white_m6idwe.png" alt="Github logo">
+                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663447957/rokucommunity.github.io/github-mono-white_m6idwe.png" alt="Github logo">
                 </a>
             </div>
         </div>
         
-        <div class="hero-content">
-            <h2 class="hero-text hero-title">
+        <div class="flex flex-col justify-between items-center h-96">
+            <h2 class="font-['Poppins'] text-white max-w-[629px] text-center text-5xl font-bold">
                 Our Goal is to make <br/> Roku Development <u>Better</u>
             </h2>
 
-            <p class="hero-text hero-subtitle">
+            <p class="font-['Poppins'] text-white text-center text-2xl opacity-90 max-w-[629px]">
                 We provide and maintain <b>Open Source</b> solutions to enhance your development workflows
             </p>
 
-            <div class="hero-cta">
+            <div>
                 <input
                     type="text"
-                    class="hero-cta--email-input"
+                    class="bg-[rgba(217,217,217,0.3)] rounded-xl py-5 px-7 placeholder:text-white outline-none text-2xl font-['Roboto'] focus-visible:text-white"
                     placeholder="Enter your email">
                 </input>
-                <button class="hero-cta--button">Keep me updated</button>
+                <button class="rounded-xl text-white font-bold text-2xl outline-none p-5 ml-4 font-['Roboto']" style="background: radial-gradient(149.24% 149.24% at 50.21% 0%, #9C1DE7 0%, rgba(156, 29, 231, 0.2) 100%);">Keep me updated</button>
             </div>
         </div>
         
-        <div class="see-more-container">
-            <p>See our magic in action</p>
-            <img src="https://res.cloudinary.com/roku-community/image/upload/v1663452078/icon-arrow-down_ewiujp.svg" alt="Icon arrow down">
+        <div class="flex flex-col items-center">
+            <p class="w-max text-white text-2xl font-['Roboto'] font-light">See our magic in action</p>
+            <img src="https://res.cloudinary.com/roku-community/image/upload/v1663452078/rokucommunity.github.io/icon-arrow-down_ewiujp.svg" alt="Icon arrow down">
         </div>
     </div>
 
-    <div class="projects-navbar">
+    <div class="flex flex-row justify-between items-center px-14 h-24 bg-white shadow [&>a]:font-['Poppins'] [&>a]:text-purple-dark [&>a]:text-2xl">
         <a href="#">
             VSCode Plugin
         </a>
@@ -73,16 +77,16 @@
         </a>
     </div>
 
-    <div id="vscode-plugin">
-        <div class="vscode-plugin--inner">
+    <div id="vscode-plugin" class="px-14">
+        <div class="flex flex-col items-center bg-[#292929] rounded-3xl pt-14 pb-5 overflow-hidden">
             <p class="vscode-plugin-title">
-                An efficient development environment for Roku
+                An efficient development <br/>environment for Roku
             </p>
 
-            <div class="vscode-plugin--cta-container">
+            <div class="flex flex-row justify-between items-center px-14 mt-12 w-4/5 [&>div]:flex [&>div]:flex-row [&>div]:items-center">
                 <div>
-                    <a class="common-link common-link--external" href="#">Download now</a>
-                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663454539/icon-open-in-new-pink_kuwapu.svg" alt="Download Visual Studio Code plugin icon" />
+                    <a class="mr-2 common-link" href="#">Download now</a>
+                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663454539/rokucommunity.github.io/icon-open-in-new-pink_kuwapu.svg" alt="Download Visual Studio Code plugin icon" />
                 </div>
                 <div>
                     <img src="https://img.shields.io/visual-studio-marketplace/v/RokuCommunity.brightscript.svg?logo=visual-studio-code&label=VSCode" alt="Visual Studio Code plugin version required" height="32px" style="margin-right: 30px;"/>
@@ -90,12 +94,12 @@
                 </div>
             </div>
 
-            <div class="vscode-plugin--section">
+            <div class="vscode-plugin--section flex flex-row items-center mt-16 mb-8 px-14">
                 <div class="vscode-plugin--section--text">
                     <p>Technicolor is here</p>
                     <p>Syntax highlighting & code formatting</p>
                 </div>
-                <img src="https://res.cloudinary.com/roku-community/image/upload/v1663455843/vscode-plugin-syntax-highlighting_lambdp.png" alt="Syntax highlighting">
+                <img src="https://res.cloudinary.com/roku-community/image/upload/v1663455843/rokucommunity.github.io/vscode-plugin-syntax-highlighting_lambdp.png" alt="Syntax highlighting">
             </div>
 
             <div class="vscode-plugin--section">
@@ -116,16 +120,18 @@
                 <img src="https://res.cloudinary.com/roku-community/image/upload/v1663457788/rokucommunity.github.io/vscode-plugin-debugging_sjh6df.png" alt="Debugging and variable inspection">
             </div>
 
-            <div class="vscode-plugin--section">
-                <div class="vscode-plugin--section--text">
-                    <p style="margin-left: 35px;">Powered by RTA</p>
-                    <p style="margin-left: 35px;">A better Layout Editor</p>
-                    <p style="margin-left: 35px; margin-bottom: 33px;">Inspect all your SceneGraph nodes, including ArrayGrid children! Easy to setup, Open Source and completely within VSCode.</p>
-                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663458114/rokucommunity.github.io/vscode-plugin-scenegraph-inspector-2_ij28sb.png" alt="Layout editor details">
-                </div>
-                <div>
+            <div class="vscode-plugin--section !flex-row">
+                <div class="flex flex-col mr-16">
                     <img src="https://res.cloudinary.com/roku-community/image/upload/v1663458051/rokucommunity.github.io/vscode-plugin-scenegraph-inspector_xfxoyx.png" alt="A better Layout Editor">
-                    <p class="vscode--sg-inspector-additional-text">These images show the SG nodes of the MarkupListExample sample project from the official documentation.</p>
+                    <p class="font-['Roboto'] italic text-xl text-white opacity-50 max-w-sm mt-11">These images show the SG nodes of the MarkupListExample sample project from the official documentation.</p>
+                </div>
+                <div class="flex flex-col items-end">
+                    <div class="vscode-plugin--section--text !mb-8 [&>p]:text-right">
+                        <p>Powered by RTA</p>
+                        <p>A better Layout Editor</p>
+                        <p>Inspect all your SceneGraph nodes, including ArrayGrid children! Easy to setup, Open Source and completely within VSCode.</p>
+                    </div>
+                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663458114/rokucommunity.github.io/vscode-plugin-scenegraph-inspector-2_ij28sb.png" alt="Layout editor details">
                 </div>
             </div>
 
@@ -138,17 +144,17 @@
                 <img src="https://res.cloudinary.com/roku-community/image/upload/v1663458674/rokucommunity.github.io/purple-keyboard_ddo4h0.png" alt="Control your device from your computer">
             </div>
 
-            <div class="vscode-plugin--last-section">
+            <div class="flex flex-col items-center mt-[90px] [&>*]:w-max [&>*]:mb-8">
                 <p class="vscode-plugin-title">
                     Start coding like a pro
                 </p>
 
-                <div>
-                    <a class="common-link common-link--external" href="#">Download now</a>
-                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663454539/icon-open-in-new-pink_kuwapu.svg" alt="Download Visual Studio Code plugin icon" />
+                <div class="flex flex-row items-center">
+                    <a class="common-link mr-2" href="#">Download now</a>
+                    <img src="https://res.cloudinary.com/roku-community/image/upload/v1663454539/rokucommunity.github.io/icon-open-in-new-pink_kuwapu.svg" alt="Download Visual Studio Code plugin icon" />
                 </div>
 
-                <img src="https://vsmarketplacebadge.apphb.com/installs-short/RokuCommunity.brightscript.svg?logo=visual-studio-code" alt="Visual Studio Code plugin number of downloads" height="32px"/>
+                <img src="https://vsmarketplacebadge.apphb.com/installs-short/RokuCommunity.brightscript.svg?logo=visual-studio-code" alt="Visual Studio Code plugin number of downloads" height="32px" class="w-48"/>
             </div>
         </div>
     </div>
