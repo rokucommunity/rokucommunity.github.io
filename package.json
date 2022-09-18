@@ -19,7 +19,8 @@
   "homepage": "https://github.com/rokucommunity/rokucommunity.github.io#readme",
   "devDependencies": {
     "cz-conventional-changelog": "^3.3.0",
-    "statigen": "^0.4.5"
+    "statigen": "^0.4.5",
+    "tailwindcss": "^3.1.8"
   },
   "config": {
     "commitizen": {
