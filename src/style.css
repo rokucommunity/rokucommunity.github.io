@@ -110,3 +110,145 @@ body, html {
     font-weight: 300;
     font-family: 'Roboto', sans-serif;
 }
+
+.projects-navbar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0px 53px;
+    height: 100px;
+    background: #FDFDFD;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+    width: 100%;
+    max-width: calc(100vw - 106px);
+}
+
+.projects-navbar > a {
+    font-family: 'Poppins', sans-serif;
+    color: #581B98;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+#vscode-plugin {
+    padding: 0px 54px;
+}
+
+.vscode-plugin--inner {
+    display: flex;
+    flex-direction: column;
+    background: #292929;
+    border-radius: 20px;
+    padding: 54px 0px 21px 0px;
+    overflow: hidden;
+}
+
+.vscode-plugin-title {
+    font-family: 'Poppins', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 70px;
+    margin: 0;
+    text-align: center;
+    background: linear-gradient(91.48deg, #00D1FF 1.88%, #BD00FF 100.15%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.common-link {
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: #F3558E;
+    font-size: 32px;
+}
+
+.common-link--external {
+    margin-right: 8px;
+}
+
+.vscode-plugin--cta-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 54px;
+    margin-top: 48px;
+}
+
+.vscode-plugin--cta-container > div {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.vscode-plugin--section {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 60px 0px 30px 0px;
+    padding: 0 55px;
+}
+
+.vscode-plugin--section:nth-child(even) {
+    flex-direction: row-reverse;
+}
+
+.vscode-plugin--section:nth-child(odd) > .vscode-plugin--section--text {
+    margin-right: 65px;
+}
+
+.vscode-plugin--section:nth-child(even) > .vscode-plugin--section--text > p {
+    text-align: right;
+}
+
+.vscode-plugin--section--text > p {
+    font-family: 'Roboto', sans-serif;
+    color: #FDFDFD;
+    margin: 0;
+    font-size: 20px;
+    width: 456px;
+}
+
+.vscode-plugin--section--text > p:nth-child(1) {
+    opacity: 0.5;
+    text-transform: uppercase;
+}
+
+.vscode-plugin--section--text > p:nth-child(2) {
+    font-family: 'Poppins', sans-serif;
+    font-weight: bold;
+    font-size: 40px;
+    line-height: 50px;
+}
+
+.vscode-plugin--section--text > p:nth-child(3) {
+    line-height: 23px;
+    opacity: 0.8;
+}
+
+.vscode--sg-inspector-additional-text {
+    font-family: 'Roboto', sans-serif;
+    font-style: italic;
+    font-size: 20px;
+    color: #FDFDFD;
+    opacity: 0.5;
+}
+
+.vscode-plugin--last-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 90px;
+}
+
+.vscode-plugin--last-section > * {
+    width: max-content;
+    margin-bottom: 33px;
+}
+
+.vscode-plugin--last-section > img {
+    width: 191px;
+}
