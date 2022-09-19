@@ -67,3 +67,147 @@
     line-height: 23px;
     opacity: 0.8;
 }
+
+.brighterscript-title {
+    font-family: 'Poppins', 'sans-serif';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 64px;
+    line-height: 70px;
+    text-transform: capitalize;
+    
+    /* identical to box height, or 109% */
+    text-align: center;
+    
+    background: linear-gradient(91.89deg, #111B73 -1.99%, #BD73E9 72.07%, #E973BA 106.43%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.brighterscript-hook {
+    max-width: 316px;
+}
+
+.brighterscript-hook > p {
+    font-family: 'Roboto', 'sans-serif';
+    font-size: 1.5rem;
+}
+
+.brighterscript-hook > p:nth-child(1) {
+    font-style: normal;
+    font-weight: 700;
+    color: #581B98;
+    text-transform: capitalize;
+    line-height: 28px;
+    margin-bottom: 16px;
+}
+
+.brighterscript-hook > p:nth-child(2) {
+    font-weight: 400;
+    line-height: 28px;
+    color: #292929;
+}
+
+.cmd-copy-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    background: #35105C;
+    border-radius: 10px;
+    width: max-content;
+    padding: 24px 46px;
+}
+
+.cmd-copy-container > span, .cmd-copy-container > p {
+    width: max-content;
+    color: white;
+    font-family: 'Roboto Mono', monospace;
+    font-size: 1.5rem;
+}
+
+/* Representes the console prompt `$` */
+.cmd-copy-container > span {
+    margin-right: 14px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+/* The text to be copied */
+.cmd-copy-container > p {
+    margin-right: 30px;
+}
+
+/* The copy button */
+.cmd-copy-container > img {
+    cursor: pointer;
+}
+
+.brighterscript-ext-link {
+    border: 2px solid #581B98;
+    border-radius: 20px;
+    width: 271px;
+    height: 360px;
+}
+
+.brighterscript-ext-link > div {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+    padding: 1.5rem;
+}
+
+.brighterscript-ext-link > div:hover {
+    box-shadow: -4px 4px 0px 2px #9C1DE7;
+    border-radius: 20px;
+}
+
+.brighterscript-ext-link > div > p {
+    font-family: 'Roboto', 'sans-serif';
+    color: #581B98;
+}
+
+.brighterscript-ext-link > div > p:nth-child(1) {
+    font-weight: 700;
+    font-size: 1.875rem;
+    line-height: 38px;
+}
+
+.brighterscript-ext-link > div > p:nth-child(2) {
+    font-weight: 400;
+    font-size: 1rem;
+    text-transform: uppercase;
+}
+
+.bs-features-list > p {
+    font-family: 'Poppins', 'sans-serif';
+    font-style: normal;
+    font-size: 1.5rem;
+    cursor: pointer;
+
+    font-weight: 700;
+    text-decoration-line: underline;
+    color: #581B98;
+}
+
+.bs-feat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 109px;
+}
+
+.bs-feat > p {
+    font-family: 'Roboto', 'sans-serif';
+    font-weight: 300;
+    font-size: 24px;
+    line-height: 28px;
+    text-align: center;
+
+    color: #292929;
+}
