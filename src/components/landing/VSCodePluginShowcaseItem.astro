@@ -10,17 +10,34 @@ interface Props {
 
 const { title, hook, description, imgUrl, imgAlt, rowReverse } = Astro.props;
 
-const containerClass = `flex flex-col ${rowReverse ? 'lg:flex-row-reverse' : 'lg:flex-row'} items-center mt-16 mb-8 md:px-14`;
+const containerClass = `
+    flex
+    flex-col
+    ${rowReverse ? "lg:flex-row-reverse" : "lg:flex-row"}
+    xl:justify-evenly
+    w-full
+    items-center
+    mt-16
+    mb-8
+    md:px-14
+`;
 ---
 
 <div class={containerClass}>
     <div class="flex flex-col">
-        <p class="font-serif text-white m-0 text-xl md:w-96 opacity-50 uppercase">{hook}</p>
-        <p class="text-white m-0 md:w-96 font-sans font-bold text-4xl">{title}</p>
-        <p class="font-serif text-white m-0 text-xl md:w-96 opacity-80">{description}</p>
+        <p
+            class="font-serif text-white m-0 text-xl lg:w-96 opacity-50 uppercase"
+        >
+            {hook}
+        </p>
+        <p class="text-white m-0 lg:w-96 font-sans font-bold text-4xl">
+            {title}
+        </p>
+        <p class="font-serif text-white m-0 text-xl lg:w-96 opacity-80">
+            {description}
+        </p>
     </div>
-    <img
-        src={imgUrl}
-        alt={imgAlt}
-    />
+    <div>
+        <img src={imgUrl} alt={imgAlt} class="mt-4 lg:mt-0" />
+    </div>
 </div>

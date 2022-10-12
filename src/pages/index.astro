@@ -27,7 +27,7 @@ import "@fontsource/material-icons";
 			</div>
 
 			<div
-				class="flex invisible md:visible flex-row align-center justify-between w-80"
+				class="hidden md:flex flex-row align-center justify-between w-80"
 			>
 				<a class="text-white text-2xl font-sans" href="#">
 					What's new?
@@ -93,7 +93,7 @@ import "@fontsource/material-icons";
 
 	<!-- Showcase menu -->
 	<div
-		class="hidden lg:flex flex-row justify-between items-center px-14 h-24 bg-white shadow [&>a]:font-sans [&>a]:text-purple-dark [&>a]:text-2xl"
+		class="hidden lg:flex flex-row justify-evenly items-center px-14 h-24 bg-white shadow [&>a]:font-sans [&>a]:text-purple-dark [&>a]:text-2xl [&>a]:text-center"
 	>
 		<a href="#"> VSCode Plugin</a>
 		<a href="#"> BrighterScript</a>
@@ -102,11 +102,15 @@ import "@fontsource/material-icons";
 		<a href="#"> Join the Community</a>
 	</div>
 
-	<div id="vscode-plugin" class="lg:px-14">
+	<div id="vscode-plugin" class="xl:px-14">
 		<div
-			class="flex flex-col sm:items-center bg-[#292929] lg:rounded-3xl pt-14 pb-5 overflow-hidden px-7 md:px-0"
+			class="flex flex-col sm:items-center bg-[#292929] xl:rounded-3xl pt-14 pb-5 overflow-hidden px-7 md:px-0"
 		>
-			<p class="text-white text-serif uppercase md:hidden">VSCode Plugin</p>
+			<p
+				class="font-serif text-white m-0 text-xl md:w-96 opacity-50 uppercase md:hidden"
+			>
+				VSCode Plugin
+			</p>
 			<p
 				class="vscode-plugin-title text-4xl md:text-6xl md:leading-[70px] sm:text-center"
 			>
@@ -116,7 +120,9 @@ import "@fontsource/material-icons";
 			<div
 				class="flex flex-col lg:flex-row justify-between md:items-center md:px-14 mt-6 md:mt-12 w-4/5"
 			>
-				<div class="flex flex-row justify-center items-center mb-6 md:mb-0">
+				<div
+					class="flex flex-row justify-center items-center mb-6 md:mb-0"
+				>
 					<a class="mr-2 common-link text-2xl sm:text-3xl" href="#"
 						>Download now</a
 					>
@@ -125,7 +131,9 @@ import "@fontsource/material-icons";
 						alt="Download Visual Studio Code plugin icon"
 					/>
 				</div>
-				<div class="flex flex-col sm:flex-row items-left justify-center">
+				<div
+					class="flex flex-col sm:flex-row items-left justify-center"
+				>
 					<img
 						class="sm:mr-7 mb-4 sm:mb-0"
 						src="https://img.shields.io/visual-studio-marketplace/v/RokuCommunity.brightscript.svg?logo=visual-studio-code&label=VSCode"
@@ -164,35 +172,36 @@ import "@fontsource/material-icons";
 				imgAlt="Debugging and variable inspection"
 			/>
 
-			<div class="flex flex-row">
-				<div class="flex flex-col mr-16">
+			<div
+				class="flex flex-col-reverse lg:flex-row md:px-14 mt-16 xl:justify-evenly w-full"
+			>
+				<div class="flex flex-col lg:mr-16">
 					<img
+						class="mt-4 lg:mt-0"
 						src="https://res.cloudinary.com/roku-community/image/upload/v1663458051/rokucommunity.github.io/vscode-plugin-scenegraph-inspector_xfxoyx.png"
 						alt="A better Layout Editor"
 					/>
 					<p
-						class="font-serif italic text-xl text-white opacity-50 max-w-sm mt-11"
+						class="font-serif italic text-xl text-white opacity-50 lg:max-w-sm mt-11 lg:visible"
 					>
 						These images show the SG nodes of the MarkupListExample
 						sample project from the official documentation.
 					</p>
 				</div>
-				<div class="flex flex-col items-end">
-					<div
-						class="vscode-plugin--section--text !mb-8 [&>p]:text-right"
-					>
+				<div class="flex flex-col lg:items-end">
+					<div class="!mb-8 lg:[&>p]:text-right">
 						<p
-							class="font-serif text-white m-0 text-xl w-96 opacity-50 uppercase"
+							class="font-serif text-white m-0 text-xl lg:w-96 opacity-50 uppercase"
 						>
 							Powered by RTA
 						</p>
 						<p
-							class="text-white m-0 w-96 font-sans font-bold text-4xl"
+							class="text-white m-0 lg:w-96 font-sans font-bold text-4xl"
 						>
 							A better Layout Editor
 						</p>
 						<p
-							class="font-serif text-white m-0 text-xl w-96 opacity-80"
+							class="font-serif text-white m-0 text-xl lg:w-96 opacity-80"
 						>
 							Inspect all your SceneGraph nodes, including
 							ArrayGrid children! Easy to setup, Open Source and
@@ -218,20 +227,20 @@ import "@fontsource/material-icons";
 </Layout>
 
 <style>
-.vscode-plugin-title {
-    font-family: 'Poppins', sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    margin: 0;
-    background: linear-gradient(91.48deg, #00D1FF 1.88%, #BD00FF 100.15%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-}
+	.vscode-plugin-title {
+		font-family: "Poppins", sans-serif;
+		font-style: normal;
+		font-weight: 700;
+		margin: 0;
+		background: linear-gradient(91.48deg, #00d1ff 1.88%, #bd00ff 100.15%);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+		background-clip: text;
+	}
 
-.common-link {
-    font-family: 'Roboto', sans-serif;
-    font-weight: bold;
-    color: #F3558E;
-}
+	.common-link {
+		font-family: "Roboto", sans-serif;
+		font-weight: bold;
+		color: #f3558e;
+	}
 </style>
