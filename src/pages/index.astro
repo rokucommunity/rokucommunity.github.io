@@ -1,4 +1,6 @@
 ---
+import { Image } from '@astrojs/image/components';
+
 import Layout from "../layouts/Layout.astro";
 import VSCodePluginShowcaseItem from "../components/landing/VSCodePluginShowcaseItem.astro";
 
@@ -11,8 +13,7 @@ import "@fontsource/material-icons";
 
 <Layout title="Roku Community">
 	<div
-		class="flex flex-col md:justify-between px-7 md:px-14 py-11 md:pb-2.5 md:h-screen md:min-h-[668px]"
-		style="background: radial-gradient(166.56% 296.11% at 1.84% 4.24%, #581B98 5.71%, #D600C0 100%);"
+		class="hero-gradient flex flex-col md:justify-between px-7 md:px-14 py-11 md:pb-2.5 md:h-screen md:min-h-[668px]"
 	>
 		<!-- Top bar -->
 		<div class="flex flex-col md:flex-row justify-between h-12 w-full">
@@ -27,21 +28,25 @@ import "@fontsource/material-icons";
 			</div>
 
 			<div
-				class="hidden md:flex flex-row align-center justify-between w-80"
+				class="hidden md:flex flex-row items-center justify-between w-80"
 			>
-				<a class="text-white text-2xl font-sans" href="#">
+				<a class="text-white text-2xl font-sans h-min" href="#">
 					What's new?
 				</a>
 				<a href="#">
-					<img
+					<Image
 						src="https://res.cloudinary.com/roku-community/image/upload/v1663447840/rokucommunity.github.io/slack_mono_white_ifc44z.png"
 						alt="Slack logo"
+						width={40}
+						height={40}
 					/>
 				</a>
 				<a href="#">
-					<img
+					<Image
 						src="https://res.cloudinary.com/roku-community/image/upload/v1663447957/rokucommunity.github.io/github-mono-white_m6idwe.png"
 						alt="Github logo"
+						width={40}
+						height={40}
 					/>
 				</a>
 			</div>
@@ -71,8 +76,7 @@ import "@fontsource/material-icons";
 					placeholder="Enter your email"
 				/>
 				<button
-					class="rounded-xl text-white font-bold text-2xl outline-none p-5 font-serif"
-					style="background: radial-gradient(149.24% 149.24% at 50.21% 0%, #9C1DE7 0%, rgba(156, 29, 231, 0.2) 100%);"
+					class="cta-btn-gradient rounded-xl text-white font-bold text-2xl outline-none p-5 font-serif"
 				>
 					Keep me updated
 				</button>
@@ -84,9 +88,11 @@ import "@fontsource/material-icons";
 			<p class="w-max text-white text-2xl font-serif font-light">
 				See our magic in action
 			</p>
-			<img
+			<Image
 				src="https://res.cloudinary.com/roku-community/image/upload/v1663452078/rokucommunity.github.io/icon-arrow-down_ewiujp.svg"
 				alt="Icon arrow down"
+				width={60}
+				height={60}
 			/>
 		</div>
 	</div>
@@ -227,6 +233,14 @@ import "@fontsource/material-icons";
 </Layout>
 
 <style>
+	.hero-gradient {
+		background: radial-gradient(166.56% 296.11% at 1.84% 4.24%, #581B98 5.71%, #D600C0 100%);
+	}
+
+	.cta-btn-gradient {
+		background: radial-gradient(149.24% 149.24% at 50.21% 0%, #9C1DE7 0%, rgba(156, 29, 231, 0.2) 100%);
+	}
+
 	.vscode-plugin-title {
 		font-family: "Poppins", sans-serif;
 		font-style: normal;
