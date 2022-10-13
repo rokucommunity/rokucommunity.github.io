@@ -1,0 +1,6 @@
+{
+    "eslint.validate": [
+      "astro", // Enable .astro
+      "typescript", // Enable .ts
+    ]
+  }
