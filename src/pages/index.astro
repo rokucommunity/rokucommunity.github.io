@@ -9,6 +9,14 @@ import "@fontsource/poppins/700.css";
 import "@fontsource/roboto";
 import "@fontsource/roboto/700.css";
 import "@fontsource/material-icons";
+
+const showcaseMenuOptions = [
+	{ label: 'VSCode Plugin', id: 'vscode-plugin' },
+	{ label: 'BrighterScript', id: 'brighterscript' },
+	{ label: 'Lint & Format', id: 'lint-and-format' },
+	{ label: 'Package Manager', id: 'ropm' },
+	{ label: 'Join us', id: 'join' }
+]
 ---
 
 <Layout title="Roku Community">
@@ -99,13 +107,11 @@ import "@fontsource/material-icons";
 
 	<!-- Showcase menu -->
 	<div
-		class="hidden lg:flex flex-row justify-evenly items-center px-14 h-24 bg-white shadow [&>a]:font-sans [&>a]:text-purple-dark [&>a]:text-2xl [&>a]:text-center"
+		class="hidden lg:flex flex-row justify-evenly items-center px-14 h-24 bg-white shadow"
 	>
-		<a href="#"> VSCode Plugin</a>
-		<a href="#"> BrighterScript</a>
-		<a href="#"> Lint & Format</a>
-		<a href="#"> Package Manager</a>
-		<a href="#"> Join the Community</a>
+		{showcaseMenuOptions.map(option => (
+			<a class="hover-underline-animation font-sans text-2xl text-center hover:text-purple-dark" href={`#${option.id}`}>{option.label}</a>	
+		))}
 	</div>
 
 	<div id="vscode-plugin" class="xl:px-14">
@@ -234,11 +240,19 @@ import "@fontsource/material-icons";
 
 <style>
 	.hero-gradient {
-		background: radial-gradient(166.56% 296.11% at 1.84% 4.24%, #581B98 5.71%, #D600C0 100%);
+		background: radial-gradient(
+			166.56% 296.11% at 1.84% 4.24%,
+			#581b98 5.71%,
+			#d600c0 100%
+		);
 	}
 
 	.cta-btn-gradient {
-		background: radial-gradient(149.24% 149.24% at 50.21% 0%, #9C1DE7 0%, rgba(156, 29, 231, 0.2) 100%);
+		background: radial-gradient(
+			149.24% 149.24% at 50.21% 0%,
+			#9c1de7 0%,
+			rgba(156, 29, 231, 0.2) 100%
+		);
 	}
 
 	.vscode-plugin-title {
@@ -256,5 +270,28 @@ import "@fontsource/material-icons";
 		font-family: "Roboto", sans-serif;
 		font-weight: bold;
 		color: #f3558e;
+	}
+
+	.hover-underline-animation {
+		display: inline-block;
+		position: relative;
+	}
+
+	.hover-underline-animation:after {
+		content: "";
+		position: absolute;
+		width: 100%;
+		transform: scaleX(0);
+		height: 2px;
+		bottom: 0;
+		left: 0;
+		background-color: #581B98;
+		transform-origin: center;
+		transition: transform 0.15s ease-out;
+	}
+
+	.hover-underline-animation:hover:after {
+		transform: scaleX(1);
+		transform-origin: center;
 	}
 </style>
