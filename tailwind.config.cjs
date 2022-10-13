@@ -6,7 +6,15 @@ module.exports = {
 		fontFamily: {
 			'sans': ['Poppins', 'sans-serif'],
 			'serif': ['Roboto', 'ui-serif']
-		}
+		},
+		colors: {
+			'white': '#FDFDFD',
+			'black': '#292929',
+			'alert': '#ADA514',
+			'purple-dark': '#581B98',
+			'purple': '#9C1DE7',
+			'pink': '#F3558E'
+		},
 	},
 	plugins: [],
 }
