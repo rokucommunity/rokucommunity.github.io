@@ -38,7 +38,7 @@ const showcaseMenuOptions = [
 			<div
 				class="hidden md:flex flex-row items-center justify-between w-80"
 			>
-				<a class="text-white text-2xl font-sans h-min" href="#">
+				<a class="hover-underline-animation after:bg-white text-white text-2xl font-sans h-min" href="#">
 					What's new?
 				</a>
 				<a href="#">
@@ -110,7 +110,7 @@ const showcaseMenuOptions = [
 		class="hidden lg:flex flex-row justify-evenly items-center px-14 h-24 bg-white shadow"
 	>
 		{showcaseMenuOptions.map(option => (
-			<a class="hover-underline-animation font-sans text-2xl text-center hover:text-purple-dark" href={`#${option.id}`}>{option.label}</a>	
+			<a class="hover-underline-animation font-sans text-2xl text-center hover:text-purple-dark after:bg-purple-dark" href={`#${option.id}`}>{option.label}</a>	
 		))}
 	</div>
 
@@ -285,7 +285,6 @@ const showcaseMenuOptions = [
 		height: 2px;
 		bottom: 0;
 		left: 0;
-		background-color: #581B98;
 		transform-origin: center;
 		transition: transform 0.15s ease-out;
 	}
