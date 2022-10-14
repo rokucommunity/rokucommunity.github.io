@@ -1,0 +1,56 @@
+---
+import SingleLineCommand from "../../components/SingleLineCommand.astro";
+
+const brighterscriptFeatures = [
+    {
+        title: "The Modern Language You Needed",
+        text: "BrighterScript adds new features like classes, namespaces, and modern syntax improvements. Write less code, more efficiently."
+    },
+    {
+        title: "A Result You Can Trust",
+        text: "BrighterScript compiles to native BrightScript. Run the compiled result on any Roku device. Source maps will point back to your original code when debugging."
+    },
+    {
+        title: "Safety at Compile Time",
+        text: "The BrighterScript CLI will notify you of syntax errors and potential program crashes before your code is running."
+    }
+];
+---
+
+<div id="brighterscript" class="flex flex-col items-center py-24">
+    <p class="font-serif text-purple-dark text-xl uppercase">
+        The Roku Community presents
+    </p>
+    <h2>BrighterScript</h2>
+    <div class="flex flex-row justify-evenly w-full mt-20">
+        {
+			brighterscriptFeatures.map((feature) => (
+				<div class="flex flex-col max-w-xs">
+                    <p class="font-serif text-purple-dark font-bold text-2xl">{feature.title}</p>
+                    <p class="font-serif text-black text-2xl">{feature.text}</p>
+                </div>
+			))
+		}
+    </div>
+    <h2 class="my-10">Get started</h2>
+    <SingleLineCommand command="npm install brighterscript -g"/>
+</div>
+
+<style>
+    h2 {
+        font-family: 'Poppins', sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        font-size: 64px;
+        line-height: 70px;
+
+        /* identical to box height, or 109% */
+        text-align: center;
+
+        background: linear-gradient(91.89deg, #111B73 -1.99%, #BD73E9 72.07%, #E973BA 106.43%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+</style>

@@ -5,7 +5,8 @@ module.exports = {
 		extend: {},
 		fontFamily: {
 			'sans': ['Poppins', 'sans-serif'],
-			'serif': ['Roboto', 'ui-serif']
+			'serif': ['Roboto', 'ui-serif'],
+			'mono': ['monospace']
 		},
 		colors: {
 			'white': '#FDFDFD',

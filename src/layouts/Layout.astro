@@ -1,4 +1,10 @@
 ---
+import "@fontsource/roboto";
+import "@fontsource/roboto/700.css";
+import "@fontsource/poppins";
+import "@fontsource/poppins/700.css";
+import "@fontsource/material-icons";
+
 export interface Props {
 	title: string;
 }
@@ -18,3 +24,35 @@ const { title } = Astro.props;
 		<slot />
 	</body>
 </html>
+
+<style is:global>
+    /* Unscoped styles, delivered as-is to the browser. */
+
+    .common-link {
+		font-family: "Roboto", sans-serif;
+		font-weight: bold;
+		color: #f3558e;
+	}
+
+	.hover-underline-animation {
+		display: inline-block;
+		position: relative;
+	}
+
+	.hover-underline-animation:after {
+		content: "";
+		position: absolute;
+		width: 100%;
+		transform: scaleX(0);
+		height: 2px;
+		bottom: 0;
+		left: 0;
+		transform-origin: center;
+		transition: transform 0.15s ease-out;
+	}
+
+	.hover-underline-animation:hover:after {
+		transform: scaleX(1);
+		transform-origin: center;
+	}
+</style>

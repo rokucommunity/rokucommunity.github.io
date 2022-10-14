@@ -1,298 +1,38 @@
 ---
-import { Image } from '@astrojs/image/components';
-
-import Layout from '../layouts/Layout.astro';
-import VSCodePluginShowcaseItem from '../components/landing/VSCodePluginShowcaseItem.astro';
-
-import '@fontsource/poppins';
-import '@fontsource/poppins/700.css';
-import '@fontsource/roboto';
-import '@fontsource/roboto/700.css';
-import '@fontsource/material-icons';
+import Layout from "../layouts/Layout.astro";
+import Hero from "../layouts/landing/Hero.astro";
+import VSCodePlugin from "../layouts/landing/VSCodePlugin.astro";
+import BrighterScript from "../layouts/landing/BrighterScript.astro";
 
 const showcaseMenuOptions = [
-	{ label: 'VSCode Plugin', id: 'vscode-plugin' },
-	{ label: 'BrighterScript', id: 'brighterscript' },
-	{ label: 'Lint & Format', id: 'lint-and-format' },
-	{ label: 'Package Manager', id: 'ropm' },
-	{ label: 'Join us', id: 'join' }
+	{ label: "VSCode Plugin", id: "vscode-plugin" },
+	{ label: "BrighterScript", id: "brighterscript" },
+	{ label: "Lint & Format", id: "lint-and-format" },
+	{ label: "Package Manager", id: "ropm" },
+	{ label: "Join us", id: "join" },
 ];
 ---
 
 <Layout title="Roku Community">
-	<div
-		class="hero-gradient flex flex-col md:justify-between px-7 md:px-14 py-11 md:pb-2.5 md:h-screen md:min-h-[668px]"
-	>
-		<!-- Top bar -->
-		<div class="flex flex-col md:flex-row justify-between h-12 w-full">
-			<div class="flex flex-row items:center h-fit">
-				<span
-					class="material-icons text-white !text-4xl mr-4 md:!hidden"
-					>menu</span
-				>
-				<h1 class="font-sans text-3xl font-bold w-max text-white">
-					Roku Community
-				</h1>
-			</div>
-
-			<div
-				class="hidden md:flex flex-row items-center justify-between w-80"
-			>
-				<a class="hover-underline-animation after:bg-white text-white text-2xl font-sans h-min" href="#">
-					What's new?
-				</a>
-				<a href="#">
-					<Image
-						src="https://res.cloudinary.com/roku-community/image/upload/v1663447840/rokucommunity.github.io/slack_mono_white_ifc44z.png"
-						alt="Slack logo"
-						width={40}
-						height={40}
-					/>
-				</a>
-				<a href="#">
-					<Image
-						src="https://res.cloudinary.com/roku-community/image/upload/v1663447957/rokucommunity.github.io/github-mono-white_m6idwe.png"
-						alt="Github logo"
-						width={40}
-						height={40}
-					/>
-				</a>
-			</div>
-		</div>
-
-		<!-- Hero text and email input -->
-		<div class="flex flex-col justify-between items-center md:h-[20rem]">
-			<h2
-				class="font-sans text-white max-w-[629px] md:text-center text-4xl md:text-5xl font-bold mt-11 md:mt-0"
-			>
-				Our Goal is to make Roku Development <u>Better</u>
-			</h2>
-
-			<p
-				class="font-sans text-white mt-4 md:mt-0 md:text-center text-2xl opacity-90 max-w-[629px]"
-			>
-				We provide and maintain <b>Open Source</b> solutions to enhance your
-				development workflows
-			</p>
-
-			<div
-				class="flex flex-col md:flex-row mt-4 md:mt-0 w-full md:justify-center"
-			>
-				<!-- <input
-					type="text"
-					class="bg-[rgba(217,217,217,0.3)] rounded-xl py-5 px-7 placeholder:text-white outline-none text-2xl font-serif focus-visible:text-white w-full md:max-w-sm md:mr-4 mb-4 md:mb-0"
-					placeholder="Enter your email"
-				/> -->
-				<a
-					target="_blank"
-					href="https://rokucommunity.substack.com/"
-					class="cta-btn-gradient rounded-xl text-white font-bold text-2xl md:text-3xl outline-none p-5 font-serif cursor-pointer hover:shadow text-center"
-				>
-					Keep me updated
-				</a>
-			</div>
-		</div>
-
-		<!-- Scroll down CTA -->
-		<div class="hidden md:flex flex-col items-center">
-			<p class="w-max text-white text-2xl font-serif font-light">
-				See our magic in action
-			</p>
-			<Image
-				src="https://res.cloudinary.com/roku-community/image/upload/v1663452078/rokucommunity.github.io/icon-arrow-down_ewiujp.svg"
-				alt="Icon arrow down"
-				width={60}
-				height={60}
-			/>
-		</div>
-	</div>
+	<Hero />
 
 	<!-- Showcase menu -->
 	<div
 		class="hidden lg:flex flex-row justify-evenly items-center px-14 h-24 bg-white shadow"
 	>
-		{showcaseMenuOptions.map(option => (
-			<a class="hover-underline-animation font-sans text-2xl text-center hover:text-purple-dark after:bg-purple-dark" href={`#${option.id}`}>{option.label}</a>	
-		))}
+		{
+			showcaseMenuOptions.map((option) => (
+				<a
+					class="hover-underline-animation font-sans text-2xl text-center hover:text-purple-dark after:bg-purple-dark"
+					href={`#${option.id}`}
+				>
+					{option.label}
+				</a>
+			))
+		}
 	</div>
 
-	<div id="vscode-plugin" class="xl:px-14">
-		<div
-			class="flex flex-col sm:items-center bg-[#292929] xl:rounded-3xl pt-14 pb-5 overflow-hidden px-7 md:px-0"
-		>
-			<p
-				class="font-serif text-white m-0 text-xl md:w-96 opacity-50 uppercase md:hidden"
-			>
-				VSCode Plugin
-			</p>
-			<p
-				class="vscode-plugin-title text-4xl md:text-6xl md:leading-[70px] sm:text-center"
-			>
-				An efficient development environment for Roku
-			</p>
+	<VSCodePlugin />
 
-			<div
-				class="flex flex-col lg:flex-row justify-between md:items-center md:px-14 mt-6 md:mt-12 w-4/5"
-			>
-				<div
-					class="flex flex-row justify-center items-center mb-6 md:mb-0"
-				>
-					<a class="mr-2 common-link text-2xl sm:text-3xl" href="#"
-						>Download now</a
-					>
-					<img
-						src="https://res.cloudinary.com/roku-community/image/upload/v1663454539/rokucommunity.github.io/icon-open-in-new-pink_kuwapu.svg"
-						alt="Download Visual Studio Code plugin icon"
-					/>
-				</div>
-				<div
-					class="flex flex-col sm:flex-row items-left justify-center"
-				>
-					<img
-						class="sm:mr-7 mb-4 sm:mb-0"
-						src="https://img.shields.io/visual-studio-marketplace/v/RokuCommunity.brightscript.svg?logo=visual-studio-code&label=VSCode"
-						alt="Visual Studio Code plugin version required"
-						height="32px"
-					/>
-					<img
-						src="https://vsmarketplacebadge.apphb.com/installs-short/RokuCommunity.brightscript.svg?logo=visual-studio-code"
-						alt="Visual Studio Code plugin number of downloads"
-						height="32px"
-					/>
-				</div>
-			</div>
-
-			<VSCodePluginShowcaseItem
-				title="Syntax highlighting & code formatting"
-				hook="Technicolor is here"
-				imgUrl="https://res.cloudinary.com/roku-community/image/upload/v1663455843/rokucommunity.github.io/vscode-plugin-syntax-highlighting_lambdp.png"
-				imgAlt="Syntax highlighting"
-			/>
-
-			<VSCodePluginShowcaseItem
-				title="Sideload your app with One Click"
-				hook="Just play it"
-				description="No need to zip your app, open your browser, or even know your device IP!"
-				imgUrl="https://res.cloudinary.com/roku-community/image/upload/v1663457667/rokucommunity.github.io/vscode-plugin-sideload_ytxc07.png"
-				imgAlt="Sideload with one click"
-				rowReverse={true}
-			/>
-
-			<VSCodePluginShowcaseItem
-				title="Breakpoints and variable inspection"
-				hook="Debugging Excellence"
-				description="Add breakpoints anywhere. Inspect and watch variables. Run brs commands. Conditionally enable and disable breakpoints. And much more!"
-				imgUrl="https://res.cloudinary.com/roku-community/image/upload/v1663457788/rokucommunity.github.io/vscode-plugin-debugging_sjh6df.png"
-				imgAlt="Debugging and variable inspection"
-			/>
-
-			<div
-				class="flex flex-col-reverse lg:flex-row md:px-14 mt-16 xl:justify-evenly w-full"
-			>
-				<div class="flex flex-col lg:mr-16">
-					<img
-						class="mt-4 lg:mt-0"
-						src="https://res.cloudinary.com/roku-community/image/upload/v1663458051/rokucommunity.github.io/vscode-plugin-scenegraph-inspector_xfxoyx.png"
-						alt="A better Layout Editor"
-					/>
-					<p
-						class="font-serif italic text-xl text-white opacity-50 lg:max-w-sm mt-11 lg:visible"
-					>
-						These images show the SG nodes of the MarkupListExample
-						sample project from the official documentation.
-					</p>
-				</div>
-				<div class="flex flex-col lg:items-end">
-					<div class="!mb-8 lg:[&>p]:text-right">
-						<p
-							class="font-serif text-white m-0 text-xl lg:w-96 opacity-50 uppercase"
-						>
-							Powered by RTA
-						</p>
-						<p
-							class="text-white m-0 lg:w-96 font-sans font-bold text-4xl"
-						>
-							A better Layout Editor
-						</p>
-						<p
-							class="font-serif text-white m-0 text-xl lg:w-96 opacity-80"
-						>
-							Inspect all your SceneGraph nodes, including
-							ArrayGrid children! Easy to setup, Open Source and
-							completely within VSCode.
-						</p>
-					</div>
-					<img
-						src="https://res.cloudinary.com/roku-community/image/upload/v1663458114/rokucommunity.github.io/vscode-plugin-scenegraph-inspector-2_ij28sb.png"
-						alt="Layout editor details"
-					/>
-				</div>
-			</div>
-
-			<VSCodePluginShowcaseItem
-				title="Control your device from your computer"
-				hook="No batteries needed"
-				description="Fill inputs with your keyboard and navigate with the arrow keys. Customize your keybindings or use our +100 predefined ones."
-				imgUrl="https://res.cloudinary.com/roku-community/image/upload/v1663458674/rokucommunity.github.io/purple-keyboard_ddo4h0.png"
-				imgAlt="Control your device from your computer"
-			/>
-		</div>
-	</div>
+	<BrighterScript/>
 </Layout>
-
-<style>
-	.hero-gradient {
-		background: radial-gradient(
-			166.56% 296.11% at 1.84% 4.24%,
-			#581b98 5.71%,
-			#d600c0 100%
-		);
-	}
-
-	.cta-btn-gradient {
-		background: radial-gradient(
-			149.24% 149.24% at 50.21% 0%,
-			#9c1de7 0%,
-			rgba(156, 29, 231, 0.2) 100%
-		);
-	}
-
-	.vscode-plugin-title {
-		font-family: "Poppins", sans-serif;
-		font-style: normal;
-		font-weight: 700;
-		margin: 0;
-		background: linear-gradient(91.48deg, #00d1ff 1.88%, #bd00ff 100.15%);
-		-webkit-background-clip: text;
-		-webkit-text-fill-color: transparent;
-		background-clip: text;
-	}
-
-	.common-link {
-		font-family: "Roboto", sans-serif;
-		font-weight: bold;
-		color: #f3558e;
-	}
-
-	.hover-underline-animation {
-		display: inline-block;
-		position: relative;
-	}
-
-	.hover-underline-animation:after {
-		content: "";
-		position: absolute;
-		width: 100%;
-		transform: scaleX(0);
-		height: 2px;
-		bottom: 0;
-		left: 0;
-		transform-origin: center;
-		transition: transform 0.15s ease-out;
-	}
-
-	.hover-underline-animation:hover:after {
-		transform: scaleX(1);
-		transform-origin: center;
-	}
-</style>
