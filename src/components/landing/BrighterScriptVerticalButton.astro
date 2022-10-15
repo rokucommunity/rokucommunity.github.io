@@ -10,7 +10,7 @@ export interface Props {
 const { title, smallText, href, iconUrl } = Astro.props;
 ---
 <a href={href}>
-    <div class="flex flex-col justify-end p-6 cursor-pointer" style={`background: url('${iconUrl}');`}>
+    <div class="flex flex-col justify-end p-6 cursor-pointer mb-8 lg:mb-0 h-52 lg:h-80" style={`background: url('${iconUrl}');`}>
         {smallText && (
             <p class="font-serif text-base uppercase text-purple-dark">{smallText}</p>
         )}
