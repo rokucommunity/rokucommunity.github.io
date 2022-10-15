@@ -1,4 +1,5 @@
 ---
+import BrighterScriptVerticalButton from "../../components/landing/BrighterScriptVerticalButton.astro";
 import SingleLineCommand from "../../components/SingleLineCommand.astro";
 
 const brighterscriptFeatures = [
@@ -22,6 +23,7 @@ const brighterscriptFeatures = [
         The Roku Community presents
     </p>
     <h2>BrighterScript</h2>
+
     <div class="flex flex-row justify-evenly w-full mt-20">
         {
 			brighterscriptFeatures.map((feature) => (
@@ -32,8 +34,29 @@ const brighterscriptFeatures = [
 			))
 		}
     </div>
+
     <h2 class="my-10">Get started</h2>
+
     <SingleLineCommand command="npm install brighterscript -g"/>
+
+    <div class="flex flex-row justify-evenly w-full my-20">
+        <BrighterScriptVerticalButton
+            title="Language specification"
+            href="#"
+            iconUrl="https://res.cloudinary.com/roku-community/image/upload/v1663542588/rokucommunity.github.io/brighterscript-language-image_xa5urn.png"
+        />
+        <BrighterScriptVerticalButton
+            title="Documentation"
+            href="#"
+            iconUrl="https://res.cloudinary.com/roku-community/image/upload/v1663542588/rokucommunity.github.io/brighterscript-docs-image_uvxylz.png"
+        />
+        <BrighterScriptVerticalButton
+            title="Learn BrighterScript"
+            href="#"
+            smallText="(Coming soon)"
+            iconUrl="https://res.cloudinary.com/roku-community/image/upload/v1663542588/rokucommunity.github.io/brighterscript-learn-image_id1uee.png"
+        />
+    </div>
 </div>
 
 <style>

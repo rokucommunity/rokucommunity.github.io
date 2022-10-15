@@ -1,0 +1,29 @@
+---
+export interface Props {
+    title: string;
+    iconUrl: string;
+    href: string;
+    smallText?: string;
+    disabled?: boolean;
+}
+
+const { title, smallText, href, iconUrl } = Astro.props;
+---
+<a href={href}>
+    <div class="flex flex-col justify-end p-6 cursor-pointer" style={`background: url('${iconUrl}');`}>
+        {smallText && (
+            <p class="font-serif text-base uppercase text-purple-dark">{smallText}</p>
+        )}
+        <p class="font-serif font-bold leading-9 text-purple-dark capitalize text-3xl">{title}</p>
+    </div>
+</a>
+<style>
+    div {
+        width: 271px;
+        height: 360px;
+        background: #FDFDFD;
+        /* purple_dark */
+        border: 2px solid #581B98;
+        border-radius: 20px;
+    }
+</style>
