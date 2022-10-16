@@ -15,6 +15,7 @@ module.exports = {
                 extraFileExtensions: ['.astro']
             },
             rules: {
+                'comma-dangle': 'error',
                 'array-type': 'off',
                 'consistent-type-assertions': 'off',
                 'explicit-function-return-type': 'off',

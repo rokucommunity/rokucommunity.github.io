@@ -1,8 +1,10 @@
 ---
+import BrighterScriptFeatures from "../../components/landing/BrighterScriptFeatures.astro";
+import BrighterScriptTitle from "../../components/landing/BrighterScriptTitle.astro";
 import BrighterScriptVerticalButton from "../../components/landing/BrighterScriptVerticalButton.astro";
 import SingleLineCommand from "../../components/SingleLineCommand.astro";
 
-const brighterscriptFeatures = [
+const hooks = [
     {
         title: "The Modern Language You Needed",
         text: "BrighterScript adds new features like classes, namespaces, and modern syntax improvements. Write less code, more efficiently."
@@ -16,30 +18,77 @@ const brighterscriptFeatures = [
         text: "The BrighterScript CLI will notify you of syntax errors and potential program crashes before your code is running."
     }
 ];
+
+const companies = [
+        {
+            img: "https://user-images.githubusercontent.com/2544493/192530108-eb470b85-e687-4575-af69-254aab13428c.png",
+            alt: "Fubo Tv",
+            href: "https://www.fubo.tv/"
+        },
+        {
+            img: "https://user-images.githubusercontent.com/2544493/192593641-aca51992-2bd1-45c2-b087-602b496fca36.png",
+            alt: "NBA",
+            href: "https://www.nba.com/"
+        },
+        {
+            img: "https://user-images.githubusercontent.com/2544493/192591901-20441fc8-3c6c-45ea-8851-b22430e6fb8e.png",
+            alt: "Applicaster",
+            href: "https://www.applicaster.com/"
+        },
+        {
+            img: "https://user-images.githubusercontent.com/2544493/195908446-8d9652f8-9877-426f-b3c6-09119d788fd8.png",
+            alt: "RED Space",
+            href: "https://www.redspace.com/"
+        },
+        {
+            img: "https://user-images.githubusercontent.com/2544493/192593254-f2a32cd4-0482-40de-830d-c1d09690c46b.png",
+            alt: "Corco plus",
+            href: "https://www.miraclechannel.ca/corcoplus"
+        },
+        {
+            img: "https://user-images.githubusercontent.com/2544493/169118062-81d94da5-2323-4e31-b19d-7db3f9c88dff.png",
+            alt: "Photo Tv",
+            href: "https://channelstore.roku.com/details/222212/phototv"
+        },
+        {
+            img: "https://user-images.githubusercontent.com/2544493/192610056-d1b5a382-edf4-47b9-a6a5-d2d3ee9094cb.png",
+            alt: "Haystack News",
+            href: "https://www.haystack.tv/"
+        }
+];
 ---
 
-<div id="brighterscript" class="flex flex-col items-center py-24">
+<div
+    id="brighterscript"
+    class="flex flex-col justify-center items-center py-24"
+>
     <p class="font-serif text-purple-dark text-lg sm:text-xl uppercase">
         The Roku Community presents
     </p>
-    <h2 class="text-4xl sm:text-6xl">BrighterScript</h2>
+    <BrighterScriptTitle title="BrighterScript" />
 
-    <div class="flex flex-col lg:flex-row justify-evenly items-center w-full mt-10 lg:mt-20">
+    <div
+        class="flex flex-col lg:flex-row justify-evenly items-center w-full mt-10 lg:mt-20"
+    >
         {
-			brighterscriptFeatures.map((feature) => (
-				<div class="flex flex-col max-w-xs mb-8 lg:mb-0 px-4 lg:px-0">
-                    <p class="font-serif text-purple-dark font-bold text-2xl">{feature.title}</p>
+            hooks.map((feature) => (
+                <div class="flex flex-col max-w-xs mb-8 lg:mb-0 px-4 lg:px-0">
+                    <p class="font-serif text-purple-dark font-bold text-2xl">
+                        {feature.title}
+                    </p>
                     <p class="font-serif text-black text-2xl">{feature.text}</p>
                 </div>
-			))
-		}
+            ))
+        }
     </div>
 
-    <h2 class="text-4xl sm:text-6xl my-10">Get started</h2>
+    <BrighterScriptTitle title="Get started" />
 
-    <SingleLineCommand command="npm install brighterscript -g"/>
+    <SingleLineCommand command="npm install brighterscript -g" />
 
-    <div class="flex flex-col lg:flex-row justify-evenly items-center w-full my-20">
+    <div
+        class="flex flex-col lg:flex-row justify-evenly items-center w-full my-20"
+    >
         <BrighterScriptVerticalButton
             title="Language specification"
             href="#"
@@ -57,22 +106,23 @@ const brighterscriptFeatures = [
             iconUrl="https://res.cloudinary.com/roku-community/image/upload/v1663542588/rokucommunity.github.io/brighterscript-learn-image_id1uee.png"
         />
     </div>
+
+    <BrighterScriptFeatures />
+
+    <BrighterScriptTitle title="Trusted in production by industry giants" />
+
+    <div class="flex flex-row w-full max-w-screen-lg justify-evenly items-center my-7 flex-wrap">
+        {
+            companies.map((company) => (
+                <a
+                    class="my-4 mx-4"
+                    href={company.href}
+                    target="_blank"
+                    rel="nofollow"
+                >
+                    <img class="max-w-[200px]" src={company.img} alt={company.alt} />
+                </a>
+            ))
+        }
+    </div>
 </div>
-
-<style>
-    h2 {
-        font-family: 'Poppins', sans-serif;
-        font-style: normal;
-        font-weight: 700;
-        line-height: 70px;
-
-        /* identical to box height, or 109% */
-        text-align: center;
-
-        background: linear-gradient(91.89deg, #111B73 -1.99%, #BD73E9 72.07%, #E973BA 106.43%);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        background-clip: text;
-        text-fill-color: transparent;
-    }
-</style>

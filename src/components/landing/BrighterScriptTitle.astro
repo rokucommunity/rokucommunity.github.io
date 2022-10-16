@@ -1,0 +1,29 @@
+---
+export interface Props {
+    title: string;
+}
+const { title } = Astro.props;
+---
+<h2 class="text-4xl sm:text-6xl my-5 capitalize">{title}</h2>
+<style>
+    h2 {
+        font-family: "Poppins", sans-serif;
+        font-style: normal;
+        font-weight: 700;
+        line-height: 70px;
+
+        /* identical to box height, or 109% */
+        text-align: center;
+
+        background: linear-gradient(
+            91.89deg,
+            #111b73 -1.99%,
+            #bd73e9 72.07%,
+            #e973ba 106.43%
+        );
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+</style>
