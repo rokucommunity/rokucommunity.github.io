@@ -1,0 +1,57 @@
+---
+const moreFeatures = [
+    {
+        icon: "power",
+        title: "Plugins",
+        description:
+            "The plugin API allows extending the compiler to provide extra diagnostics or transformations."
+    },
+    {
+        icon: "attach_file",
+        title: "Annotations",
+        description:
+            "Annotations are metadata you can attach to any statement. This extra information will be available to plugins walking the AST of the code."
+    },
+    {
+        icon: "code",
+        title: "BrighterScript CLI",
+        description:
+            "Check syntax and program errors without a Device and catch them at compile time. Deploy .zip files from your console. Integrate all these features in your CI/CD pipelines."
+    },
+    {
+        icon: "list_alt",
+        title: "Flexible compiler options",
+        description:
+            "The bsconfig.json file specifies the root files and the compiler options required to compile the project. It can inherit configurations from another file using the extends property."
+    }
+];
+---
+
+<div id="feat-more" class="splide__slide flex flex-col justify-center w-full">
+    <div
+        class="flex flex-row w-full max-w-screen-lg justify-evenly items-center my-7 flex-wrap"
+    >
+        {
+            moreFeatures.map((feat) => (
+                <div class="feat-more-container cursor-pointer p-9 max-w-[455px] xl:min-h-64 border-2 rounded-3xl border-purple-dark">
+                    <div class="flex flex-row row-title items-center">
+                        <span class="material-icons text-purple-dark text-3xl mr-2">
+                            {feat.icon}
+                        </span>
+                        <p class="text-purple-dark text-2xl font-serif font-bold">
+                            {feat.title}
+                        </p>
+                    </div>
+                    <div>
+                        <p class="text-2xl font-serif">{feat.description}</p>
+                    </div>
+                </div>
+            ))
+        }
+    </div>
+</div>
+<style>
+    .feat-more-container:hover {
+        box-shadow: -10px 5px #9c1de7;
+    }
+</style>
