@@ -5,6 +5,8 @@ import image from "@astrojs/image";
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://rokucommunity.github.io',
+  base: '/',
   integrations: [
     tailwind(),
     image({
