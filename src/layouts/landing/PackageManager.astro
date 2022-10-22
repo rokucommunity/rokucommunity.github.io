@@ -1,0 +1,40 @@
+---
+import SingleLineCommand from "../../components/SingleLineCommand.astro";
+
+---
+
+<div id="ropm" class="flex flex-col items-center w-full py-16 lg:py-20 px-4">
+    <p class="text-purple-dark uppercase text-xl lg:text-2xl font-bold">Powered by npm</p>
+    <p class="title text-4xl lg:text-6xl text-center font-poppins font-bold max-w-screen-lg">The package manager you didn't know you needed</p>
+
+    <div class="flex flex-col justify-center items-center w-full my-9 flex-wrap">
+        <div class="mr-4">
+            <SingleLineCommand command="npm i ropm -g" />
+        </div>
+        <div class="flex flex-row justify-center items-center mt-4">
+            <a class="mr-2 text-pink text-2xl underline" href="https://github.com/rokucommunity/ropm#readme">
+                See documentation
+            </a>
+            <span class="material-icons text-pink text-2xl">open_in_new</span>
+        </div>
+    </div>
+
+    <p class="text-center max-w-screen-md text-2xl">"Today I want a <b>BrightScript HTTP framework for Roku apps, inspired by Python Requests"</b></p>
+    <p class="font-mono text-center text-lg md:text-xl my-9">{">"} ropm install roku-requests</p>
+
+    <div class="flex flex-row justify-center items-center">
+        <a class="mr-2 text-pink text-xl md:text-2xl underline" href="https://www.npmjs.com/search?q=keywords%3Aropm%20">
+            Discover ropm packages
+        </a>
+        <span class="material-icons text-pink text-xl md:text-2xl">open_in_new</span>
+    </div>
+</div>
+<style>
+    .title {
+        background: linear-gradient(91.55deg, #121078 1.94%, #C72E65 94.9%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        text-fill-color: transparent;
+    }
+</style>
