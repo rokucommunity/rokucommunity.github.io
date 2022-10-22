@@ -1,18 +1,23 @@
 ---
 interface Props {
     command: string;
+    helperTextColor?: string;
 }
 
-const { command } = Astro.props;
+const { command, helperTextColor } = Astro.props;
 ---
 
-<div class="flex flex-row items-center h-20 py-6 px-11">
-    <span class="text-white mr-4 text-2xl font-mono" unselectable="on">$</span>
-    <p class="text-white text-2xl mr-7 font-mono overflow-x-scroll w-24 sm:w-auto">{command}</p>
+<div class="flex flex-col items-center">
+    <div class="wrapper flex flex-row items-center h-20 py-6 px-6 md:px-11 max-w-[80vw]">
+        <span class="text-white mr-4 text-2xl font-mono" unselectable="on">$</span>
+        <p class="text-white text-2xl font-mono overflow-x-scroll bg-none">{command}</p>
+    </div>
+    <span class={`${helperTextColor} font-mono select-none mt-2`}>Tap once to select command</span>
 </div>
 
+
 <style>
-    div {
+    .wrapper {
         background: #35105C;
         border-radius: 10px;
     }
@@ -21,6 +26,7 @@ const { command } = Astro.props;
         overflow-y: hidden;
         overflow-x: auto;
         white-space: nowrap;
+        user-select: all;
     }
 
     span {
