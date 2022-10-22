@@ -4,8 +4,8 @@ module.exports = {
 	theme: {
 		extend: {},
 		fontFamily: {
-			'sans': ['Poppins', 'sans-serif'],
-			'serif': ['Roboto', 'ui-serif'],
+			'poppins': ['Poppins', 'sans-serif'],
+			'sans': ['Roboto', 'sans-serif'],
 			'mono': ['monospace']
 		},
 		colors: {
