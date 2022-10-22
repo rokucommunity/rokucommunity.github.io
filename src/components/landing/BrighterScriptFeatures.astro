@@ -1,7 +1,6 @@
 ---
 import "@splidejs/splide/dist/css/splide.min.css";
 import BrighterScriptTitle from "./BrighterScriptTitle.astro";
-import BsFeatCarousel from "./bs-features/BsFeatCarousel.astro";
 import BSFeatClasses from "./bs-features/BSFeatClasses.astro";
 import BsFeatImports from "./bs-features/BsFeatImports.astro";
 import BsFeatMore from "./bs-features/BsFeatMore.astro";
@@ -12,20 +11,28 @@ import BsFeatSyntax from "./bs-features/BsFeatSyntax.astro";
 <div class="w-full flex flex-col justify-center items-center">
     <BrighterScriptTitle title="Language features" />
 
-    <div id="features-list" class="max-w-full px-4">
-        <p class="font-serif text-purple-dark font-bold text-2xl">Classes</p>
+    <div class={`
+        flex flex-col items-center
+        max-w-full
+        px-4
+        features-container
+        [&>p]:font-serif
+        [&>p]:text-purple-dark
+        [&>p]:font-bold
+        [&>p]:text-4xl
+        [&>p]:xl:text-center
+        [&>p]:mt-8
+    `}
+    >
+        <p>Classes</p>
         <BSFeatClasses />
-        <p class="font-serif text-purple-dark font-bold text-2xl">Imports</p>
+        <p>Imports</p>
         <BsFeatImports />
-        <p class="font-serif text-purple-dark font-bold text-2xl">Namespaces</p>
+        <p>Namespaces</p>
         <BsFeatNamespaces />
-        <p class="font-serif text-purple-dark font-bold text-2xl">Syntax sugar</p>
+        <p>Syntax sugar</p>
         <BsFeatSyntax />
-        <p class="font-serif text-purple-dark font-bold text-2xl">And more!</p>
+        <p>More features</p>
         <BsFeatMore />
-    </div>
-
-    <div class="w-full hidden xl:inline">
-        <BsFeatCarousel/>
     </div>
 </div>

@@ -27,28 +27,26 @@ const moreFeatures = [
 ];
 ---
 
-<div id="feat-more" class="splide__slide flex flex-col justify-center w-full">
-    <div
-        class="flex flex-row w-full max-w-screen-lg justify-evenly items-center my-7 flex-wrap"
-    >
-        {
-            moreFeatures.map((feat) => (
-                <div class="feat-more-container cursor-pointer p-9 max-w-[455px] xl:min-h-64 border-2 rounded-3xl border-purple-dark">
-                    <div class="flex flex-row row-title items-center">
-                        <span class="material-icons text-purple-dark text-3xl mr-2">
-                            {feat.icon}
-                        </span>
-                        <p class="text-purple-dark text-2xl font-serif font-bold">
-                            {feat.title}
-                        </p>
-                    </div>
-                    <div>
-                        <p class="text-2xl font-serif">{feat.description}</p>
-                    </div>
+<div
+    class="flex flex-row w-full justify-evenly items-center my-7 flex-wrap max-w-screen-lg"
+>
+    {
+        moreFeatures.map((feat) => (
+            <div class="feat-more-container cursor-pointer p-9 max-w-[455px] min-h-[18rem] border-2 rounded-3xl border-purple-dark mb-6">
+                <div class="flex flex-row row-title items-center">
+                    <span class="material-icons text-purple-dark text-3xl mr-2">
+                        {feat.icon}
+                    </span>
+                    <p class="text-purple-dark text-2xl font-serif font-bold">
+                        {feat.title}
+                    </p>
                 </div>
-            ))
-        }
-    </div>
+                <div>
+                    <p class="text-2xl font-serif">{feat.description}</p>
+                </div>
+            </div>
+        ))
+    }
 </div>
 <style>
     .feat-more-container:hover {
