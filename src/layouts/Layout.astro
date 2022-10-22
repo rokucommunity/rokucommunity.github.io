@@ -1,9 +1,7 @@
 ---
-import "@fontsource/roboto";
-import "@fontsource/roboto/700.css";
-import "@fontsource/poppins";
-import "@fontsource/poppins/700.css";
 import "@fontsource/material-icons";
+import "@fontsource/poppins/700.css";
+import "@fontsource/poppins";
 
 export interface Props {
 	title: string;
@@ -29,7 +27,8 @@ const { title } = Astro.props;
     /* Unscoped styles, delivered as-is to the browser. */
 
     .common-link {
-		font-family: "Roboto", sans-serif;
+		font-family: sans-serif;
+		text-decoration: underline;
 		font-weight: bold;
 		color: #f3558e;
 	}
