@@ -1,6 +1,8 @@
 ---
 import { Image } from "@astrojs/image/components";
+import GithubWhiteLogo from "../../components/landing/GithubWhiteLogo.astro";
 import HeroWhatsNew from "../../components/landing/HeroWhatsNew.astro";
+import SlackWhiteLogo from "../../components/landing/SlackWhiteLogo.astro";
 ---
 
 <div
@@ -16,22 +18,8 @@ import HeroWhatsNew from "../../components/landing/HeroWhatsNew.astro";
             class="hidden md:flex flex-row items-center justify-between w-80"
         >
             <HeroWhatsNew/>
-            <a href="#">
-                <Image
-                    src="https://res.cloudinary.com/roku-community/image/upload/v1663447840/rokucommunity.github.io/slack_mono_white_ifc44z.png"
-                    alt="Slack logo"
-                    width={40}
-                    height={40}
-                />
-            </a>
-            <a href="#">
-                <Image
-                    src="https://res.cloudinary.com/roku-community/image/upload/v1663447957/rokucommunity.github.io/github-mono-white_m6idwe.png"
-                    alt="Github logo"
-                    width={40}
-                    height={40}
-                />
-            </a>
+            <SlackWhiteLogo/>
+            <GithubWhiteLogo/>
         </div>
     </div>
 
@@ -67,22 +55,8 @@ import HeroWhatsNew from "../../components/landing/HeroWhatsNew.astro";
         >
             <HeroWhatsNew/>
             <div class="flex flex-row items-center justify-evenly w-full mt-4">
-                <a href="#">
-                    <Image
-                        src="https://res.cloudinary.com/roku-community/image/upload/v1663447840/rokucommunity.github.io/slack_mono_white_ifc44z.png"
-                        alt="Slack logo"
-                        width={40}
-                        height={40}
-                    />
-                </a>
-                <a href="#">
-                    <Image
-                        src="https://res.cloudinary.com/roku-community/image/upload/v1663447957/rokucommunity.github.io/github-mono-white_m6idwe.png"
-                        alt="Github logo"
-                        width={40}
-                        height={40}
-                    />
-                </a>
+                <SlackWhiteLogo/>
+                <GithubWhiteLogo/>
             </div>
         </div>
     </div>
