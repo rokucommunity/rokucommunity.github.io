@@ -2,6 +2,7 @@
 import { Image } from "@astrojs/image/components";
 import GithubWhiteLogo from "../../components/landing/GithubWhiteLogo.astro";
 import HeroWhatsNew from "../../components/landing/HeroWhatsNew.astro";
+import NewsletterCTA from "../../components/landing/NewsletterCTA.astro";
 import SlackWhiteLogo from "../../components/landing/SlackWhiteLogo.astro";
 ---
 
@@ -41,13 +42,7 @@ import SlackWhiteLogo from "../../components/landing/SlackWhiteLogo.astro";
         <div
             class="flex flex-col md:flex-row mt-4 md:mt-0 w-full md:justify-center"
         >
-            <a
-                target="_blank"
-                href="https://rokucommunity.substack.com/"
-                class="cta-btn-gradient rounded-xl text-white font-bold text-2xl md:text-3xl outline-none p-5 font-sans cursor-pointer hover:shadow text-center"
-            >
-                Keep me updated
-            </a>
+            <NewsletterCTA/>
         </div>
 
         <div
@@ -82,14 +77,6 @@ import SlackWhiteLogo from "../../components/landing/SlackWhiteLogo.astro";
 			166.56% 296.11% at 1.84% 4.24%,
 			#581b98 5.71%,
 			#d600c0 100%
-		);
-	}
-
-	.cta-btn-gradient {
-		background: radial-gradient(
-			149.24% 149.24% at 50.21% 0%,
-			#9c1de7 0%,
-			rgba(156, 29, 231, 0.2) 100%
 		);
 	}
 

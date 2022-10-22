@@ -1,0 +1,52 @@
+---
+import NewsletterCTA from "../../components/landing/NewsletterCTA.astro";
+
+const _posts = await Astro.glob("../../pages/whats-new/**/*.md");
+const posts = _posts
+    // Exclude the readme and any .md files starting with "_".
+    .filter(
+        (p) =>
+            !p.file.includes("readme.md") &&
+            !p.file.split("/").pop()?.startsWith("_")
+    )
+    // Reverse to show last three posts
+    .reverse()
+    .slice(0, 3);
+---
+
+<div id="whats-new" class="flex flex-col items-center wrapper w-full py-16 lg:py-20 px-4 lg:px-14">
+    <div class="w-full">
+        <p class="text-white uppercase font-bold font-poppins text-2xl">
+            On the Roku community
+        </p>
+        <p class="text-white uppercase font-bold font-poppins text-6xl">
+            What's new?
+        </p>
+    </div>
+    <div class="w-full flex flex-row flex-wrap justify-between items-start">
+        {
+            posts.map((post) => (
+                <a href={post.url} class="w-full max-w-sm">
+                    <div class="post flex flex-col my-12 bg-white w-full p-7 rounded-xl">
+                        <p class="font-sans font-bold leading-9 text-purple-dark capitalize text-3xl">
+                            {post.frontmatter.date}
+                        </p>
+                        <p class="mt-4 text-justify text-xl" set:html={post.frontmatter.summary} />
+                    </div>
+                </a>
+            ))
+        }
+    </div>
+    <NewsletterCTA/>
+    <a href={posts[0]?.url} class="text-white uppercase font-bold underline text-xl mt-8">See all the updates</a>
+    
+</div>
+<style>
+    .wrapper {
+        background: linear-gradient(116.56deg, #960b80 0%, #380b96 97.37%);
+    }
+
+    .post:hover {
+        box-shadow: -10px 5px #9C1DE7;
+    }
+</style>
