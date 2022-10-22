@@ -1,5 +1,4 @@
 ---
-import BrighterScriptFeatures from "../../components/landing/BrighterScriptFeatures.astro";
 import BrighterScriptTitle from "../../components/landing/BrighterScriptTitle.astro";
 import BrighterScriptVerticalButton from "../../components/landing/BrighterScriptVerticalButton.astro";
 import SingleLineCommand from "../../components/SingleLineCommand.astro";
@@ -60,7 +59,7 @@ const companies = [
 
 <div
     id="brighterscript"
-    class="flex flex-col justify-center items-center py-24"
+    class="flex flex-col justify-center items-center py-20"
 >
     <p class="font-serif text-purple-dark text-lg sm:text-xl uppercase">
         The Roku Community presents
@@ -68,7 +67,7 @@ const companies = [
     <BrighterScriptTitle title="BrighterScript" />
 
     <div
-        class="flex flex-col lg:flex-row justify-evenly items-center w-full mt-10 lg:mt-20"
+        class="flex flex-col lg:flex-row justify-evenly items-center w-full my-10"
     >
         {
             hooks.map((feature) => (
@@ -82,12 +81,12 @@ const companies = [
         }
     </div>
 
-    <BrighterScriptTitle title="Get started" />
-
-    <SingleLineCommand command="npm install brighterscript -g" />
+    <div class="my-4">
+        <SingleLineCommand command="npm install brighterscript -g" />
+    </div>
 
     <div
-        class="flex flex-col lg:flex-row justify-evenly items-center w-full my-20"
+        class="flex flex-col lg:flex-row justify-evenly items-center w-full my-4"
     >
         <BrighterScriptVerticalButton
             title="Language specification"
@@ -107,11 +106,11 @@ const companies = [
         />
     </div>
 
-    <BrighterScriptFeatures />
+    <div class="my-4">
+        <BrighterScriptTitle title="Trusted in production by industry giants" />
+    </div>
 
-    <BrighterScriptTitle title="Trusted in production by industry giants" />
-
-    <div class="flex flex-row w-full max-w-screen-lg justify-evenly items-center my-7 flex-wrap">
+    <div class="flex flex-row w-full max-w-screen-lg justify-evenly items-center my-4 flex-wrap">
         {
             companies.map((company) => (
                 <a

@@ -1,5 +1,6 @@
 ---
 import { Image } from "@astrojs/image/components";
+import HeroWhatsNew from "../../components/landing/HeroWhatsNew.astro";
 ---
 
 <div
@@ -7,22 +8,14 @@ import { Image } from "@astrojs/image/components";
 >
     <!-- Top bar -->
     <div class="flex flex-col md:flex-row justify-between h-12 w-full">
-        <div class="flex flex-row items:center h-fit">
-            <span
-                class="material-icons text-white !text-4xl mr-4 md:!hidden"
-                >menu</span
-            >
-            <h1 class="font-sans text-3xl font-bold w-max text-white">
-                Roku Community
-            </h1>
-        </div>
+        <h1 class="text-center md:text-left font-sans text-3xl font-bold md:w-max text-white">
+            Roku Community
+        </h1>
 
         <div
             class="hidden md:flex flex-row items-center justify-between w-80"
         >
-            <a class="hover-underline-animation after:bg-white text-white text-2xl font-sans h-min" href="#">
-                What's new?
-            </a>
+            <HeroWhatsNew/>
             <a href="#">
                 <Image
                     src="https://res.cloudinary.com/roku-community/image/upload/v1663447840/rokucommunity.github.io/slack_mono_white_ifc44z.png"
@@ -43,15 +36,15 @@ import { Image } from "@astrojs/image/components";
     </div>
 
     <!-- Hero text and email input -->
-    <div class="flex flex-col justify-between items-center md:h-[20rem]">
+    <div class="flex flex-col justify-between items-center md:h-[20rem] mt-9">
         <h2
-            class="font-sans text-white max-w-[629px] md:text-center text-4xl md:text-5xl font-bold mt-11 md:mt-0"
+            class="font-sans text-white max-w-[629px] text-center text-4xl md:text-5xl font-bold md:mt-0"
         >
             Our Goal is to make Roku Development <u>Better</u>
         </h2>
 
         <p
-            class="font-sans text-white mt-4 md:mt-0 md:text-center text-2xl opacity-90 max-w-[629px]"
+            class="font-sans text-white mt-4 md:mt-0 text-center text-2xl opacity-90 max-w-[629px]"
         >
             We provide and maintain <b>Open Source</b> solutions to enhance your
             development workflows
@@ -60,11 +53,6 @@ import { Image } from "@astrojs/image/components";
         <div
             class="flex flex-col md:flex-row mt-4 md:mt-0 w-full md:justify-center"
         >
-            <!-- <input
-                type="text"
-                class="bg-[rgba(217,217,217,0.3)] rounded-xl py-5 px-7 placeholder:text-white outline-none text-2xl font-serif focus-visible:text-white w-full md:max-w-sm md:mr-4 mb-4 md:mb-0"
-                placeholder="Enter your email"
-            /> -->
             <a
                 target="_blank"
                 href="https://rokucommunity.substack.com/"
@@ -72,6 +60,30 @@ import { Image } from "@astrojs/image/components";
             >
                 Keep me updated
             </a>
+        </div>
+
+        <div
+            class="flex md:hidden flex-col items-center justify-center w-80 mt-8"
+        >
+            <HeroWhatsNew/>
+            <div class="flex flex-row items-center justify-evenly w-full mt-4">
+                <a href="#">
+                    <Image
+                        src="https://res.cloudinary.com/roku-community/image/upload/v1663447840/rokucommunity.github.io/slack_mono_white_ifc44z.png"
+                        alt="Slack logo"
+                        width={40}
+                        height={40}
+                    />
+                </a>
+                <a href="#">
+                    <Image
+                        src="https://res.cloudinary.com/roku-community/image/upload/v1663447957/rokucommunity.github.io/github-mono-white_m6idwe.png"
+                        alt="Github logo"
+                        width={40}
+                        height={40}
+                    />
+                </a>
+            </div>
         </div>
     </div>
 
