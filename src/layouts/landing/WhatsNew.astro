@@ -23,7 +23,7 @@ const posts = _posts
             What's new?
         </p>
     </div>
-    <div class="w-full flex flex-row flex-wrap justify-between items-start">
+    <div class={`w-full flex flex-row flex-wrap ${posts.length < 3 ? "justify-evenly" : "justify-between"} items-start`}>
         {
             posts.map((post) => (
                 <a href={post.url} class="w-full max-w-sm">
