@@ -1,3 +1,53 @@
-<div id="join">
+---
+import JoinCTA from "../../components/landing/JoinCTA.astro";
 
+---
+
+<div id="join" class="flex flex-col w-full py-20 px-4 lg:px-28">
+    <p
+        class="text-purple-dark text-center lg:text-left text-xl xl:text-2xl font-bold uppercase font-poppins"
+    >
+        Be in the room where it happens
+    </p>
+    <p
+        class="text-purple-dark text-center lg:text-left text-4xl md:text-5xl xl:text-6xl uppercase font-bold font-poppins"
+    >
+        Join the Roku community
+    </p>
+    <div
+        class="flex flex-col-reverse lg:flex-row flex-wrap w-full justify-around items-center lg:items-end mt-8"
+    >
+        <div class="flex flex-col max-w-xs mt-8 lg:mt-0">
+            <img
+                src="https://res.cloudinary.com/roku-community/image/upload/v1666469587/rokucommunity.github.io/bronley_gbs8re.png"
+                alt="Bronley Plumb's face"
+                class="w-56 h-56 rounded-full mb-8"
+            />
+            <p class="font-bold text-purple-dark text-2xl">Bronley Plumb</p>
+            <p class="text-xl">
+                Founder of Roku Community. Creator of BrighterScript. Tooling
+                Engineer at Fubo.tv
+            </p>
+        </div>
+        <div class="flex flex-col max-w-md xl:max-w-lg">
+            <p class="text-2xl italic text-justify">
+                All of these tools are made available for free, and are
+                maintained by a wonderful group of developers who care about
+                improving the entire Roku development scene (as well as several
+                very generous companies who donate developer time). Please get
+                in touch if you are interested in contributing. There's so much
+                work to be done, such as:
+            </p>
+            <ul class="text-2xl [&>li]:list-disc pl-8">
+                <li>Documentation</li>
+                <li>Bug fixes</li>
+                <li>New feature implementation</li>
+                <li>Github issues management</li>
+                <li>And much more!</li>
+            </ul>
+        </div>
+    </div>
+    <div class="flex flex-col sm:flex-row justify-evenly items-start lg:justify-around mt-10">
+        <JoinCTA/>
+    </div>
 </div>
