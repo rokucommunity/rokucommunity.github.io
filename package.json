@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "@astrojs/image": "^0.9.3",
+    "@astrojs/mdx": "^0.11.4",
     "@astrojs/tailwind": "^2.0.2",
     "@fontsource/material-icons": "^4.5.4",
     "@fontsource/poppins": "^4.5.10",
@@ -23,6 +24,7 @@
     "tailwindcss": "^3.1.8"
   },
   "devDependencies": {
+    "@types/node": "^18.11.4",
     "@typescript-eslint/eslint-plugin": "^5.40.0",
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",

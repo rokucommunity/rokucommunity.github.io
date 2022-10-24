@@ -1,0 +1,124 @@
+---
+import type { MDXInstance } from "astro";
+import Footer from "./Footer.astro";
+import "./github-markdown.css";
+
+export interface Props {
+    title: string;
+}
+
+const { frontmatter } = Astro.props;
+
+const allPosts = (await Astro.glob("/src/pages/whats-new/**/*.mdx"))
+    // Exclude the readme and any .md files starting with "_".
+    .filter(
+        (p) =>
+            !p.file.includes("readme.md") &&
+            !p.file.split("/").pop()?.startsWith("_")
+    )
+    // Reverse to show last three posts
+    .reverse();
+
+const thisPost = allPosts.find(p => p.file === frontmatter.file) as MDXInstance<Record<string, any>>;
+
+const postsByYear: { year: string; posts: Record<string, any>[] }[] = [];
+
+for (const post of allPosts) {
+    const fileArray = post.file.split("/");
+    // Remove file name
+    fileArray.pop();
+    const year = fileArray.pop();
+    const yearIndex = postsByYear.findIndex(e => e?.year === year);
+
+    const postData = {
+        title: post.frontmatter.date,
+        url: post.url,
+        current: thisPost.file === post.file
+    };
+
+    if (yearIndex === -1) {
+        postsByYear.push({
+            year: String(year),
+            posts: [postData]
+        });
+    } else {
+        postsByYear[yearIndex]?.posts.push(postData);
+    }
+}
+
+console.log(postsByYear);
+const headings = thisPost?.getHeadings().filter(h => h.depth < 3) ?? [];
+---
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <meta name="generator" content={Astro.generator} />
+        <title>{frontmatter.date}</title>
+    </head>
+    <body>
+        <div class="flex flex-row">
+            <div class="p-11">
+                <p>What's new</p>
+                <ol>
+                    {
+                        postsByYear.map(postByYear => (
+                            <li>{postByYear.year}</li>
+                            <>
+                                {
+                                    postByYear.posts.map(post => (
+                                        <li class="pl-3">
+                                            <a
+                                                href={post.url}
+                                                style={`
+                                                    text-decoration: ${post.current ? "underline" : "none"};
+                                                    font-weight: ${post.current ? "bold" : "none"};
+                                                `}
+                                            >
+                                                {post.title}
+                                            </a>
+                                        </li>
+                                    ))
+                                }
+                            </>
+                        ))
+                    }
+                </ol>
+            </div>
+            <div class="markdown-body">
+                <slot />
+            </div>
+            <div class="p-11">
+                <p>In this page</p>
+                <ol>
+                    {
+                        headings.map(h => (
+                            <li style={`padding-left: ${8 * (h.depth - 1)}px;`}>
+                                <a href={`#${h.slug}`}>
+                                    {h.text}
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ol>
+            </div>
+        </div>
+        <Footer />
+    </body>
+</html>
+<style>
+    .markdown-body {
+        box-sizing: border-box;
+        min-width: 200px;
+        max-width: 980px;
+        padding: 45px;
+    }
+
+    @media (max-width: 767px) {
+        .markdown-body {
+            padding: 15px;
+        }
+    }
+</style>
