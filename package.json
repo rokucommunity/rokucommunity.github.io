@@ -11,7 +11,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint \"src/**/*.{astro,ts}\"",
-    "check-format": "prettier --max-warnings=0 --config ./.prettierrc.json --check \"src/**/*.{astro,css,ts}",
+    "check-format": "prettier --max-warnings=0 --config ./.prettierrc.json --check \"src/**/*.{astro,css,ts}\"",
     "validate": "npm run lint && npm run check-format"
   },
   "dependencies": {
