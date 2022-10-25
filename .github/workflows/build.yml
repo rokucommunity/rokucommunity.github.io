@@ -13,15 +13,11 @@ jobs:
     steps:
       - name: Install, build, and upload your site
         uses: withastro/action@v0
-      - run: npm run lint
-      - run: npm run test
-      - run: npm run publish-coverage
-      - run: npm run test-related-projects
-
-
-
+      - run: npm run validate
 
   deploy:
+    #only deploy the site when pushing to the master branch
+    if: github.ref == 'refs/heads/master'
     needs: build
     runs-on: ubuntu-latest
     environment:
