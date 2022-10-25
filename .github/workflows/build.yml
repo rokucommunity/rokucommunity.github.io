@@ -11,10 +11,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your repository using git
-        uses: actions/checkout@v2
-      - name: Install, build, and upload your site
-        uses: withastro/action@v0
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: "16.16.0"
+      - run: npm ci
+      - run: npm run build
       - run: npm run validate
 
   deploy:
@@ -26,6 +28,10 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
+      - name: Checkout your repository using git
+        uses: actions/checkout@v2
+      - name: Install, build, and upload your site
+        uses: withastro/action@v0
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
