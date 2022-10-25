@@ -1,50 +1,48 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import Hero from "../layouts/landing/Hero.astro";
-import VSCodePlugin from "../layouts/landing/VSCodePlugin.astro";
-import BrighterScript from "../layouts/landing/BrighterScript.astro";
-import LinterFormatter from "../layouts/landing/LinterFormatter.astro";
-import PackageManager from "../layouts/landing/PackageManager.astro";
-import WhatsNew from "../layouts/landing/WhatsNew.astro";
-import JoinUs from "../layouts/landing/JoinUs.astro";
+import Layout from '../layouts/Layout.astro';
+import Hero from '../layouts/landing/Hero.astro';
+import VSCodePlugin from '../layouts/landing/VSCodePlugin.astro';
+import BrighterScript from '../layouts/landing/BrighterScript.astro';
+import LinterFormatter from '../layouts/landing/LinterFormatter.astro';
+import PackageManager from '../layouts/landing/PackageManager.astro';
+import WhatsNew from '../layouts/landing/WhatsNew.astro';
+import JoinUs from '../layouts/landing/JoinUs.astro';
 
 const showcaseMenuOptions = [
-	{ label: "VSCode Plugin", id: "vscode-plugin" },
-	{ label: "BrighterScript", id: "brighterscript" },
-	{ label: "Lint & Format", id: "lint-and-format" },
-	{ label: "Package Manager", id: "ropm" },
-	{ label: "Join us", id: "join" }
+    { label: 'VSCode Plugin', id: 'vscode-plugin' },
+    { label: 'BrighterScript', id: 'brighterscript' },
+    { label: 'Lint & Format', id: 'lint-and-format' },
+    { label: 'Package Manager', id: 'ropm' },
+    { label: 'Join us', id: 'join' }
 ];
 ---
 
 <Layout title="Roku Community">
-	<Hero />
+    <Hero />
 
-	<!-- Showcase menu -->
-	<div
-		class="hidden lg:flex flex-row justify-evenly items-center px-14 h-24 bg-white shadow"
-	>
-		{
-			showcaseMenuOptions.map((option) => (
-				<a
-					class="hover-underline-animation font-poppins text-2xl text-center hover:text-purple-dark after:bg-purple-dark"
-					href={`#${option.id}`}
-				>
-					{option.label}
-				</a>
-			))
-		}
-	</div>
+    <!-- Showcase menu -->
+    <div
+        class="hidden lg:flex flex-row justify-evenly items-center px-14 h-24 bg-white shadow">
+        {
+            showcaseMenuOptions.map((option) => (
+                <a
+                    class="hover-underline-animation font-poppins text-2xl text-center hover:text-purple-dark after:bg-purple-dark"
+                    href={`#${option.id}`}>
+                    {option.label}
+                </a>
+            ))
+        }
+    </div>
 
-	<VSCodePlugin />
+    <VSCodePlugin />
 
-	<BrighterScript/>
+    <BrighterScript />
 
-	<LinterFormatter/>
+    <LinterFormatter />
 
-	<PackageManager/>
+    <PackageManager />
 
-	<WhatsNew/>
+    <WhatsNew />
 
-	<JoinUs/>
+    <JoinUs />
 </Layout>

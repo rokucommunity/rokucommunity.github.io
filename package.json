@@ -10,8 +10,9 @@
     "prepreview": "npm run build",
     "preview": "astro preview",
     "astro": "astro",
-    "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint": "eslint \"src/**/*.{astro,ts}\"",
+    "check-format": "prettier --max-warnings=0 --config ./.prettierrc.json --check \"src/**/*.{astro,css,ts}\"",
+    "validate": "npm run lint && npm run check-format"
   },
   "dependencies": {
     "@astrojs/image": "^0.9.3",
@@ -29,6 +30,7 @@
     "@typescript-eslint/parser": "^5.40.0",
     "eslint": "^8.25.0",
     "eslint-plugin-astro": "^0.20.0",
-    "eslint-plugin-jsx-a11y": "^6.6.1"
+    "eslint-plugin-jsx-a11y": "^6.6.1",
+    "prettier-plugin-astro": "^0.6.0"
   }
 }

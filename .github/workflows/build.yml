@@ -1,0 +1,41 @@
+name: build
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+# Allow this job to clone the repo and create a page deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+      - uses: actions/setup-node@master
+        with:
+          node-version: "16.16.0"
+      - run: npm ci
+      - run: npm run build
+      - run: npm run validate
+
+  deploy:
+    #only deploy the site when pushing to the master branch
+    if: github.ref == 'refs/heads/master'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout your repository using git
+        uses: actions/checkout@v2
+      - name: Install, build, and upload your site
+        uses: withastro/action@v0
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1

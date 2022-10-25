@@ -1,10 +1,8 @@
 module.exports = {
-    extends: [
-        'plugin:astro/recommended'
-    ],
+    extends: ['plugin:astro/recommended'],
     overrides: [
         {
-        // Define the configuration for `.astro` file.
+            // Define the configuration for `.astro` file.
             files: ['*.astro', '*.ts'],
             // Allows Astro components to be parsed.
             parser: 'astro-eslint-parser',
@@ -27,7 +25,7 @@ module.exports = {
                 'method-signature-style': 'off',
                 'naming-convention': 'off',
                 'no-base-to-string': 'off',
-                'semi': 'error',
+                semi: 'error',
                 'no-confusing-void-expression': 'off',
                 'no-dynamic-delete': 'off',
                 'no-empty-function': 'off',
@@ -42,10 +40,7 @@ module.exports = {
                 //mitigating this sometimes results in undesirably verbose code. Should investigate enabling again in the future.
                 'no-unsafe-argument': 'off',
                 'object-curly-spacing': 'off',
-                'object-curly-spacing': [
-                    'error',
-                    'always'
-                ],
+                'object-curly-spacing': ['error', 'always'],
                 'no-shadow': 'off',
                 'no-this-alias': 'off',
                 //possibly disable this once we have converted all throw statements to actual errors
@@ -66,11 +61,11 @@ module.exports = {
                 'prefer-readonly': 'off',
                 'prefer-readonly-parameter-types': 'off',
                 'promise-function-async': 'off',
-                'quotes': [
+                quotes: [
                     'error',
-                    'double',
+                    'single',
                     {
-                        'allowTemplateLiterals': true
+                        allowTemplateLiterals: true
                     }
                 ],
                 'require-array-sort-compare': 'off',
@@ -79,7 +74,7 @@ module.exports = {
                 'sort-type-union-intersection-members': 'off',
                 'space-before-function-paren': 'off',
                 'strict-boolean-expressions': 'off',
-                'typedef': 'off',
+                typedef: 'off',
                 'unbound-method': 'off',
                 'unified-signatures': 'off',
                 'array-bracket-newline': 'off',
@@ -90,10 +85,10 @@ module.exports = {
                 'callback-return': 'off',
                 'capitalized-comments': 'off',
                 'class-methods-use-this': 'off',
-                'complexity': 'off',
+                complexity: 'off',
                 'consistent-return': 'off',
                 'consistent-this': 'off',
-                'curly': 'error',
+                curly: 'error',
                 'default-case': 'off',
                 'dot-location': 'off',
                 'dot-notation': 'off',
@@ -103,7 +98,7 @@ module.exports = {
                 'getter-return': 'off',
                 'guard-for-in': 'off',
                 'id-length': 'off',
-                'indent': 'off',
+                indent: 'off',
                 'init-declarations': 'off',
                 'line-comment-position': 'off',
                 'linebreak-style': 'off',
@@ -146,21 +141,15 @@ module.exports = {
                 'no-useless-escape': 'off',
                 'no-warning-comments': 'off',
                 'object-property-newline': 'off',
-                'object-shorthand': [
-                    'error',
-                    'never'
-                ],
-                'one-var': [
-                    'error',
-                    'never'
-                ],
+                'object-shorthand': ['error', 'never'],
+                'one-var': ['error', 'never'],
                 'padded-blocks': 'off',
                 'prefer-const': 'off',
                 'prefer-destructuring': 'off',
                 'prefer-named-capture-group': 'off',
                 'prefer-template': 'off',
                 'quote-props': 'off',
-                'radix': 'off',
+                radix: 'off',
                 'require-atomic-updates': 'off',
                 'require-unicode-regexp': 'off',
                 'sort-imports': 'off',
