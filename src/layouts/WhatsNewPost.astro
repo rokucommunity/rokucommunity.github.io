@@ -19,34 +19,30 @@ const allPosts = (await Astro.glob('/src/pages/whats-new/**/*.mdx'))
     // Reverse to show last three posts
     .reverse();
 
-const thisPost = allPosts.find(p => p.file === frontmatter.file) as MDXInstance<Record<string, any>>;
-
-const postsByYear: { year: string; posts: Record<string, any>[] }[] = [];
+const thisPost = allPosts.find(
+    (p) => p.file === frontmatter.file
+) as MDXInstance<Record<string, any>>;
+interface Post {
+    title: string;
+    url: string | undefined;
+    isCurrent: boolean;
+}
+const posts = new Map<string, Post>();
 
 for (const post of allPosts) {
     const fileArray = post.file.split('/');
     // Remove file name
     fileArray.pop();
-    const year = fileArray.pop();
-    const yearIndex = postsByYear.findIndex(e => e?.year === year);
 
-    const postData = {
+    //add an empty year entry
+    posts.set(post.frontmatter.date, {
         title: post.frontmatter.date,
-        url: post.url,
-        current: thisPost.file === post.file
-    };
-
-    if (yearIndex === -1) {
-        postsByYear.push({
-            year: String(year),
-            posts: [postData]
-        });
-    } else {
-        postsByYear[yearIndex]?.posts.push(postData);
-    }
+        url: post.url!,
+        isCurrent: thisPost.file === post.file
+    });
 }
 
-const headings = thisPost?.getHeadings().filter(h => h.depth < 3) ?? [];
+const headings = thisPost?.getHeadings().filter((h) => h.depth < 3) ?? [];
 ---
 
 <!DOCTYPE html>
@@ -60,28 +56,26 @@ const headings = thisPost?.getHeadings().filter(h => h.depth < 3) ?? [];
     <body>
         <div class="flex flex-row">
             <div class="p-11">
-                <p>What's new</p>
+                <p style="font-size: 1.6em">What's new</p>
                 <ol>
                     {
-                        postsByYear.map(postByYear => (
-                            <li>{postByYear.year}</li>
-                            <>
-                                {
-                                    postByYear.posts.map(post => (
-                                        <li class="pl-3">
-                                            <a
-                                                href={post.url}
-                                                style={`
-                                                    text-decoration: ${post.current ? 'underline' : 'none'};
-                                                    font-weight: ${post.current ? 'bold' : 'none'};
-                                                `}
-                                            >
-                                                {post.title}
-                                            </a>
-                                        </li>
-                                    ))
-                                }
-                            </>
+                        [...posts].map(([, post]) => (
+                            <li class="pl-3">
+                                <a
+                                    href={post.url}
+                                    style={`
+                                        text-decoration: ${
+                                            post.isCurrent
+                                                ? 'underline'
+                                                : 'none'
+                                        };
+                                        font-weight: ${
+                                            post.isCurrent ? 'bold' : 'none'
+                                        };
+                                    `}>
+                                    {post.title}
+                                </a>
+                            </li>
                         ))
                     }
                 </ol>
@@ -93,11 +87,9 @@ const headings = thisPost?.getHeadings().filter(h => h.depth < 3) ?? [];
                 <p>In this page</p>
                 <ol>
                     {
-                        headings.map(h => (
+                        headings.map((h) => (
                             <li style={`padding-left: ${8 * (h.depth - 1)}px;`}>
-                                <a href={`#${h.slug}`}>
-                                    {h.text}
-                                </a>
+                                <a href={`#${h.slug}`}>{h.text}</a>
                             </li>
                         ))
                     }
@@ -105,19 +97,19 @@ const headings = thisPost?.getHeadings().filter(h => h.depth < 3) ?? [];
             </div>
         </div>
         <Footer />
+        <style>
+            .markdown-body {
+                box-sizing: border-box;
+                min-width: 200px;
+                max-width: 980px;
+                padding: 45px;
+            }
+
+            @media (max-width: 767px) {
+                .markdown-body {
+                    padding: 15px;
+                }
+            }
+        </style>
     </body>
 </html>
-<style>
-    .markdown-body {
-        box-sizing: border-box;
-        min-width: 200px;
-        max-width: 980px;
-        padding: 45px;
-    }
-
-    @media (max-width: 767px) {
-        .markdown-body {
-            padding: 15px;
-        }
-    }
-</style>
