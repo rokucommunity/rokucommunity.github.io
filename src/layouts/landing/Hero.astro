@@ -1,57 +1,51 @@
 ---
-import { Image } from "@astrojs/image/components";
-import GithubWhiteLogo from "../../components/landing/GithubWhiteLogo.astro";
-import HeroWhatsNew from "../../components/landing/HeroWhatsNew.astro";
-import NewsletterCTA from "../../components/landing/NewsletterCTA.astro";
-import SlackWhiteLogo from "../../components/landing/SlackWhiteLogo.astro";
+import { Image } from '@astrojs/image/components';
+import GithubWhiteLogo from '../../components/landing/GithubWhiteLogo.astro';
+import HeroWhatsNew from '../../components/landing/HeroWhatsNew.astro';
+import NewsletterCTA from '../../components/landing/NewsletterCTA.astro';
+import SlackWhiteLogo from '../../components/landing/SlackWhiteLogo.astro';
 ---
 
 <div
-    class="hero-gradient flex flex-col md:justify-between px-7 md:px-14 py-11 md:pb-2.5 md:h-screen md:min-h-[668px]"
->
+    class="hero-gradient flex flex-col md:justify-between px-7 md:px-14 py-11 md:pb-2.5 md:h-screen md:min-h-[668px]">
     <!-- Top bar -->
     <div class="flex flex-col md:flex-row justify-between h-12 w-full">
-        <h1 class="text-center md:text-left font-poppins text-3xl font-bold md:w-max text-white">
+        <h1
+            class="text-center md:text-left font-poppins text-3xl font-bold md:w-max text-white">
             Roku Community
         </h1>
 
-        <div
-            class="hidden md:flex flex-row items-center justify-between w-80"
-        >
-            <HeroWhatsNew/>
-            <SlackWhiteLogo/>
-            <GithubWhiteLogo/>
+        <div class="hidden md:flex flex-row items-center justify-between w-80">
+            <HeroWhatsNew />
+            <SlackWhiteLogo />
+            <GithubWhiteLogo />
         </div>
     </div>
 
     <!-- Hero text and email input -->
     <div class="flex flex-col justify-between items-center md:h-[20rem] mt-9">
         <h2
-            class="font-poppins text-white max-w-[800px] text-center text-4xl md:text-5xl font-bold md:mt-0"
-        >
+            class="font-poppins text-white max-w-[800px] text-center text-4xl md:text-5xl font-bold md:mt-0">
             Our Goal is to make Roku Development <u>Better</u>
         </h2>
 
         <p
-            class="font-poppins text-white mt-4 md:mt-0 text-center text-2xl opacity-90 max-w-[629px]"
-        >
+            class="font-poppins text-white mt-4 md:mt-0 text-center text-2xl opacity-90 max-w-[629px]">
             We provide and maintain <b>Open Source</b> solutions to enhance your
             development workflows
         </p>
 
         <div
-            class="flex flex-col md:flex-row mt-4 md:mt-0 w-full md:justify-center"
-        >
-            <NewsletterCTA/>
+            class="flex flex-col md:flex-row mt-4 md:mt-0 w-full md:justify-center">
+            <NewsletterCTA />
         </div>
 
         <div
-            class="flex md:hidden flex-col items-center justify-center w-80 mt-8"
-        >
-            <HeroWhatsNew/>
+            class="flex md:hidden flex-col items-center justify-center w-80 mt-8">
+            <HeroWhatsNew />
             <div class="flex flex-row items-center justify-evenly w-full mt-4">
-                <SlackWhiteLogo/>
-                <GithubWhiteLogo/>
+                <SlackWhiteLogo />
+                <GithubWhiteLogo />
             </div>
         </div>
     </div>
@@ -73,29 +67,29 @@ import SlackWhiteLogo from "../../components/landing/SlackWhiteLogo.astro";
 
 <style>
     .hero-gradient {
-		background: radial-gradient(
-			166.56% 296.11% at 1.84% 4.24%,
-			#581b98 5.71%,
-			#d600c0 100%
-		);
-	}
+        background: radial-gradient(
+            166.56% 296.11% at 1.84% 4.24%,
+            #581b98 5.71%,
+            #d600c0 100%
+        );
+    }
 
     .float-up-down {
-		transform: translatey(0px);
-		animation: float 3s ease-in-out infinite;
-	}
+        transform: translatey(0px);
+        animation: float 3s ease-in-out infinite;
+    }
 
     @keyframes float {
-		0% {
-			transform: translatey(0px);
-		}
+        0% {
+            transform: translatey(0px);
+        }
 
-		50% {
-			transform: translatey(+10px);
-		}
+        50% {
+            transform: translatey(+10px);
+        }
 
-		100% {
-			transform: translatey(0px);
-		}
-	}
+        100% {
+            transform: translatey(0px);
+        }
+    }
 </style>

@@ -8,17 +8,23 @@ const { command, helperTextColor } = Astro.props;
 ---
 
 <div class="flex flex-col items-center">
-    <div class="wrapper flex flex-row items-center h-20 py-6 px-6 md:px-11 max-w-[80vw]">
-        <span class="text-white mr-4 text-2xl font-mono" unselectable="on">$</span>
-        <p class="text-white text-2xl font-mono overflow-x-scroll bg-none">{command}</p>
+    <div
+        class="wrapper flex flex-row items-center h-20 py-6 px-6 md:px-11 max-w-[80vw]">
+        <span class="text-white mr-4 text-2xl font-mono" unselectable="on"
+            >$</span
+        >
+        <p class="text-white text-2xl font-mono overflow-x-scroll bg-none">
+            {command}
+        </p>
     </div>
-    <span class={`${helperTextColor} font-mono select-none mt-2`}>Tap once to select command</span>
+    <span class={`${helperTextColor} font-mono select-none mt-2`}
+        >Tap once to select command</span
+    >
 </div>
-
 
 <style>
     .wrapper {
-        background: #35105C;
+        background: #35105c;
         border-radius: 10px;
     }
 
@@ -34,7 +40,7 @@ const { command, helperTextColor } = Astro.props;
     }
 
     span {
-        -webkit-user-select: none; /* Safari */        
+        -webkit-user-select: none; /* Safari */
         -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* IE10+/Edge */
         user-select: none; /* Standard */

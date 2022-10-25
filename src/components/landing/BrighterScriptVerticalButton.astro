@@ -9,34 +9,49 @@ export interface Props {
 
 const { title, smallText, href, iconUrl, disabled = false } = Astro.props;
 ---
-{disabled ? (
-    <div class="flex flex-col justify-end p-6 mb-8 lg:mb-0 h-52 lg:h-80" style={`background: url('${iconUrl}');`}>
-        {smallText && (
-            <p class="font-sans text-base uppercase text-purple-dark">{smallText}</p>
-        )}
-        <p class="font-sans font-bold leading-9 text-purple-dark capitalize text-3xl">{title}</p>
-    </div>
-) : (
-<a href={href}>
-    <div class="enabled flex flex-col justify-end p-6 cursor-pointer mb-8 lg:mb-0 h-52 lg:h-80" style={`background: url('${iconUrl}');`}>
-        {smallText && (
-            <p class="font-sans text-base uppercase text-purple-dark">{smallText}</p>
-        )}
-        <p class="font-sans font-bold leading-9 text-purple-dark capitalize text-3xl">{title}</p>
-    </div>
-</a>
-)}
+
+{
+    disabled ? (
+        <div
+            class="flex flex-col justify-end p-6 mb-8 lg:mb-0 h-52 lg:h-80"
+            style={`background: url('${iconUrl}');`}>
+            {smallText && (
+                <p class="font-sans text-base uppercase text-purple-dark">
+                    {smallText}
+                </p>
+            )}
+            <p class="font-sans font-bold leading-9 text-purple-dark capitalize text-3xl">
+                {title}
+            </p>
+        </div>
+    ) : (
+        <a href={href}>
+            <div
+                class="enabled flex flex-col justify-end p-6 cursor-pointer mb-8 lg:mb-0 h-52 lg:h-80"
+                style={`background: url('${iconUrl}');`}>
+                {smallText && (
+                    <p class="font-sans text-base uppercase text-purple-dark">
+                        {smallText}
+                    </p>
+                )}
+                <p class="font-sans font-bold leading-9 text-purple-dark capitalize text-3xl">
+                    {title}
+                </p>
+            </div>
+        </a>
+    )
+}
 <style>
     div {
         width: 271px;
         height: 360px;
-        background: #FDFDFD;
+        background: #fdfdfd;
         /* purple_dark */
-        border: 2px solid #581B98;
+        border: 2px solid #581b98;
         border-radius: 20px;
     }
 
     .enabled:hover {
-        box-shadow: -10px 5px #9C1DE7;
+        box-shadow: -10px 5px #9c1de7;
     }
 </style>

@@ -68,7 +68,7 @@ module.exports = {
                 'promise-function-async': 'off',
                 'quotes': [
                     'error',
-                    'double',
+                    'single',
                     {
                         'allowTemplateLiterals': true
                     }
