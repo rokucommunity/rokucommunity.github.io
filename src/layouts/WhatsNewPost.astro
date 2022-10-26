@@ -1,5 +1,9 @@
 ---
 import type { MDXInstance } from 'astro';
+import GithubWhiteLogo from '../components/landing/GithubWhiteLogo.astro';
+import SlackWhiteLogo from '../components/landing/SlackWhiteLogo.astro';
+import WhatsNewHeadings from '../components/WhatsNewHeadings.astro';
+import WhatsNewUpdates from '../components/WhatsNewUpdates.astro';
 import Footer from './Footer.astro';
 import './github-markdown.css';
 
@@ -22,6 +26,9 @@ const allPosts = (await Astro.glob('/src/pages/whats-new/**/*.mdx'))
 const thisPost = allPosts.find(
     (p) => p.file === frontmatter.file
 ) as MDXInstance<Record<string, any>>;
+
+// TODO: This interface is duplicated in WhatsNewUpdates.astro
+// externalize into a .d.ts file
 interface Post {
     title: string;
     url: string | undefined;
@@ -51,50 +58,31 @@ const headings = thisPost?.getHeadings().filter((h) => h.depth < 3) ?? [];
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
-        <title>{frontmatter.date}</title>
+        <title>Roku Community {frontmatter.date}</title>
     </head>
-    <body>
+    <body class="dark:bg-[#0D1117]">
+        <div
+            class="flex flex-row justify-between items-center bg-purple-dark p-7">
+            <a href="/" class="text-2xl font-poppins text-white font-bold">
+                Roku Community
+            </a>
+            <div class="flex flex-row">
+                <div class="mr-8">
+                    <SlackWhiteLogo />
+                </div>
+                <GithubWhiteLogo />
+            </div>
+        </div>
         <div class="flex flex-row">
-            <div class="p-11">
-                <p style="font-size: 1.6em">What's new</p>
-                <ol>
-                    {
-                        [...posts].map(([, post]) => (
-                            <li class="pl-3">
-                                <a
-                                    href={post.url}
-                                    style={`
-                                        text-decoration: ${
-                                            post.isCurrent
-                                                ? 'underline'
-                                                : 'none'
-                                        };
-                                        font-weight: ${
-                                            post.isCurrent ? 'bold' : 'none'
-                                        };
-                                    `}>
-                                    {post.title}
-                                </a>
-                            </li>
-                        ))
-                    }
-                </ol>
+            <WhatsNewUpdates posts={posts} _class="hidden lg:inline" />
+            <div class="flex flex-col">
+                <WhatsNewHeadings headings={headings} _class="lg:hidden" />
+                <div class="markdown-body !mt-2 !mb-9 !lg:my-0">
+                    <slot />
+                </div>
+                <WhatsNewUpdates posts={posts} _class="lg:hidden" />
             </div>
-            <div class="markdown-body">
-                <slot />
-            </div>
-            <div class="p-11">
-                <p>In this page</p>
-                <ol>
-                    {
-                        headings.map((h) => (
-                            <li style={`padding-left: ${8 * (h.depth - 1)}px;`}>
-                                <a href={`#${h.slug}`}>{h.text}</a>
-                            </li>
-                        ))
-                    }
-                </ol>
-            </div>
+            <WhatsNewHeadings headings={headings} _class="hidden lg:inline" />
         </div>
         <Footer />
         <style>
@@ -109,6 +97,13 @@ const headings = thisPost?.getHeadings().filter((h) => h.depth < 3) ?? [];
                 .markdown-body {
                     padding: 15px;
                 }
+            }
+            .hero-gradient {
+                background: radial-gradient(
+                    166.56% 296.11% at 1.84% 4.24%,
+                    #581b98 5.71%,
+                    #d600c0 100%
+                );
             }
         </style>
     </body>

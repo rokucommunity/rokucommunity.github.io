@@ -1,0 +1,45 @@
+---
+interface Post {
+    title: string;
+    url: string | undefined;
+    isCurrent: boolean;
+}
+
+export interface Props {
+    posts: Map<string, Post>,
+    _class?: string;
+}
+
+const { _class, posts } = Astro.props;
+---
+<div class={`py-11 dark:bg-[#161e27] bg-[#f1f1f1] w-full lg:w-[320px] ${_class}`}>
+    <p
+        class="text-lg font-bold uppercase text-purple-dark dark:text-white mb-4 pl-7">
+        Updates
+    </p>
+    <ol>
+        {
+            [...posts].map(([, post]) => (
+                <a href={post.url}>
+                    <li
+                        class={`
+                            px-11
+                            py-5
+                            hover:font-bold
+                            hover:bg-[#fff]
+                            dark:hover:bg-purple-dark
+                            dark:text-white
+                            hover:text-purple-dark dark:hover:text-white
+                            ${
+                                post.isCurrent
+                                    ? 'text-purple-dark dark:text-white underline font-bold bg-white dark:bg-purple-dark'
+                                    : 'no-underline font-normal bg-[#f1f1f1] dark:bg-[#161e27]'
+                            }
+                            `}>
+                        {post.title}
+                    </li>
+                </a>
+            ))
+        }
+    </ol>
+</div>
