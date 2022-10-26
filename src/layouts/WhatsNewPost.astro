@@ -44,7 +44,7 @@ for (const post of allPosts) {
     //add an empty year entry
     posts.set(post.frontmatter.date, {
         title: post.frontmatter.date,
-        url: post.url!,
+        url: post.url,
         isCurrent: thisPost.file === post.file
     });
 }
