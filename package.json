@@ -12,7 +12,8 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint \"src/**/*.{astro,ts}\"",
-    "check-format": "prettier --config ./.prettierrc.json --check \"src/**/*.{astro,css,ts}\""
+    "check-format": "prettier --config ./.prettierrc.json --check \"src/**/*.{astro,css,ts}\"",
+    "format": "npm run check-format -- -w"
   },
   "dependencies": {
     "@astrojs/image": "^0.9.3",

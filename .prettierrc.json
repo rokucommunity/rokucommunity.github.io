@@ -4,7 +4,7 @@
     ],
     "trailingComma": "none",
     "tabWidth": 4,
-    "endOfLine": "lf",
+    "endOfLine": "auto",
     "semi": true,
     "singleQuote": true,
     "bracketSameLine": true
