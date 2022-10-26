@@ -4,6 +4,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "preversion": "npm run lint && npm run check-format && npm run build",
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
@@ -11,8 +12,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint \"src/**/*.{astro,ts}\"",
-    "check-format": "prettier --max-warnings=0 --config ./.prettierrc.json --check \"src/**/*.{astro,css,ts}\"",
-    "validate": "npm run lint && npm run check-format"
+    "check-format": "prettier --config ./.prettierrc.json --check \"src/**/*.{astro,css,ts}\""
   },
   "dependencies": {
     "@astrojs/image": "^0.9.3",
