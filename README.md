@@ -6,8 +6,8 @@ The repository for https://rokucommunity.github.io
     ```bash
     npm install
     ```
-2. run the `watch` task to spin up a local server with livereload support
+2. run the `start` task to spin up a local server with livereload support
     ```bash
-    npm run watch
+    npm run start
     ```
 3. Edit files and see the site reload in realtime.
