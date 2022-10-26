@@ -6,13 +6,15 @@ interface Post {
 }
 
 export interface Props {
-    posts: Map<string, Post>,
+    posts: Map<string, Post>;
     _class?: string;
 }
 
 const { _class, posts } = Astro.props;
 ---
-<div class={`py-11 dark:bg-[#161e27] bg-[#f1f1f1] w-full lg:w-[320px] ${_class}`}>
+
+<div
+    class={`py-11 dark:bg-[#161e27] bg-[#f1f1f1] w-full lg:w-[320px] ${_class}`}>
     <p
         class="text-lg font-bold uppercase text-purple-dark dark:text-white mb-4 pl-7">
         Updates
