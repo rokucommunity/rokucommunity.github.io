@@ -1,4 +1,3 @@
-
 export const companies = [
     {
         img: '/images/logos/fubo.png',
