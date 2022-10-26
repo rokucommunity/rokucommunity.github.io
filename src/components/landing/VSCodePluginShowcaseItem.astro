@@ -36,7 +36,8 @@ const containerClass = `
             {description}
         </p>
     </div>
-    <div>
+    <div class="flex flex-col">
         <img src={imgUrl} alt={imgAlt} class="mt-4 lg:mt-0" />
+        <slot name="attribution"></slot>
     </div>
 </div>
