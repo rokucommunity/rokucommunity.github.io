@@ -1,10 +1,10 @@
 ---
+import Layout from './Layout.astro';
 import type { MDXInstance } from 'astro';
 import GithubWhiteLogo from '../components/landing/GithubWhiteLogo.astro';
 import SlackWhiteLogo from '../components/landing/SlackWhiteLogo.astro';
 import WhatsNewHeadings from '../components/WhatsNewHeadings.astro';
 import WhatsNewUpdates from '../components/WhatsNewUpdates.astro';
-import Footer from './Footer.astro';
 import './github-markdown.css';
 
 export interface Props {
@@ -52,40 +52,15 @@ for (const post of allPosts) {
 const headings = thisPost?.getHeadings().filter((h) => h.depth < 3) ?? [];
 ---
 
-<!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
-        <link
-            rel="apple-touch-icon"
-            sizes="180x180"
-            href="/apple-touch-icon.png"
-        />
-        <link
-            rel="icon"
-            type="image/png"
-            sizes="32x32"
-            href="/favicon-32x32.png"
-        />
-        <link
-            rel="icon"
-            type="image/png"
-            sizes="16x16"
-            href="/favicon-16x16.png"
-        />
-        <link rel="manifest" href="/site.webmanifest" />
-        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#542ec2" />
-        <meta name="msapplication-TileColor" content="#542ec2" />
-        <meta name="theme-color" content="#542ec2" />
-        <title>RokuCommunity {frontmatter.date}</title>
-    </head>
-    <body class="dark:bg-[#0D1117]">
+<Layout title={`${thisPost?.frontmatter?.date ?? ''} - What's New`}>
+    <div class="dark:bg-[#0D1117]">
         <div
-            class="flex flex-row justify-between items-center bg-purple-dark p-7">
-            <a href="/" class="text-2xl font-poppins text-white font-bold">
-                RokuCommunity
+            class="flex flex-row justify-between items-center bg-purple-dark p-4">
+            <a class="flex flex-row justify-center" href="/">
+                <img
+                    src="/images/logos/RokuCommunity.png"
+                    style="height: 48px; max-width: 100%;"
+                />
             </a>
             <div class="flex flex-row">
                 <div class="mr-8">
@@ -105,7 +80,6 @@ const headings = thisPost?.getHeadings().filter((h) => h.depth < 3) ?? [];
             </div>
             <WhatsNewHeadings headings={headings} _class="hidden lg:inline" />
         </div>
-        <Footer />
         <style>
             .markdown-body {
                 box-sizing: border-box;
@@ -127,12 +101,5 @@ const headings = thisPost?.getHeadings().filter((h) => h.depth < 3) ?? [];
                 );
             }
         </style>
-
-        <!-- Cloudflare Web Analytics -->
-        <script
-            defer
-            src="https://static.cloudflareinsights.com/beacon.min.js"
-            data-cf-beacon='{"token": "cd8ec4ebbee74873ad913e4a1a962128"}'
-        ></script><!-- End Cloudflare Web Analytics -->
-    </body>
-</html>
+    </div>
+</Layout>
