@@ -17,8 +17,27 @@ const { title } = Astro.props;
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
         <meta name="generator" content={Astro.generator} />
-        <link rel="icon" href="/favicon-128.png" sizes="any" />
-        <!-- <link rel="icon" href="/favicon.svg" type="image/svg+xml"> -->
+        <link
+            rel="apple-touch-icon"
+            sizes="180x180"
+            href="/apple-touch-icon.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="32x32"
+            href="/favicon-32x32.png"
+        />
+        <link
+            rel="icon"
+            type="image/png"
+            sizes="16x16"
+            href="/favicon-16x16.png"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#542ec2" />
+        <meta name="msapplication-TileColor" content="#542ec2" />
+        <meta name="theme-color" content="#542ec2" />
         <title>{title}</title>
     </head>
     <body>
