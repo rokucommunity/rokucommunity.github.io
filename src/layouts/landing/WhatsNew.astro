@@ -12,6 +12,14 @@ const posts = _posts
     // Reverse to show last three posts
     .reverse()
     .slice(0, 3);
+
+let postsJustifyClass = 'justify-between';
+
+if (posts.length === 1) {
+    postsJustifyClass = 'justify-start';
+} else if (posts.length < 3) {
+    postsJustifyClass = 'justify-evenly';
+}
 ---
 
 <div
@@ -26,9 +34,7 @@ const posts = _posts
         </p>
     </div>
     <div
-        class={`w-full flex flex-row flex-wrap ${
-            posts.length < 3 ? 'justify-evenly' : 'justify-between'
-        } items-start`}>
+        class={`w-full flex flex-row flex-wrap ${postsJustifyClass} items-start`}>
         {
             posts.map((post) => (
                 <a href={post.url} class="w-full max-w-sm">
