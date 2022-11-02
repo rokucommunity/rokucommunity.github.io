@@ -2,18 +2,16 @@
 
 These posts describe the monthly updates of the projects in our community.
 
--   Each month must be created inside a `year` folder and named with a format that orders them in **ascending order**. For example:
+-   Each file must have the file format `YYYY-MM-MonthName`. Examples:
 
-```
-whats-new/
-├── 2022
-│   ├── 09-september.mdx
-│   ├── 10-october.mdx
-│   ├── 11-november.mdx
-│   └── 12-december.mdx
-├── 2023
-    └── 01-january.mdx
-```
+    ```graphql
+    whats-new/
+    ├── 2022-11-november.mdx
+    └── 2022-12-december.mdx
+    └── 2023-01-january.mdx
+    ```
+
+    `MonthName` should be the month that the work occurred in. So for example `2022-10-October.mdx` will include all changes that occured between October 1 - October 31, regardless of when the document is actually published to the website.
 
 -   Any post with a file name starting with `_` will be ignored. This is useful for keeping posts private. This `readme.md` file is also ignored.
 
