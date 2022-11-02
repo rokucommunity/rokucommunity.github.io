@@ -73,7 +73,16 @@ const headings = thisPost?.getHeadings().filter((h) => h.depth < 3) ?? [];
             <WhatsNewUpdates posts={posts} _class="hidden lg:inline" />
             <div class="flex flex-col">
                 <WhatsNewHeadings headings={headings} _class="lg:hidden" />
-                <div class="markdown-body !mt-2 !mb-9 !lg:my-0">
+                <div class={`
+                    markdown-body
+                    !max-w-[100vw]
+                    !mt-2
+                    !mb-9
+                    !lg:my-0
+                    [&>h3]:!mt-8 [&>h3]:!mb-4
+                    [&>ul]:list-disc
+                    [&>p>img]:mt-4
+                `}>
                     <slot />
                 </div>
                 <WhatsNewUpdates posts={posts} _class="lg:hidden" />
