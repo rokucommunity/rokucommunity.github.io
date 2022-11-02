@@ -42,3 +42,20 @@ This can be very useful when recording a presentation, as it will conceal all of
 ### Fixed crash when device encountered certain rendezvous log entries ([roku-debug#108](https://github.com/rokucommunity/roku-debug/pull/108))
 
 ### Added goto definition for enum statements and enum members ([brighterscript#715](https://github.com/rokucommunity/brighterscript/pull/715))
+
+## BrighterScript Changes
+### Added support for nested namespaces ([brighterscript#708](https://github.com/rokucommunity/brighterscript/pull/708))
+![go-to-enum](https://user-images.githubusercontent.com/2544493/199565423-566e5d5f-b2ca-4afb-9d02-7656bd540b90.gif)
+Thanks to [Elliot Nelson](https://github.com/elliot-nelson) for landing this much-requested feature!
+
+### Added syntax and transpile support for [continue statement](https://developer.roku.com/docs/references/brightscript/language/program-statements.md#continue-for--continue-while) ([brighterscript#697](https://github.com/rokucommunity/brighterscript/pull/697))
+
+### Bug fixes and performance improvements
+    - fix token location for bs1042 ([brighterscript#719](https://github.com/rokucommunity/brighterscript/pull/719))
+    - fix signature help resolution for callexpressions ([brighterscript#707](https://github.com/rokucommunity/brighterscript/pull/707))
+    - fix transpilation of simple else block with leading comment ([brighterscript#712](https://github.com/rokucommunity/brighterscript/pull/712))
+    - fix enum error for negative values ([brighterscript#703](https://github.com/rokucommunity/brighterscript/pull/703))
+    - fix: finds and includes more deeply embedded expressions ([brighterscript#696](https://github.com/rokucommunity/brighterscript/pull/696))
+    - fix xml parse bug during benchmarking ([#brighterscript0805c1f](https://github.com/rokucommunity/brighterscript/commit/0805c1f))
+    - fix: scope validation performance boost ([brighterscript#656](https://github.com/rokucommunity/brighterscript/pull/656))
+    - fix: error during transpile with duplicate file paths ([brighterscript#691](https://github.com/rokucommunity/brighterscript/pull/691))
