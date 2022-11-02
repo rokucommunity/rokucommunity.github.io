@@ -1,0 +1,44 @@
+---
+date: October 2022
+summary: New website, new logo, and some extension fixes
+layout: ../../layouts/WhatsNewPost.astro
+
+---
+
+# October 2022
+
+## Brand new website!
+We are pleased to present our brand new website, [rokucommunity.github.io](https://rokucommunity.github.io). This is a great resource for showcasing all of the different projects and tools that are managed by RokuCommunity.
+
+A huge shout out to [Arturo Cuya](https://github.com/arturocuya) for the fantastic work designing and building the site.
+
+![image](/images/screenshots/website-page-1.png)
+
+## New logo
+We finally have a logo! You should be able to see this on our website
+
+![image](/images/screenshots/website-logo.png)
+
+as well as on our GitHub organization.
+![image](/images/screenshots/github-org-logo.png)
+
+## VSCode Extension Updates
+We've added several new features to the BrightScript language extension for VSCode.
+
+
+### All launch configuration settings are now available in user/workspace settings under the `brightscript.debug` key ([#438](https://github.com/rokucommunity/vscode-brightscript-language/pull/438))
+    ![image](https://user-images.githubusercontent.com/2544493/199561488-18ae8872-d3b7-4cdf-aeed-98efdab00fc9.png)
+
+
+### The "clear rendezvous history" button has been moved out of the menu and into the title bar of that section ([#444](https://github.com/rokucommunity/vscode-brightscript-language/pull/444))
+    ![image](/images/screenshots/clear-rendezvous-button.png)
+
+### Rendezvous events can now be cleared even when debug session is not running. ([#444](https://github.com/rokucommunity/vscode-brightscript-language/pull/444))
+
+### Added a `brightscript.deviceDiscovery.concealDeviceInfo` option to obscure the device-info ([#443](https://github.com/rokucommunity/vscode-brightscript-language/pull/443))
+This can be very useful when recording a presentation, as it will conceal all of your Roku's sensitive information. All of the device IDs in the screenshot below have been obscured.
+![image](https://user-images.githubusercontent.com/2544493/199562421-ad01b93f-712f-4f8f-9d52-853897a87bca.png)
+
+### Fixed crash when device encountered certain rendezvous log entries ([roku-debug#108](https://github.com/rokucommunity/roku-debug/pull/108))
+
+### Added goto definition for enum statements and enum members ([brighterscript#715](https://github.com/rokucommunity/brighterscript/pull/715))
