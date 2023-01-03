@@ -3,7 +3,7 @@
     "tasks": [
         {
             "label": "create-whats-new",
-            "command": "npm run create-whats-new -- --force --year 2022 --month november",
+            "command": "npm run create-whats-new -- --force --year 2022 --month november --noclear",
             "type": "shell",
             "group": {
                 "kind": "test",

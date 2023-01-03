@@ -47,7 +47,9 @@ class Runner {
         }
 
         console.log('Creating tempDir', this.tempDir);
-        fsExtra.emptyDirSync(this.tempDir);
+        if (this.emptyTempDirOnRun) {
+            fsExtra.emptyDirSync(this.tempDir);
+        }
 
         // await Promise.all(
         //     this.projects.map(async project => {
@@ -60,7 +62,13 @@ class Runner {
         this.write();
     }
 
+    /**
+     * Should the temp dir be deleted before running
+     */
+    private emptyTempDirOnRun = false;
+
     private configure(options: RunnerOptions) {
+        this.emptyTempDirOnRun = options.noclear === true ? false : true;
         this.force = options.force ?? false;
         this.cwd = s(options.cwd ?? process.cwd());
         this.tempDir = path.resolve(this.cwd, options.tempDir ?? s`${__dirname}/../.tmp/whatsnew`);
@@ -133,8 +141,11 @@ class Runner {
     }
 
     private async cloneProject(project: Project) {
-        this.log(project, `Cloning ${project.repositoryUrl} `);
-        await exec(`git clone "${project.repositoryUrl}" "${project.dir}"`);
+        const dirExists = await fsExtra.pathExists(project.dir);
+        this.log(project, `Cloning ${project.repositoryUrl}${dirExists ? '(skipped)' : ''}`);
+        if (!dirExists) {
+            await exec(`git clone "${project.repositoryUrl}" "${project.dir}"`);
+        }
     }
 
     private write() {
@@ -246,6 +257,7 @@ interface RunnerOptions {
     force?: boolean;
     year?: number;
     month?: number | string;
+    noclear?: boolean;
 }
 
 const options = yargs(hideBin(process.argv))
@@ -253,6 +265,7 @@ const options = yargs(hideBin(process.argv))
     .help('help', 'View help information about this tool.')
     .option('projects', { type: 'array', description: 'A list of the projects that will be used for this whats-new page?', default: projects })
     .option('force', { type: 'boolean', description: 'Should the whats-new post be created even if it will overwrite a previous one?', default: false })
+    .option('noclear', { type: 'boolean', description: 'Don\'t clear the temp dir (mostly useful for testing)', default: false })
     .option('month', { type: 'string', description: 'The month the post should be generated for' })
     .option('year', { type: 'number', description: 'The year the should be generated for' })
     .argv as unknown as RunnerOptions;

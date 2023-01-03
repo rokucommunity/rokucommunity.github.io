@@ -19,7 +19,8 @@
                 "--year",
                 "2022",
                 "--month",
-                "november"
+                "november",
+                "--noclear"
 			],
 			"cwd": "${workspaceRoot}",
 			"internalConsoleOptions": "openOnSessionStart"
