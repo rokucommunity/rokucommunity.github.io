@@ -1,0 +1,6 @@
+ul { list-style: disc outside ;}
+ul ul { list-style: circle outside ;}
+ul ul ul {list-style: square outside ;}
+ul ul ul ul {list-style: disc outside ;}
+ul ul ul ul ul {list-style: square outside ;}
+ul ul ul ul ul ul {list-style: circle outside ;}

@@ -154,28 +154,75 @@ class Runner {
             `date: ${monthNames[this.startDate.getMonth()]} ${this.startDate.getFullYear()}`,
             `summary: Changes to ${this.projects.filter(x => x.releases.length > 0).map(x => x.name).join(', ')}`,
             `layout: ../../layouts/WhatsNewPost.astro`,
-            `---`
+            `---`,
+            `# Overview`,
+            ``,
+            `# Editor`,
+            ``,
+            `# Debugging`,
+            ``,
+            `# Formatting`,
+            ``,
+            `# Language Features`,
+            ``,
+            `# BrighterScript`,
+            ``,
+            `# Preview features`,
+            ``,
+            `# Documentation`,
+            ``,
+            ``,
+            `# TODO`,
+            `***Move the items in this list to the appropriate section above, then delete this section*`,
+            ...this.projects.map(project => {
+                return project.releases.map(release => {
+                    return release.commits.map(commit => {
+                        if (commit.pullRequestId) {
+                            return `${project.name}: ${commit.message} ([#${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`;
+                        } else {
+                            return `${project.name}: ${commit.message} ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
+                        }
+                    });
+                });
+            }).flat().flat().map(x => ` - ${x}`)
         ] as string[];
+
+        result.push(
+            '# Thank you',
+            `Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:`
+        );
         for (const project of this.projects) {
             //skip projects that had no releases this month
             if (project.releases.length === 0) {
                 continue;
             }
-            result.push(`## ${project.name}`);
-            for (const release of project.releases) {
-                result.push(`### ${release.version}`);
-                for (const commit of release.commits) {
-                    let message = ` - ${commit.message}`;
-                    if (commit.pullRequestId) {
-                        message += ` ([#${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`;
-                    } else {
-                        message += ` ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
-                    }
-                    result.push(message);
+            result.push('', `Contributions to [${project.name}](${project.repositoryUrl}):`);
+            for (const [, commits] of this.groupCommitsByUser(project)) {
+                const { author } = commits[0];
+                result.push(` - [@${author.username} (${author.name})](${author.profileUrl})`);
+                for (const commit of commits) {
+                    result.push(`    - ${commit.message}`);
                 }
             }
         }
         await fsExtra.outputFile(this.outputPath, result.join('\n'));
+    }
+
+    private groupCommitsByUser(project: Project) {
+        const result = new Map<string, Commit[]>();
+        for (const release of project.releases) {
+            const commits = [...release.commits];
+            //group the commits by email address
+            while (commits.length > 0) {
+                const commit = commits.shift();
+                const email = commit.author.email.toLowerCase();
+                if (!result.has(email)) {
+                    result.set(email, []);
+                }
+                result.get(email).push(commit);
+            }
+        }
+        return result;
     }
 
     /**
@@ -234,7 +281,13 @@ class Runner {
                     hash: hash,
                     branchInfo: branchInfo,
                     message: message ?? x,
-                    pullRequestId: prNumber
+                    pullRequestId: prNumber,
+                    author: {
+                        name: 'Bronley Plumb',
+                        email: 'bronley@gmail.com',
+                        username: 'TwitchBronBron',
+                        profileUrl: 'https://github.com/TwitchBronBron'
+                    }
                 };
             })
             //exclude version-only commit messages
@@ -257,6 +310,12 @@ interface Commit {
     hash: string;
     branchInfo: string;
     message: string;
+    author: {
+        name: string;
+        username: string;
+        email: string;
+        profileUrl: string;
+    };
     /**
      * The ID of the pull request on github
      */
