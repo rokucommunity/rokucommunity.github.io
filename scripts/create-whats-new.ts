@@ -59,7 +59,7 @@ class Runner {
         //     })
         // );
 
-        this.write();
+        await this.write();
     }
 
     /**
@@ -148,7 +148,7 @@ class Runner {
         }
     }
 
-    private write() {
+    private async write() {
         let result = [
             `---`,
             `date: ${monthNames[this.startDate.getMonth()]} ${this.startDate.getFullYear()}`,
@@ -156,14 +156,34 @@ class Runner {
             `layout: ../../layouts/WhatsNewPost.astro`,
             `---`
         ] as string[];
-        fsExtra.outputFileSync(this.outputPath, result.join('\n'));
+        for (const project of this.projects) {
+            //skip projects that had no releases this month
+            if (project.releases.length === 0) {
+                continue;
+            }
+            result.push(`## ${project.name}`);
+            for (const release of project.releases) {
+                result.push(`### ${release.version}`);
+                for (const commit of release.commits) {
+                    let message = ` - ${commit.message}`;
+                    if (commit.pullRequestId) {
+                        message += ` ([#${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`;
+                    } else {
+                        message += ` ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
+                    }
+                    result.push(message);
+                }
+            }
+        }
+        await fsExtra.outputFile(this.outputPath, result.join('\n'));
     }
 
     /**
      * Find all the releases for a given date range, including the leading and trailing releases that are outside the date range
      */
     private async getReleases(project: Project): Promise<Release[]> {
-        this.log(project, `Finding releases between ${dayjs(this.startDate).format('YYYY-MM-DD')} and ${dayjs(this.endDate).format('YYYY-MM-DD')}`);
+        this.log(project, `Finding releases between ${dayjs(this.startDate).format('YYYY-MM-DD')
+            } and ${dayjs(this.endDate).format('YYYY-MM-DD')} `);
         /**
          * generates output like:
          *      2022-11-03 16:01:48 -0400  (tag: v0.60.5)
