@@ -31,6 +31,8 @@
     "@types/node": "^18.11.4",
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
+    "brighterscript": "^0.61.2",
+    "dayjs": "^1.11.7",
     "eslint": "^8.26.0",
     "eslint-plugin-astro": "^0.20.0",
     "eslint-plugin-jsx-a11y": "^6.6.1",

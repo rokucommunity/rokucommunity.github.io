@@ -9,8 +9,11 @@ import * as childProcess from 'child_process';
 import * as util from 'util';
 const exec = util.promisify(childProcess.exec);
 import chalk from 'chalk';
+import { standardizePath as s } from 'brighterscript';
+import dayjs from 'dayjs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
+import semver from 'semver';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -27,39 +30,15 @@ const projects = [
     'ropm',
     'roku-report-analyzer',
     'roku-promise'
-] as Array<Project | string>;
+];
 
 class Runner {
     constructor(
         options: RunnerOptions
     ) {
         console.log(options);
-        Object.assign(this, options);
-        this.startDate = new Date(options.year, options.month, 1);
-        this.endDate = new Date(options.year, options.month + 1, 1);
+        this.configure(options);
     }
-
-    private projects: Project[];
-    private force: boolean;
-    /**
-     * The very first moment of the first day of the month (i.e. 11/1 - 11/31, this value should be 11/1 00:00:00)
-     */
-    private startDate: Date;
-    /**
-     * Should be the very first moment of the next day. (i.e. 11/1 - 11/31, this value should be 12/1 00:00:00)
-     */
-    private endDate: Date;
-
-    /**
-     * The path to the whatsnew file that will be created in this script
-     */
-    private get outputPath() {
-        return path.normalize(
-            path.join(__dirname, `../src/pages/whats-new/${this.startDate.getFullYear()}-${this.startDate.getMonth() + 1}-${monthNames[this.startDate.getMonth()]}.mdx`)
-        );
-    }
-
-    private tempDir = path.normalize(path.join(__dirname, '/../.tmp/whatsnew'));
 
     public async run() {
         //fail if we already have a document, and we're not forcing
@@ -81,11 +60,88 @@ class Runner {
         this.write();
     }
 
+    private configure(options: RunnerOptions) {
+        this.force = options.force ?? false;
+        this.cwd = s(options.cwd ?? process.cwd());
+        this.tempDir = path.resolve(this.cwd, options.tempDir ?? s`${__dirname}/../.tmp/whatsnew`);
+
+        //construct the date range
+        const today = new Date();
+        const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        const firstDayOfPreviousMonth = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth() - 1, 1);
+        let monthIndex = monthNames.findIndex(x => x.toLocaleLowerCase().startsWith(options.month?.toString().toLowerCase()));
+        if (monthIndex < 0) {
+            monthIndex = firstDayOfPreviousMonth.getMonth();
+        }
+        let year = options.year;
+        if (typeof year !== 'number') {
+            year = firstDayOfPreviousMonth.getFullYear();
+        }
+
+        //build start and end dates so we can do >= startDate && < endDate
+        this.startDate = new Date(options.year, monthIndex, 1);
+        this.endDate = new Date(options.year, monthIndex + 1, 1);
+
+        this.projects = (options.projects ?? projects).map(x => {
+            let project = {
+                releases: []
+            } as Project;
+            if (typeof x === 'string') {
+                project.name = x;
+                project.repositoryUrl = `https://github.com/RokuCommunity/${project.name}`;
+                project.dir = s`${this.tempDir}/${x}`;
+            }
+            let url = project.repositoryUrl;
+            if (!url) {
+                project.repositoryUrl = `https://github.com/rokucommunity/${project.name}`;
+            }
+
+            return project;
+        });
+    }
+
+    private projects: Project[];
+    private force: boolean;
+    /**
+     * The very first moment of the first day of the month (i.e. 11/1 - 11/31, this value should be 11/1 00:00:00)
+     */
+    private startDate: Date;
+    /**
+     * Should be the very first moment of the next day. (i.e. 11/1 - 11/31, this value should be 12/1 00:00:00)
+     */
+    private endDate: Date;
+
+    /**
+     * The path to the whatsnew file that will be created in this script
+     */
+    private get outputPath() {
+        return s`${__dirname}../src/pages/whats-new/${this.startDate.getFullYear()}-${this.startDate.getMonth() + 1}-${monthNames[this.startDate.getMonth()]}.mdx`;
+    }
+
+    private cwd = process.cwd();
+
+    private tempDir = s`${__dirname}/../.tmp/whatsnew`;
+
+    private log(project: Project, ...args) {
+        console.log(chalk.green(project.name), ...args);
+    }
+
+    private async processProject(project: Project) {
+        await this.cloneProject(project);
+        //get all commits grouped by their release
+        project.releases = await this.getReleases(project);
+    }
+
+    private async cloneProject(project: Project) {
+        this.log(project, `Cloning ${project.repositoryUrl} `);
+        await exec(`git clone "${project.repositoryUrl}" "${project.dir}"`);
+    }
+
     private write() {
         let result = [
             `---`,
             `date: ${monthNames[this.startDate.getMonth()]} ${this.startDate.getFullYear()}`,
-            `summary: Changes to ${this.projects.filter(x => x.changes.length > 0).map(x => x.name).join(', ')}`,
+            `summary: Changes to ${this.projects.filter(x => x.releases.length > 0).map(x => x.name).join(', ')}`,
             `layout: ../../layouts/WhatsNewPost.astro`,
             `---`
         ] as string[];
@@ -93,75 +149,69 @@ class Runner {
     }
 
     /**
-     * Find the year-month-day of the specified release from git logs
+     * Find all the releases for a given date range, including the leading and trailing releases that are outside the date range
      */
-    private async getReleasesForDateRange(cwd: string, startDate: Date, endDate: Date) {
+    private async getReleases(project: Project): Promise<Release[]> {
+        this.log(project, `Finding releases between ${dayjs(this.startDate).format('YYYY-MM-DD')} and ${dayjs(this.endDate).format('YYYY-MM-DD')}`);
         /**
          * generates output like:
          *      2022-11-03 16:01:48 -0400  (tag: v0.60.5)
          *      2022-10-28 13:02:25 -0400  (tag: v0.60.4)
          */
-        const execResult = await exec('git log --tags --simplify-by-decoration --pretty="format:%ci %d"', { cwd: cwd });
+        const execResult = await exec('git log --tags --simplify-by-decoration --pretty="format:%ci %d"', { cwd: project.dir });
         //https://regex101.com/r/cGcKUj/2
-        const result = [
+        const releases = [
             ...execResult.stdout.matchAll(/(\d+-\d+-\d+\s*(?:\d+:\d+:\d+(?:\s*[+-]?\d+))?).*?\(tag:[ \t]*(v.*?)\)/g)
         ].map(x => ({
             date: new Date(x[1]),
             version: x[2]
-        })).filter(x => {
+        })).sort((a, b) => a.date.getTime() - b.date.getTime());
+
+        const matchedReleases = releases.map((release, index) => {
+            return {
+                date: release.date,
+                version: release.version,
+                previousRef: releases[index - 1]?.version,
+                commits: [] as Commit[]
+            };
+        }).filter(x => {
             //only keep releases that happened within the specified range
-            return x.date >= startDate && x.date < endDate;
+            return x.date >= this.startDate && x.date < this.endDate;
         });
-        return result;
-    }
-
-    // private async getCommitLogs(projectName: string, startVersion: string, endVersion: string) {
-    //     startVersion = startVersion.startsWith('v') ? startVersion : 'v' + startVersion;
-    //     endVersion = endVersion.startsWith('v') || endVersion === 'HEAD' ? endVersion : 'v' + endVersion;
-    //     const project = this.getProject(projectName);
-    //     const commitMessages = (await exec(`git log ${startVersion}...${endVersion} --oneline`, {
-    //         cwd: project?.dir
-    //     })).toString()
-    //         .split(/\r?\n/g)
-    //         //exclude empty lines
-    //         .filter(x => x.trim())
-    //         .map(x => {
-    //             const [, hash, branchInfo, message, prNumber] = /\s*([a-z0-9]+)\s*(?:\((.*?)\))?\s*(.*?)\s*(?:\(#(\d+)\))?$/gm.exec(x) ?? [];
-    //             return {
-    //                 hash: hash,
-    //                 branchInfo: branchInfo,
-    //                 message: message ?? x,
-    //                 prNumber: prNumber
-    //             };
-    //         })
-    //         //exclude version-only commit messages
-    //         .filter(x => !semver.valid(x.message))
-    //         //exclude those "update changelog for..." message
-    //         .filter(x => !x.message.toLowerCase().startsWith('update changelog for '));
-
-
-    //     return commitMessages;
-    // }
-
-    private async processProject(project: Project) {
-        await this.cloneProject(project);
-        //get a list of all releases
-        const releases = await this.getReleasesForDateRange(project.dir, this.startDate, this.endDate);
-        console.log(releases);
-    }
-
-    private async cloneProject(project: Project) {
-        const repoName = project.name.split('/').pop();
-
-        let url = project.repositoryUrl;
-        if (!url) {
-            url = `https://github.com/rokucommunity/${repoName}`;
+        //if there's no leading release, use the first commit as the baseline for changes in this release
+        if (matchedReleases[0] && !matchedReleases[0].previousRef) {
+            const execResult2 = await exec('git rev-list --max-parents=0 HEAD', { cwd: project.dir });
+            matchedReleases[0].previousRef = execResult2.stdout?.trim();
         }
+        for (const release of matchedReleases) {
+            this.log(project, `finding commits for ${release.version}`);
+            release.commits = await this.getCommits(project, release.previousRef, release.version);
+        }
+        return matchedReleases;
+    }
 
-        //clone the project
-        project.dir = `${this.tempDir}/${repoName}`;
-        console.log(`Cloning ${url} `);
-        await exec(`git clone "${url}" "${project.dir}"`);
+    private async getCommits(project: Project, startRef: string, endRef: string): Promise<Commit[]> {
+        const commitMessages = (await exec(`git log ${startRef}...${endRef} --oneline`, {
+            cwd: project?.dir
+        })).stdout.toString()
+            .split(/\r?\n/g)
+            //exclude empty lines
+            .filter(x => x.trim())
+            .map(x => {
+                const [, hash, branchInfo, message, prNumber] = /\s*([a-z0-9]+)\s*(?:\((.*?)\))?\s*(.*?)\s*(?:\(#(\d+)\))?$/gm.exec(x) ?? [];
+                return {
+                    hash: hash,
+                    branchInfo: branchInfo,
+                    message: message ?? x,
+                    pullRequestId: prNumber
+                };
+            })
+            //exclude version-only commit messages
+            .filter(x => !semver.valid(x.message))
+            //exclude those "update changelog for..." message
+            .filter(x => !x.message.toLowerCase().startsWith('update changelog for '));
+
+        return commitMessages;
     }
 }
 
@@ -169,51 +219,42 @@ interface Project {
     name: string;
     repositoryUrl: string;
     dir: string;
-    changes: [];
+    releases: Release[];
 }
 
 interface Commit {
     hash: string;
     branchInfo: string;
     message: string;
-    prNumber: string;
+    /**
+     * The ID of the pull request on github
+     */
+    pullRequestId: string;
+}
+
+interface Release {
+    date: Date;
+    version: string;
+    previousRef: string;
+    commits: Commit[];
 }
 
 interface RunnerOptions {
-    projects: string[];
-    force: boolean;
-    year: number;
-    month: number;
+    cwd?: string;
+    tempDir?: string;
+    projects?: string[];
+    force?: boolean;
+    year?: number;
+    month?: number | string;
 }
 
 const options = yargs(hideBin(process.argv))
     .usage('$0', 'BrighterScript, a superset of Roku\'s BrightScript language')
     .help('help', 'View help information about this tool.')
+    .option('projects', { type: 'array', description: 'A list of the projects that will be used for this whats-new page?', default: projects })
     .option('force', { type: 'boolean', description: 'Should the whats-new post be created even if it will overwrite a previous one?', default: false })
-    .option('month', { type: 'number', description: 'The month the post should be generated for' })
+    .option('month', { type: 'string', description: 'The month the post should be generated for' })
     .option('year', { type: 'number', description: 'The year the should be generated for' })
-    .check((argv: any) => {
-        const today = new Date();
-        const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        const firstDayOfPreviousMonth = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth() - 1, 1);
-        if (typeof argv.month !== 'number') {
-            argv.month = firstDayOfPreviousMonth.getMonth();
-        }
-        if (typeof argv.year !== 'number') {
-            argv.year = firstDayOfPreviousMonth.getFullYear();
-        }
-        argv.projects = projects.map(x => {
-            let result = {
-                changes: []
-            } as Project;
-            if (typeof x === 'string') {
-                result.name = x;
-                result.repositoryUrl = `https://github.com/RokuCommunity/${result.name}`;
-            }
-            return result;
-        });
-        return argv;
-    })
     .argv as unknown as RunnerOptions;
 
 new Runner(options).run().catch((error) => {
