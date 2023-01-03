@@ -98,6 +98,8 @@ class Runner {
 
             return project;
         });
+
+        this.outputPath = s`${__dirname}/../src/pages/whats-new/${this.startDate.getFullYear()}-${this.startDate.getMonth() + 1}-${monthNames[this.startDate.getMonth()]}.mdx`;
     }
 
     private projects: Project[];
@@ -114,9 +116,7 @@ class Runner {
     /**
      * The path to the whatsnew file that will be created in this script
      */
-    private get outputPath() {
-        return s`${__dirname}../src/pages/whats-new/${this.startDate.getFullYear()}-${this.startDate.getMonth() + 1}-${monthNames[this.startDate.getMonth()]}.mdx`;
-    }
+    private outputPath;
 
     private cwd = process.cwd();
 
