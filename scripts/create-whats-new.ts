@@ -14,9 +14,18 @@ import dayjs from 'dayjs';
 import * as path from 'path';
 import { fileURLToPath } from 'url';
 import semver from 'semver';
+import { Octokit } from 'octokit';
+import * as dotenv from 'dotenv';
+dotenv.config();
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+
+const octokit = new Octokit({
+    auth: process.env.GITHUB_TOKEN ?? process.env.TOKEN
+});
 
 const projects = [
     'vscode-brightscript-language',
@@ -39,6 +48,8 @@ class Runner {
         console.log(options);
         this.configure(options);
     }
+
+    public cache = new Cache(s`${__dirname}/.cache/${path.basename(__filename)}.json`);
 
     public async run() {
         //fail if we already have a document, and we're not forcing
@@ -96,6 +107,8 @@ class Runner {
             } as Project;
             if (typeof x === 'string') {
                 project.name = x;
+                project.repoName = x;
+                project.repoOwner = 'RokuCommunity';
                 project.repositoryUrl = `https://github.com/RokuCommunity/${project.name}`;
                 project.dir = s`${this.tempDir}/${x}`;
             }
@@ -180,7 +193,7 @@ class Runner {
                         if (commit.pullRequestId) {
                             return `${project.name}: ${commit.message} ([#${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`;
                         } else {
-                            return `${project.name}: ${commit.message} ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
+                            return `${project.name}: ${commit.message} ([${commit.ref}](${project.repositoryUrl}/commit/${commit.ref}))`;
                         }
                     });
                 });
@@ -201,7 +214,13 @@ class Runner {
                 const { author } = commits[0];
                 result.push(` - [@${author.username} (${author.name})](${author.profileUrl})`);
                 for (const commit of commits) {
-                    result.push(`    - ${commit.message}`);
+                    result.push(
+                        '    - ' + (
+                            commit.pullRequestId
+                                ? `${commit.message} ([PR #${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`
+                                : `${commit.message} ([${commit.ref}](${project.repositoryUrl}/commit/${commit.ref}))`
+                        )
+                    );
                 }
             }
         }
@@ -215,11 +234,11 @@ class Runner {
             //group the commits by email address
             while (commits.length > 0) {
                 const commit = commits.shift();
-                const email = commit.author.email.toLowerCase();
-                if (!result.has(email)) {
-                    result.set(email, []);
+                const username = commit.author.username.toLowerCase();
+                if (!result.has(username)) {
+                    result.set(username, []);
                 }
-                result.get(email).push(commit);
+                result.get(username).push(commit);
             }
         }
         return result;
@@ -269,25 +288,20 @@ class Runner {
     }
 
     private async getCommits(project: Project, startRef: string, endRef: string): Promise<Commit[]> {
-        const commitMessages = (await exec(`git log ${startRef}...${endRef} --oneline`, {
+        const commits = (await exec(`git log ${startRef}...${endRef} --oneline`, {
             cwd: project?.dir
         })).stdout.toString()
             .split(/\r?\n/g)
             //exclude empty lines
             .filter(x => x.trim())
             .map(x => {
-                const [, hash, branchInfo, message, prNumber] = /\s*([a-z0-9]+)\s*(?:\((.*?)\))?\s*(.*?)\s*(?:\(#(\d+)\))?$/gm.exec(x) ?? [];
+                const [, ref, branchInfo, message, prNumber] = /\s*([a-z0-9]+)\s*(?:\((.*?)\))?\s*(.*?)\s*(?:\(#(\d+)\))?$/gm.exec(x) ?? [];
                 return {
-                    hash: hash,
+                    ref: ref,
                     branchInfo: branchInfo,
                     message: message ?? x,
                     pullRequestId: prNumber,
-                    author: {
-                        name: 'Bronley Plumb',
-                        email: 'bronley@gmail.com',
-                        username: 'TwitchBronBron',
-                        profileUrl: 'https://github.com/TwitchBronBron'
-                    }
+                    author: undefined as Commit['author']
                 };
             })
             //exclude version-only commit messages
@@ -295,19 +309,111 @@ class Runner {
             //exclude those "update changelog for..." message
             .filter(x => !x.message.toLowerCase().startsWith('update changelog for '));
 
-        return commitMessages;
+        //hydrate with author info
+        for (const commit of commits) {
+            await this.hydrateCommit(project, commit);
+            // {
+            //     name: 'Bronley Plumb',
+            //     email: 'bronley@gmail.com',
+            //     username: 'TwitchBronBron',
+            //     profileUrl: 'https://github.com/TwitchBronBron'
+            // }
+        }
+        return commits;
+    }
+
+    private async hydrateCommit(project: Project, commit: Commit) {
+        this.log(project, `Hydrating #${commit.ref}`);
+        //load info about this commit
+        const githubCommit = await this.cache.getOrAdd([project.repositoryUrl, 'commits', commit.ref], async () => {
+            return (await octokit.rest.repos.getCommit({
+                repo: project.repoName,
+                owner: project.repoOwner,
+                ref: commit.ref
+            })).data;
+        });
+        //temporarily write the cache after every read so we don't annoy the github api
+        this.cache.write();
+        commit.author = {
+            email: githubCommit.author.email,
+            name: githubCommit.commit.author.name,
+            profileUrl: githubCommit.author.html_url,
+            username: githubCommit.author.login
+        };
+    }
+}
+
+class Cache {
+    constructor(
+        private path: string
+    ) {
+        this.load();
+    }
+
+    private get(keys: string[]) {
+        keys = [...keys ?? []];
+        let value: any = this.data;
+        while (keys.length > 0) {
+            value = value[keys.shift()];
+            if (value === undefined) {
+                return value;
+            }
+        }
+        return value;
+    }
+
+    public async getOrAdd<T>(keys: string[], factory: () => T | Promise<T>) {
+        let value = this.get(keys);
+        if (!value) {
+            value = this.set(keys, Promise.resolve(factory()));
+            //once the promise has finished loading, write the raw value
+            this.set(keys, await value);
+        }
+        return value as T;
+    }
+
+    private set<T = any>(keys: string[], value: T | Promise<T>) {
+        let data: any = this.data;
+        //build the structure
+        for (let i = 0; i < keys.length - 1; i++) {
+            const key = keys[i];
+            if (!data[key]) {
+                data[key] = {};
+            }
+            data = data[key];
+        }
+        data[keys[keys.length - 1]] = value;
+        return value;
+    }
+
+    private data: Record<string, any>;
+
+    public load() {
+        try {
+            this.data = fsExtra.readJsonSync(this.path);
+        } catch {
+            this.data = {};
+        }
+    }
+
+    public write() {
+        fsExtra.outputJsonSync(this.path, this.data, {
+            spaces: 4
+        });
     }
 }
 
 interface Project {
     name: string;
     repositoryUrl: string;
+    repoOwner: string;
+    repoName: string;
     dir: string;
     releases: Release[];
 }
 
 interface Commit {
-    hash: string;
+    ref: string;
     branchInfo: string;
     message: string;
     author: {
@@ -349,8 +455,12 @@ const options = yargs(hideBin(process.argv))
     .option('year', { type: 'number', description: 'The year the should be generated for' })
     .argv as unknown as RunnerOptions;
 
-new Runner(options).run().catch((error) => {
+const runner = new Runner(options);
+runner.run().catch((error) => {
     console.error(error);
     process.exit(1);
+}).finally(() => {
+    //write the cache to help with performance in the future
+    runner.cache.write();
 });
 
