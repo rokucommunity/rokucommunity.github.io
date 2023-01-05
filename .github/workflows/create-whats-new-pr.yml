@@ -1,7 +1,6 @@
 name: Create What's New PR
 on:
-  #TODO remove this once we fixed the build issues
-  push:
+  - cron:  '0 0 1 * *'
   workflow_dispatch:
 
 env:
