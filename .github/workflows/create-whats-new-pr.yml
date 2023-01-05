@@ -43,6 +43,8 @@ jobs:
 
       - name: Open PR for new whats-new page
         if: steps.verify-changed-files.outputs.files_changed == 'true'
+        env:
+          GH_TOKEN: ${{ steps.generate-token.outputs.token }}
         run: |
             git add src/*
             git config user.name "rokucommunity-bot"
