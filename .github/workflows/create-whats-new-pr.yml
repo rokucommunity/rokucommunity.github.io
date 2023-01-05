@@ -25,7 +25,9 @@ jobs:
         run: echo " TOKEN=${{ steps.generate-token.outputs.token }}" >> $GITHUB_ENV
 
       - name: Generate whats-new page
-        run: npm run create-whats-new
+        run: |
+          npm ci
+          npm run create-whats-new
 
       - name: Commit a new branch if there are changes
         uses: tj-actions/verify-changed-files@v13
