@@ -48,7 +48,7 @@ jobs:
         run: |
             git add src/*
             git config user.name "rokucommunity-bot"
-            git config user.email "27856297+rokucommunity-bot@users.noreply.github.com"
+            git config user.email "93661887+rokucommunity-bot@users.noreply.github.com"
             git config --add --bool push.autoSetupRemote true
             git checkout -b whats-new/${{ steps.getFilename.outputs.filename }}
             git commit -m "What's new for ${{ steps.getFilename.outputs.filename }}"
