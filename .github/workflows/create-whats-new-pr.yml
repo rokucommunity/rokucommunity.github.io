@@ -1,0 +1,54 @@
+name: Create What's New PR
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@master
+
+      - uses: actions/setup-node@master
+        with:
+          node-version: "16.16.0"
+
+      - name: get RokuCommunity bot token #so the bot's name shows up on all our actions
+        uses: tibdex/github-app-token@v1.5.1
+        id: generate-token
+        with:
+          app_id: ${{ secrets.BOT_APP_ID }}
+          private_key: ${{ secrets.BOT_PRIVATE_KEY }}
+
+      - name: Set New GitHub Token
+        run: echo " TOKEN=${{ steps.generate-token.outputs.token }}" >> $GITHUB_ENV
+
+      - name: Generate whats-new page
+        run: npm run create-whats-new
+
+      - name: Commit a new branch if there are changes
+        uses: tj-actions/verify-changed-files@v13
+        id: verify-changed-files
+        with:
+          separator: " "
+          autocrlf: input
+
+      - name: Get the name of the new file
+        id: getFilename
+        run: echo "filename=$(git status | grep -Ei .mdx | grep -oEi '[0-9]+-[0-9]+-[a-z]+')" >> $GITHUB_OUTPUT
+
+      - name: Run Design System Converter
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+            git add src/*
+            git config user.name "rokucommunity-bot"
+            git config user.email "27856297+rokucommunity-bot@users.noreply.github.com"
+            git config --add --bool push.autoSetupRemote true
+            git checkout -b whats-new/${{ steps.getFilename.outputs.filename }}
+            git commit -m "What's new for ${{ steps.getFilename.outputs.filename }}"
+            git push
+            gh pr create --title "What's new: ${{ steps.getFilename.outputs.filename  }}" --body "All changes in RokuCommunity for ${{ steps.getFilename.outputs.filename }}"
+
+
+
+
+
