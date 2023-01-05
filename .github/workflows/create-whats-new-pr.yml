@@ -1,5 +1,7 @@
 name: Create What's New PR
 on:
+  #TODO remove this once we fixed the build issues
+  push:
   workflow_dispatch:
 
 jobs:
