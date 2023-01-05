@@ -14,13 +14,7 @@
 			"args": [
                 "--loader",
                 "ts-node/esm/transpile-only",
-				"./scripts/create-whats-new.ts",
-                "--force",
-                "--year",
-                "2022",
-                "--month",
-                "november",
-                "--noclear"
+				"./scripts/create-whats-new.ts"
 			],
 			"cwd": "${workspaceRoot}",
 			"internalConsoleOptions": "openOnSessionStart"

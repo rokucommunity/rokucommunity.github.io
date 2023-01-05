@@ -24,7 +24,7 @@ const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'Jul
 
 
 const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN ?? process.env.TOKEN
+    auth: process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? process.env.TOKEN
 });
 
 const projects = [
@@ -98,8 +98,8 @@ class Runner {
         }
 
         //build start and end dates so we can do >= startDate && < endDate
-        this.startDate = new Date(options.year, monthIndex, 1);
-        this.endDate = new Date(options.year, monthIndex + 1, 1);
+        this.startDate = new Date(year, monthIndex, 1);
+        this.endDate = new Date(year, monthIndex + 1, 1);
 
         this.projects = (options.projects ?? projects).map(x => {
             let project = {
