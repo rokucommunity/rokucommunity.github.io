@@ -1,10 +1,9 @@
 name: Create What's New PR
 on:
-  - cron:  '0 0 1 * *'
+  schedule:
+      - cron:  '0 0 2 * *'
+  push: # delete before merging this pr
   workflow_dispatch:
-
-env:
-  GH_TOKEN: ${{ secrets.GH_TOKEN }}
 
 jobs:
   run:
@@ -24,7 +23,7 @@ jobs:
           private_key: ${{ secrets.BOT_PRIVATE_KEY }}
 
       - name: Set New GitHub Token
-        run: echo " TOKEN=${{ steps.generate-token.outputs.token }}" >> $GITHUB_ENV
+        run: echo " GH_TOKEN=${{ steps.generate-token.outputs.token }}" >> $GITHUB_ENV
 
       - name: Generate whats-new page
         run: |
