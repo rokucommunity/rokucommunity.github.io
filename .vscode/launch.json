@@ -6,6 +6,18 @@
             "name": "Development server",
             "request": "launch",
             "type": "node-terminal"
-        }
+        },
+        {
+			"name": "Debug create-whats-new",
+			"type": "node",
+			"request": "launch",
+			"args": [
+                "--loader",
+                "ts-node/esm/transpile-only",
+				"./scripts/create-whats-new.ts"
+			],
+			"cwd": "${workspaceRoot}",
+			"internalConsoleOptions": "openOnSessionStart"
+		},
     ]
 }
