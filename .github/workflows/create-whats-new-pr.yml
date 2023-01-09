@@ -9,7 +9,7 @@ on:
           description: "The 4 digit year for the desired whats-new doc"
           required: false
         month:
-          description: "The abbreviated or full month name for the desired whats-new doc (i.e. "jan", "january", etc)
+          description: "The abbreviated or full month name for the desired whats-new doc (i.e. 'jan', 'january', etc)"
           required: false
 
 jobs:
