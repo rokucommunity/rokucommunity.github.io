@@ -45,7 +45,6 @@ class Runner {
     constructor(
         options: RunnerOptions
     ) {
-        console.log(options);
         this.configure(options);
     }
 
@@ -88,12 +87,13 @@ class Runner {
         const today = new Date();
         const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         const firstDayOfPreviousMonth = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth() - 1, 1);
-        let monthIndex = monthNames.findIndex(x => x.toLocaleLowerCase().startsWith(options.month?.toString().toLowerCase()));
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        let monthIndex = monthNames.findIndex(x => x.toLocaleLowerCase().startsWith(options.month?.toString().toLowerCase() || undefined));
         if (monthIndex < 0) {
             monthIndex = firstDayOfPreviousMonth.getMonth();
         }
-        let year = options.year;
-        if (typeof year !== 'number') {
+        let year = parseInt(options.year?.toString());
+        if (isNaN(year) || typeof year !== 'number') {
             year = firstDayOfPreviousMonth.getFullYear();
         }
 
@@ -463,4 +463,3 @@ runner.run().catch((error) => {
     //write the cache to help with performance in the future
     runner.cache.write();
 });
-

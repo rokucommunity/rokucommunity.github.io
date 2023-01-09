@@ -4,6 +4,13 @@ on:
       - cron:  '0 0 2 * *'
   push: # delete before merging this pr
   workflow_dispatch:
+      inputs:
+        year:
+          description: "The 4 digit year for the desired whats-new doc"
+          required: false
+        month:
+          description: "The abbreviated or full month name for the desired whats-new doc (i.e. "jan", "january", etc)
+          required: false
 
 jobs:
   run:
@@ -28,7 +35,7 @@ jobs:
       - name: Generate whats-new page
         run: |
           npm ci
-          npm run create-whats-new
+          npm run create-whats-new -- --year ${{ github.event.inputs.year }} --month ${{ github.event.inputs.month }}
 
       - name: Commit a new branch if there are changes
         uses: tj-actions/verify-changed-files@v13
