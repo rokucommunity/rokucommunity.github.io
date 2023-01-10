@@ -20,7 +20,9 @@ const { headings, _class } = Astro.props;
                 <a href={`#${h.slug}`}>
                     <li
                         class="py-2 hover:font-bold hover:underline hover:text-purple-dark dark:hover:text-white dark:text-white"
-                        style={`padding-left: ${8 * (h.depth - 1)}px;`}>
+                        style={`padding-left: ${8 * (h.depth - 1)}px;${
+                            h.depth === 1 ? 'font-size: 1.3em !important;' : ''
+                        }`}>
                         {h.text}
                     </li>
                 </a>
