@@ -4,14 +4,23 @@ summary: Changes to vscode-brightscript-language, brighterscript, roku-debug
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
-## We presented at Roku developer summit!!
-https://youtu.be/117g078_tXc
+## Roku Dev Summit Presentation
+[Bronley Plumb](https://github.com/TwitchBronBron) and [Christopher Dwyer-Perkins](https://github.com/chrisdp) had the priviledge to present at the Roku 2022 Developer Summit on November 2. It was a great opportunity to share an overview of the Language features and debugging experience in the VSCode extension, as well as an overview of the popular BrighterScript Language. You can watch the presentation in the link below:
+
+Full video:
+- [Roku 2022 Developer Summit: RokuCommunity tools panel](https://youtu.be/117g078_tXc)
+
+Demos:
+- [Real-time Roku project validation in VSCode](https://youtu.be/APdYBMoDTis)
+- [Debugger](https://youtu.be/5I0FwT4-h-Q)
+- [BrighterScript](https://youtu.be/1rjNGi9c-rA)
+
 
 # Debugging
 ## Hide "unused variable" warnings
 Starting in Roku OS 11.5, developers can now hide on-device compiler warnings, such as `BRIGHTSCRIPT: WARNING: unused varaible 'someVar'...`. The warnings can be disabled by sending `brightscript_warnings 0` as a [port 8080 command](https://developer.roku.com/en-gb/docs/developer-program/debugging/debugging-channels.md#scenegraph-debug-server-port-8080-commands).
 
-The BrightScript VSCode extension can also auto-run this command before every debug session by adding `brightscript_warnings 0` to the `autoRunSgDebugCommands` in the `launch.json`.
+The BrightScript VSCode extension supports auto-running this command before every debug session by adding `brightscript_warnings 0` to the `autoRunSgDebugCommands` in the `launch.json`.
 ![hide-unused-vars](https://user-images.githubusercontent.com/2544493/211400813-01ab14b5-13f5-4ceb-983c-611bc76fbe8a.gif)
 
 
