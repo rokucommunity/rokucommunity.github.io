@@ -1,35 +1,50 @@
 ---
 date: December 2022
-summary: Changes to vscode-brightscript-language, brighterscript, roku-debug, brighterscript-formatter, bslint
+summary: SceneGraph Inspector enhancements, BrighterScript bug fixes, new bslint rules and more
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
-TODO add an overview of what changed this month
+Welcome to the December 22 RokuCommunity update. Here are some of the key highlights:
+- [SceneGraph Inspector properly orders ArrayGrid children](#scenegraph-inspector-properly-orders-arraygrid-children)
+- [Focus ArrayGrid child in Scenegraph Inspector's "Show Focused Node" action](#focus-arraygrid-child-in-scenegraph-inspectors-show-focused-node-action)
+- [Improved Roku Registry panel functionality](#improved-roku-registry-panel-functionality)
+- [Fix `continue` repeat bug for debug protocol](#fix-continue-repeat-bug-for-debug-protocol)
+- [Better component library postfixing](#better-component-library-postfixing)
+- [Better `continue` indentation formatting](#better-continue-indentation)
+- [More stable BrighterScript watch mode](#more-stable-watch-mode)
+- [Discard function parameter types when transpiling BrighterScript](#discard-function-parameter-types)
+- [Preventing incorrectly nested statements in BrighterScript](#preventing-incorrectly-nested-statements)
+- [Fix bslint false positive for missing `return`](#fix-false-positive-for-missing-return)
+- [Add new bslint `aa-comma-style` option `all-except-single-line`](#add-new-aa-comma-style-option-all-except-single-line)
+
 
 # Debugging
 
 ## SceneGraph Inspector properly orders ArrayGrid children
 The VSCode extension has a built-in node viewer (similar to [RALe]()) called SceneGraph Inspector. In past releases, SceneGraph Inspector was able to show the children of [ArrayGrid](https://developer.roku.com/docs/references/scenegraph/abstract-nodes/arraygrid.md) nodes (MarkupList, RowList, etc...), but these child nodes were loaded in seemingly random order. As of v2.38.4, these children are now ordered properly.
-![image](https://user-images.githubusercontent.com/2544493/213292185-80290666-d766-48a3-a91c-fb81889c0522.png)
+![scenegraph inspector children](https://user-images.githubusercontent.com/2544493/213292185-80290666-d766-48a3-a91c-fb81889c0522.png)
 
-## Added Scenegraph Inspector "focus node" action
-Historically the "focus that node" logic in the Scenegraph Inspector would focus the ArrayGrid itself. As part of v2.38.4, that action will now dig deeper into the ArrayGrid child and focus the actual focused node.
+## Focus ArrayGrid child in Scenegraph Inspector's "Show Focused Node" action
+Historically the "Show Focused Node" logic in the Scenegraph Inspector would focus the ArrayGrid itself. As part of v2.38.4, that action will now dig deeper into the ArrayGrid child and focus the actual focused node.
+![focus node](https://user-images.githubusercontent.com/2544493/213462276-e06b8e04-43e3-42ca-ab06-2de7b07b20c1.gif)
+
 
 ## Improved Roku Registry panel functionality
 We've added "refresh" and "clear" buttons to the **Roku Registry** panel. The import/export functionalty has also been fixed.
 
-![image](https://user-images.githubusercontent.com/2544493/213294070-5c973443-bfbd-42cc-9896-b999ac0e4c9e.png)
-## Debug protocol breakpoint verification
-
+![refresh and clear Roku Registry buttons](https://user-images.githubusercontent.com/2544493/213294070-5c973443-bfbd-42cc-9896-b999ac0e4c9e.png)
 
 
 ## Fix `continue` repeat bug for debug protocol
 We've fixed a [debug session bug](https://github.com/RokuCommunity/roku-debug/pull/114) where a breakpoint would be replayed several times. This was only present when `enableDebugProtocol` was set to `true` and the developer issued a `continue` command. This was mostly caused by an underlying bug in the Roku OS when using the ADD_CONDITIONAL_BREAKPOINTS command, so to mitigate the problem we now *only* use that command when a user has actually defined a conditional breakpoint.
+![breakpoint-stepping](https://user-images.githubusercontent.com/2544493/213468140-9703c7fd-6c72-42ba-8fa4-ff9854e0485e.gif)
+
 
 ## Better component library postfixing
 A popular feature of the BrightScript Language extension for VSCode is the ability to host/sideload component libraries directly through the editor instead of needing to manually run an http server. (you can read more about component library support [here](https://rokucommunity.github.io/vscode-brightscript-language/Debugging/component-libraries.html)). The telnet debugger truncates file paths after a certain length (i.e. `...ource/main.brs`), which means there are situations where we can't tell if the path references a file in the main app or a component library. To work around this, all .brs files in the comonent library are renamed with a suffix. (i.e. `pkg:/source/networking.brs` -> `pkg:/source/networking__lib1.brs`). Then, when we receive a path from the server, we unravel that path and do an `.endsWith()` check to find the referenced path.
 
 However, this rewrite logic was a little too aggressive, and would rewrite every script import regardless of whether it actually existed in the project, including things like: `common:/LibCore/v30/bslCore.brs`. [#112](https://github.com/RokuCommunity/roku-debug/pull/112) fixes this issue by restricting that rewrite logic to only relative, `pkg:/`, and `libpkg:/` paths.
+![image](https://user-images.githubusercontent.com/2544493/213481236-cf21b4cd-c894-4a0d-93f5-df3edf091d12.png)
 
 
 # Formatting
@@ -73,7 +88,7 @@ bslint's `aa-comma-style` rule has been given a new option, `all-except-single-l
 
 # Notable bug fixes
  - vscode-brightscript-language: Make vsix smaller by excluding unneeded files ([#454](https://github.com/RokuCommunity/vscode-brightscript-language/pull/454))
- - roku-debug: stability around breakpoint verifiction ([#117](https://github.com/RokuCommunity/roku-debug/pull/117))
+ - roku-debug: stability around breakpoint verification ([#117](https://github.com/RokuCommunity/roku-debug/pull/117))
 
 
 # Thank you
