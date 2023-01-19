@@ -22,10 +22,12 @@ Welcome to the December 22 RokuCommunity update. Here are some of the key highli
 
 ## SceneGraph Inspector properly orders ArrayGrid children
 The VSCode extension has a built-in node viewer (similar to [RALe]()) called SceneGraph Inspector. In past releases, SceneGraph Inspector was able to show the children of [ArrayGrid](https://developer.roku.com/docs/references/scenegraph/abstract-nodes/arraygrid.md) nodes (MarkupList, RowList, etc...), but these child nodes were loaded in seemingly random order. As of v2.38.4, these children are now ordered properly.
+
 ![scenegraph inspector children](https://user-images.githubusercontent.com/2544493/213292185-80290666-d766-48a3-a91c-fb81889c0522.png)
 
 ## Focus ArrayGrid child in Scenegraph Inspector's "Show Focused Node" action
 Historically the "Show Focused Node" logic in the Scenegraph Inspector would focus the ArrayGrid itself. As part of v2.38.4, that action will now dig deeper into the ArrayGrid child and focus the actual focused node.
+
 ![focus node](https://user-images.githubusercontent.com/2544493/213462276-e06b8e04-43e3-42ca-ab06-2de7b07b20c1.gif)
 
 
@@ -37,6 +39,7 @@ We've added "refresh" and "clear" buttons to the **Roku Registry** panel. The im
 
 ## Fix `continue` repeat bug for debug protocol
 We've fixed a [debug session bug](https://github.com/RokuCommunity/roku-debug/pull/114) where a breakpoint would be replayed several times. This was only present when `enableDebugProtocol` was set to `true` and the developer issued a `continue` command. This was mostly caused by an underlying bug in the Roku OS when using the ADD_CONDITIONAL_BREAKPOINTS command, so to mitigate the problem we now *only* use that command when a user has actually defined a conditional breakpoint.
+
 ![breakpoint-stepping](https://user-images.githubusercontent.com/2544493/213468140-9703c7fd-6c72-42ba-8fa4-ff9854e0485e.gif)
 
 
@@ -44,12 +47,14 @@ We've fixed a [debug session bug](https://github.com/RokuCommunity/roku-debug/pu
 A popular feature of the BrightScript Language extension for VSCode is the ability to host/sideload component libraries directly through the editor instead of needing to manually run an http server. (you can read more about component library support [here](https://rokucommunity.github.io/vscode-brightscript-language/Debugging/component-libraries.html)). The telnet debugger truncates file paths after a certain length (i.e. `...ource/main.brs`), which means there are situations where we can't tell if the path references a file in the main app or a component library. To work around this, all .brs files in the comonent library are renamed with a suffix. (i.e. `pkg:/source/networking.brs` -> `pkg:/source/networking__lib1.brs`). Then, when we receive a path from the server, we unravel that path and do an `.endsWith()` check to find the referenced path.
 
 However, this rewrite logic was a little too aggressive, and would rewrite every script import regardless of whether it actually existed in the project, including things like: `common:/LibCore/v30/bslCore.brs`. [#112](https://github.com/RokuCommunity/roku-debug/pull/112) fixes this issue by restricting that rewrite logic to only relative, `pkg:/`, and `libpkg:/` paths.
+
 ![image](https://user-images.githubusercontent.com/2544493/213481236-cf21b4cd-c894-4a0d-93f5-df3edf091d12.png)
 
 
 # Formatting
 ## Better `continue` indentation
 The [brighterscript-formatter]() has been [enhanced](https://github.com/RokuCommunity/brighterscript-formatter/pull/65) to properly handle the new `continue while` and `continue for` keywords that were added in [11.5](https://developer.roku.com/docs/references/brightscript/language/program-statements.md#continue-for--continue-while)
+
 ![format-continue](https://user-images.githubusercontent.com/2544493/213262603-1aec826a-60bd-49db-9b4f-a464cda28c91.gif)
 
 
@@ -60,13 +65,14 @@ We've [fixed](https://github.com/RokuCommunity/brighterscript/pull/755) an issue
 
 ## Discard function parameter types
 We've added a new performace-focused flag to BrighterScript that will remove all types from function parameters when transpiling the project. This should give your app a small performance boost since there *is* a runtime cost to running those checks.
+
 ![image](https://user-images.githubusercontent.com/2544493/212156958-27fb51c6-db31-42ad-a9cf-895945777098.png)
 
 ## Preventing incorrectly nested statements
 We've added a new diagnostic that flags top-level statements (like namespaces, classes, etc...) whenever they are incorrectly defined inside of nested blocks (like function bodies, if statements, etc).
 ![image](https://user-images.githubusercontent.com/2544493/204573003-807c0064-76f1-43d8-bb29-349cb339409d.png)
 
-## Miscelaneous BrighterScript fixes
+## Miscellaneous BrighterScript fixes
  - We fixed a crash caused when validating `continue` statements ([#752](https://github.com/RokuCommunity/brighterscript/pull/752))
  - For plugin authors, we've added missing visitor params for `DottedSetStatement` ([#748](https://github.com/RokuCommunity/brighterscript/pull/748))
  - Ensure enums and interfaces are included in type definition files ([#757](https://github.com/RokuCommunity/brighterscript/pull/757))
@@ -76,13 +82,17 @@ We've added a new diagnostic that flags top-level statements (like namespaces, c
 Bslint 0.7.6 includes a fix to account for `throw` statements when detecting missing `return` statements
 
 **Before:**
+
 ![image](https://user-images.githubusercontent.com/2544493/213278382-c616ea38-a0d5-46dc-96e3-b19a944d8fa1.png)
+
 **After:**
+
 ![image](https://user-images.githubusercontent.com/2544493/213279270-21a7f779-451a-4304-a44b-dea6801e685e.png)
 
 
 ## Add new `aa-comma-style` option `all-except-single-line`
 bslint's `aa-comma-style` rule has been given a new option, `all-except-single-line`, which will enforce that every line in an associative array, _except_ for single-line statements.
+
 ![image](https://user-images.githubusercontent.com/2544493/213277615-aa653f6d-ae1e-4991-a7fc-cb5a4d4de6f0.png)
 
 
