@@ -1,0 +1,110 @@
+---
+date: January 2023
+summary: Changes to vscode-brightscript-language, brighterscript, roku-debug, bslint, roku-report-analyzer
+layout: ../../layouts/WhatsNewPost.astro
+---
+# Overview
+
+# Editor
+
+# Debugging
+## Allow relative RALE tracker task path
+The RALE tracker task path can now be a relative path, and supports replacement variables like `${workspaceFolder}`
+ ![image](https://user-images.githubusercontent.com/2544493/221651842-93754a1e-6bbd-4d5a-b75f-da72b0fcfe58.png)
+
+
+## SceneGraph Inspector improvements
+The SceneGraph Inspector has been enhanced with a new keypath syntax which should make it much easier to identify a specific node in the scene at a point in time. This is powered by some [better keypath logic](https://github.com/RokuCommunity/vscode-brightscript-language/pull/455) in RDB. You can see the new `keyPath` field in the screenshot below:
+
+![image](https://user-images.githubusercontent.com/2544493/221642229-510a37ed-d37b-4c6c-ac6b-8d0380343a30.png)
+
+We've also improved the reliability of the focus scrolling.
+
+# Formatting
+
+# Language Features
+
+# BrighterScript
+## New diagnostic for max callfunc arguments
+An undocumented limitation of SceneGraph's `callfunc` functionality is that you cannot pass more than 5 arguments. Doing so would cause the call to silently fail, and sometimes even crash the application. ([BrighterScript#765](https://github.com/RokuCommunity/brighterscript/pull/765)) adds a diagnostic to flag these types of calls so you can detect them at compile time instead of at runtime.
+
+
+----TODO add screenshot of diagnostic----
+
+## Syntax highlighting for `continue for` and `continue while`
+Syntax highlighting for the new `continue while` and `continue for` keywords was fixed in [v2.38.7](https://github.com/rokucommunity/vscode-brightscript-language/blob/master/CHANGELOG.md#2387---2023-01-24)
+
+**Before:**
+
+![image](https://user-images.githubusercontent.com/2544493/213289463-b614a8cf-e84d-4cbe-b144-295bbbc63b93.png)
+
+**After:**
+
+![image](https://user-images.githubusercontent.com/2544493/213289592-a593fe99-51ab-4d32-82f4-df6770912a93.png)
+
+# Preview features
+
+# Documentation
+
+# Misc
+## Improved extension development experience
+Historically, you'd need to manually launch watcher tasks for each RokuCommunity project that you were actively working on. As of ([#456](https://github.com/RokuCommunity/vscode-brightscript-language/pull/456)), we automatically find all RokuCommunity repositories cloned at the same level as vscode-brightscript-language, and kick of a combined watcher task for all of them. This greatly simplifies the development experience, reducing confusion for community contributors.
+
+
+# TODO
+***Move the items in this list to the appropriate section above, then delete this section*
+ - brighterscript: Fix test-related-projects. Reenable rooibos ([#761](https://github.com/RokuCommunity/brighterscript/pull/761))
+ - roku-debug: Execute command for repl expressions ([#119](https://github.com/RokuCommunity/roku-debug/pull/119))
+ - roku-debug: Update create-vsix.yml ([#126](https://github.com/RokuCommunity/roku-debug/pull/126))
+ - roku-debug: Bump luxon from 1.28.0 to 1.28.1 ([#125](https://github.com/RokuCommunity/roku-debug/pull/125))
+ - roku-debug: Bump json5 from 2.2.0 to 2.2.3 ([#124](https://github.com/RokuCommunity/roku-debug/pull/124))
+ - roku-debug: Fix inifinite-spin for unloaded vars ([#120](https://github.com/RokuCommunity/roku-debug/pull/120))
+ - roku-debug: Hiding prefixed variables in the debug variable panel ([#127](https://github.com/RokuCommunity/roku-debug/pull/127))
+ - roku-debug: Fix isAssignableExpression to correctly support dotted and indexed statements ([#128](https://github.com/RokuCommunity/roku-debug/pull/128))
+ - roku-debug: Fix off-by-1 bug with threads over protocol ([#132](https://github.com/RokuCommunity/roku-debug/pull/132))
+ - roku-debug: Increase the timeout for debug protocol control ([#134](https://github.com/RokuCommunity/roku-debug/pull/134))
+ - bslint: Fixing issues before release 0.8.1 ([5d84d9e](https://github.com/RokuCommunity/bslint/commit/5d84d9e))
+ - roku-report-analyzer: Fix audit issues ([925c9f8](https://github.com/RokuCommunity/roku-report-analyzer/commit/925c9f8))
+# Thank you
+Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:
+
+Contributions to [vscode-brightscript-language](https://github.com/RokuCommunity/vscode-brightscript-language):
+ - [@triwav (Brian Leighty)](https://github.com/triwav)
+    - Fix rdb keypaths and focus scrolling ([PR #455](https://github.com/RokuCommunity/vscode-brightscript-language/pull/455))
+ - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    - watch-all ([PR #456](https://github.com/RokuCommunity/vscode-brightscript-language/pull/456))
+    - Use png instead of svg ([d1e3d29](https://github.com/RokuCommunity/vscode-brightscript-language/commit/d1e3d29))
+    - Fix vsmarketplace badge ([b2153a3](https://github.com/RokuCommunity/vscode-brightscript-language/commit/b2153a3))
+    - Fix dependency order in watch-all ([b7843a7](https://github.com/RokuCommunity/vscode-brightscript-language/commit/b7843a7))
+    - fix: continue keyword colorization ([PR #459](https://github.com/RokuCommunity/vscode-brightscript-language/pull/459))
+ - [@Christian-Holbrook (Christian-Holbrook)](https://github.com/Christian-Holbrook)
+    - Watch all dependency and configuration updates ([PR #460](https://github.com/RokuCommunity/vscode-brightscript-language/pull/460))
+ - [@iBicha (Brahim Hadriche)](https://github.com/iBicha)
+    - Allow relative injectRaleTrackerTask ([PR #462](https://github.com/RokuCommunity/vscode-brightscript-language/pull/462))
+
+Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscript):
+ - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    - Fixing issues before release 0.61.3 ([fd841a0](https://github.com/RokuCommunity/brighterscript/commit/fd841a0))
+    - Fix test-related-projects. Reenable rooibos ([PR #761](https://github.com/RokuCommunity/brighterscript/pull/761))
+ - [@iObject (Tyler Smith)](https://github.com/iObject)
+    - Add diagnostic for passing more than 5 arguments to a callFunc ([PR #765](https://github.com/RokuCommunity/brighterscript/pull/765))
+
+Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
+ - [@Christian-Holbrook (Christian-Holbrook)](https://github.com/Christian-Holbrook)
+    - Execute command for repl expressions ([PR #119](https://github.com/RokuCommunity/roku-debug/pull/119))
+    - Hiding prefixed variables in the debug variable panel ([PR #127](https://github.com/RokuCommunity/roku-debug/pull/127))
+    - Fix isAssignableExpression to correctly support dotted and indexed statements ([PR #128](https://github.com/RokuCommunity/roku-debug/pull/128))
+ - [@adellhk (adellhk)](https://github.com/adellhk)
+    - Update create-vsix.yml ([PR #126](https://github.com/RokuCommunity/roku-debug/pull/126))
+ - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    - Fix inifinite-spin for unloaded vars ([PR #120](https://github.com/RokuCommunity/roku-debug/pull/120))
+    - Fix off-by-1 bug with threads over protocol ([PR #132](https://github.com/RokuCommunity/roku-debug/pull/132))
+    - Increase the timeout for debug protocol control ([PR #134](https://github.com/RokuCommunity/roku-debug/pull/134))
+
+Contributions to [bslint](https://github.com/RokuCommunity/bslint):
+ - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    - Fixing issues before release 0.8.1 ([5d84d9e](https://github.com/RokuCommunity/bslint/commit/5d84d9e))
+
+Contributions to [roku-report-analyzer](https://github.com/RokuCommunity/roku-report-analyzer):
+ - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    - Fix audit issues ([925c9f8](https://github.com/RokuCommunity/roku-report-analyzer/commit/925c9f8))
