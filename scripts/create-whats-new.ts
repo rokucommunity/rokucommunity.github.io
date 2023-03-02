@@ -84,7 +84,13 @@ class Runner {
         this.tempDir = path.resolve(this.cwd, options.tempDir ?? s`${__dirname}/../.tmp/whatsnew`);
 
         //construct the date range
-        const today = new Date();
+        let today: Date;
+        if (options.today) {
+            today = new Date(options.today);
+        } else {
+            today = new Date();
+        }
+        console.log('today', today);
         const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
         const firstDayOfPreviousMonth = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth() - 1, 1);
         // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
@@ -120,7 +126,7 @@ class Runner {
             return project;
         });
 
-        this.outputPath = s`${__dirname}/../src/pages/whats-new/${this.startDate.getFullYear()}-${this.startDate.getMonth() + 1}-${monthNames[this.startDate.getMonth()]}.mdx`;
+        this.outputPath = s`${__dirname}/../src/pages/whats-new/${this.startDate.getFullYear()}-${(this.startDate.getMonth() + 1).toString().padStart(2, '0')}-${monthNames[this.startDate.getMonth()]}.mdx`;
     }
 
     private projects: Project[];
@@ -186,7 +192,7 @@ class Runner {
             ``,
             ``,
             `# TODO`,
-            `***Move the items in this list to the appropriate section above, then delete this section*`,
+            `***Move the items in this list to the appropriate section above, then delete this section***`,
             ...this.projects.map(project => {
                 return project.releases.map(release => {
                     return release.commits.map(commit => {
@@ -201,6 +207,7 @@ class Runner {
         ] as string[];
 
         result.push(
+            '',
             '# Thank you',
             `Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:`
         );
@@ -443,6 +450,7 @@ interface RunnerOptions {
     year?: number;
     month?: number | string;
     noclear?: boolean;
+    today?: string;
 }
 
 const options = yargs(hideBin(process.argv))
@@ -453,6 +461,7 @@ const options = yargs(hideBin(process.argv))
     .option('noclear', { type: 'boolean', description: 'Don\'t clear the temp dir (mostly useful for testing)', default: false })
     .option('month', { type: 'string', description: 'The month the post should be generated for' })
     .option('year', { type: 'number', description: 'The year the should be generated for' })
+    .option('today', { type: 'string', description: 'A string used to construct a new new date, used for any `today` variables' })
     .argv as unknown as RunnerOptions;
 
 const runner = new Runner(options);
