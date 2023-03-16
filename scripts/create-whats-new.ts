@@ -53,7 +53,7 @@ class Runner {
     public async run() {
         //fail if we already have a document, and we're not forcing
         if (fsExtra.pathExistsSync(this.outputPath) && !this.force) {
-            throw new Error(`what's new doc already exists at ${this.outputPath}`);
+            throw new Error(`what's new doc already exists at ${this.outputPath}. Use --force to overwrite.`);
         }
 
         console.log('Creating tempDir', this.tempDir);
