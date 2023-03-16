@@ -1,11 +1,15 @@
 ---
 date: January 2023
-summary: Changes to vscode-brightscript-language, brighterscript, roku-debug, bslint, roku-report-analyzer
+summary: Complex debug protocol REPL expressions, SceneGraph Inspector improvements, callfunc validations, syntax highlighting, and more.
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
+This month we made some great improvements to the debugging experience, such as support for [executing complex expressions in the REPL and watch panels](#allow-relative-rale-tracker-task-path), fixing that frustrating [infinite spin](#fix-infinite-spin-for-unloaded-vars) issue in the variables panel, and some nice new features in [SceneGraph Inspector](#scenegraph-inspector-improvements).
 
-# Editor
+When editing your projects, you will now see a new diagnostic whenever you use more than the [max callfunc arguments](#new-diagnostic-for-max-callfunc-arguments), and we've improved syntax highlighting for the [`continue for` and `continue while`](#syntax-highlighting-for-continue-for-and-continue-while) keywords.
+
+We also made a few [non-user-facing](#misc) changes to help RokuCommunity contributors work on the projects.
+
 
 # Debugging
 ## Allow relative RALE tracker task path
@@ -13,16 +17,16 @@ The RALE tracker task path can now be a relative path, and supports replacement 
  ![image](https://user-images.githubusercontent.com/2544493/221651842-93754a1e-6bbd-4d5a-b75f-da72b0fcfe58.png)
 
 ## Execute complex REPL expressions in the Run & Debug panel
-Now the Watch section of the Run & Debug panel supports complex REPL expressions. This means you can now execute expressions like `doSomething()` or `"alpha" + chr(3)`.
+Now the Watch section of the Run & Debug panel supports complex REPL expressions when using Roku's new [debug protocol](https://developer.roku.com/en-ca/docs/developer-program/debugging/socket-based-debugger.md). This means you can now execute expressions like `doSomething()` or `"alpha" + chr(3)`.
 
 ![image](https://user-images.githubusercontent.com/29876959/223409615-49099453-cdad-4e9c-a8de-16e4030d78d2.png)
 
-> Note that this only works if you have the Debug Protocol enabled.
+> Note that this already worked when using telnet, and is now functional when you have the Debug Protocol enabled.
 
 ![image](https://user-images.githubusercontent.com/29876959/223410841-e3b97783-2e34-4fef-b7d5-4cdc138a5a48.png)
 
 ## Fix infinite spin for unloaded vars
-Fix a bug where the UI would spin forever when trying to load variables that no longer exist. Now we show a useful error message.
+Fix a bug where the UI would spin forever when trying to load variables that no longer exist, and would then cause the rest of the debug session to become unresponsive. Now we show a useful error message instead.
 
 Before:
 ![image](https://user-images.githubusercontent.com/2544493/210622158-175282bf-2113-4bc0-9e97-796d378d9967.png)
@@ -32,13 +36,16 @@ After:
 
 
 ## Hide certain prefixed variables in the Debug panel
-Our telnet adapter currently creates variables like `vscodeLoopKey`, `vscodeLoopItem`, etc. This variable shows up in the `Local variables` panel after the first step. We have established the prefix `__rokudebug__` for tool-generated variables and we will use it to avoid showing them in the Debug panel.
+Our debug adapters currently create variables like `vscodeLoopKey`, `vscodeLoopItem`, etc. These variables show up in the `Local variables` panel after the first step. We have established the prefix `__rokudebug__` for tool-generated variables and we will now filter variables that start with this prefix so they don't show in the the various Debug panels.
+
+If for some reason you need to see these variables, you can set `"showHiddenVariables": true` in your `launch.json`.
+
 
 ## Fix off-by-1 bug with threads over protocol
-We fixed a bug in the Debug Protocol where the wrong line numbers were being reported for the threads response. We had incorrectly assumed that the protocol reported 0-based line numbers, when in fact they are 1-based.
+We fixed a bug in the Debug Protocol where the wrong line numbers were being reported for the threads response. We had incorrectly assumed that the protocol reported 0-based line numbers, when in fact they are 1-based. This was largly not evident to the user because we had a few workarounds in place, but now we can directly trust the values coming from the device.
 
 ## Increased the timeout for debug protocol control
-For larger apps it takes longer than 5 seconds to finish parsing and compiling the app. We need to increase our Debug Protocol timeout as well. Ideally this would be configurable, but in the short term we have just doubled the timeout length.
+For larger apps it takes longer than 5 seconds to finish parsing and compiling the app, which would cause the debug protocol to time out and terminate the debug session. In the short term we just doubled our internal timeout to 10 seconds, but ideally this would be configurable so that may eventually be implemented in a future release.
 
 ## SceneGraph Inspector improvements
 The SceneGraph Inspector has been enhanced with a new keypath syntax which should make it much easier to identify a specific node in the scene at a point in time. This is powered by some [better keypath logic](https://github.com/RokuCommunity/vscode-brightscript-language/pull/455) in RDB. You can see the new `keyPath` field in the screenshot below:
@@ -47,13 +54,9 @@ The SceneGraph Inspector has been enhanced with a new keypath syntax which shoul
 
 We've also improved the reliability of the focus scrolling.
 
-# Formatting
-
-# Language Features
-
 # BrighterScript
 ## New diagnostic for max callfunc arguments
-An undocumented limitation of SceneGraph's `callfunc` functionality is that you cannot pass more than 5 arguments. Doing so would cause the call to silently fail, and sometimes even crash the application. ([BrighterScript#765](https://github.com/RokuCommunity/brighterscript/pull/765)) adds a diagnostic to flag these types of calls so you can detect them at compile time instead of at runtime.
+An undocumented limitation of SceneGraph's `callfunc` functionality is that you cannot pass more than 5 arguments. Doing so would cause the call to silently fail, and sometimes even crash the application. [BrighterScript#765](https://github.com/RokuCommunity/brighterscript/pull/765) adds a diagnostic to flag these types of calls so you can detect them at compile time instead of at runtime.
 
 ![image](https://user-images.githubusercontent.com/29876959/223404690-cef9d4a3-884a-4088-a0b8-8bbc998b94cc.png)
 
@@ -72,15 +75,11 @@ Syntax highlighting for the new `continue while` and `continue for` keywords was
 
 We want to make sure changes to BrighterScript don't break the main projects that depend on it. For a while now, our script to test the related `RokuCommunity` projects had problems with certain repositories that found ancestors inside `node_modules`. To fix that, now we use the system `tempdir` instead of a local `.tmp` folder.
 
-We have also added the test suites for the projects [rooibos](https://github.com/georgejecook/rooibos) and [maestro-roku-bsc-plugin](https://github.com/georgejecook/maestro-roku-bsc-plugin).
-
-# Preview features
-
-# Documentation
+We have also started running the test suites from the [rooibos](https://github.com/georgejecook/rooibos) and [maestro-roku-bsc-plugin](https://github.com/georgejecook/maestro-roku-bsc-plugin) projects.
 
 # Misc
 ## Improved extension development experience
-Historically, you'd need to manually launch watcher tasks for each RokuCommunity project that you were actively working on. As of ([#456](https://github.com/RokuCommunity/vscode-brightscript-la  nguage/pull/456)), we automatically find all RokuCommunity repositories cloned at the same level as vscode-brightscript-language, and kick of a combined watcher task for all of them. This greatly simplifies the development experience, reducing confusion for community contributors.
+Historically, you'd need to manually launch watcher tasks for each RokuCommunity project that you were actively working on. As of [vscode-brightscript-language#456](https://github.com/RokuCommunity/vscode-brightscript-language/pull/456), we automatically find all RokuCommunity repositories cloned at the same level as vscode-brightscript-language, and launch a combined watcher task for all of them. This greatly simplifies the development experience, reducing confusion for community contributors.
 
 ## Fix Github action that creates .vsix files on PR changes
 
@@ -89,11 +88,6 @@ If you are a contributor to the [roku-debug](https://github.com/rokucommunity/ro
 ![image](https://user-images.githubusercontent.com/29876959/223412230-2fb92db3-9f81-4bec-952e-7c5beffd3a44.png)
 
 The link to the instalation instructions was broken. Now we have updated it to open the correct page in our new website: [rokucommunity.github.io](https://rokucommunity.github.io/).
-
-
-# TODO
-***Move the items in this list to the appropriate section above, then delete this section*
- - roku-debug: Fix isAssignableExpression to correctly support dotted and indexed statements ([#128](https://github.com/RokuCommunity/roku-debug/pull/128))
 
 # Thank you
 Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:
