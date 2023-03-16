@@ -19,14 +19,16 @@ We'll do a larger writeup on all of these features when feature lands (hopefully
 
 # BrighterScript
 ## File API
-We've been hard at work designing the upcoming [file API] for BrighterScript. Currently in BrighterScript, only `.brs`,`.bs`, and `.xml` files are loaded into the program. All other files are copied as-is from `./src` to `./staging`. Even manifest files are only loaded in read-only mode and cannot be changed by plugins. The file API introduced in [BrighterScript#408](https://github.com/rokucommunity/brighterscript/pull/408) will empower brighterscript plugins to process, transform, and even completely rewrite any file type. We're excited to see what the community will use these features for, so hopefully we can get it finished up in the next few months.
+We've been hard at work designing the upcoming [file API](https://github.com/rokucommunity/brighterscript/pull/408) for BrighterScript. Currently in BrighterScript, only `.brs`,`.bs`, and `.xml` files are loaded into the program. All other files are copied as-is from `./src` to `./staging`. Even manifest files are only loaded in read-only mode and cannot be changed by plugins. The file API introduced in [BrighterScript#408](https://github.com/rokucommunity/brighterscript/pull/408) will empower brighterscript plugins to process, transform, and even completely rewrite files of any type. We're excited to see what the community will do with these new features, so hopefully we can get it finished up in the next few months.
 
 ## Component Statement
-Component statement is a proposal to the BrighterScript language that would allow develoeprs to device SceneGraph components *in code* instead of xml. It's built off the foundations of the [File API](#file-api), and is being used to validate that the File API is functionally capable of its goals. You can read more about the Component Statmenet designs in [this PR](https://github.com/rokucommunity/brighterscript/pull/575), and we're hopeful to land this feature before summer.
+Component statement is a proposal to the BrighterScript language that would allow developers to define SceneGraph components *in brighterscript code* instead of xml. It's built off the foundations of the [File API](#file-api), and is being used to validate that the File API is functionally capable of its goals. You can read more about the Component Statmenet designs in [this PR](https://github.com/rokucommunity/brighterscript/pull/575), and we're hopeful to land this feature before summer.
 
 # Thank you
 Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:
 
 Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
  - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    - Debug protocol server ([PR #107](https://github.com/RokuCommunity/roku-debug/pull/107))
+ - [@chrisdp (Christopher Dwyer-Perkins)](https://github.com/chrisdp)
     - Debug protocol server ([PR #107](https://github.com/RokuCommunity/roku-debug/pull/107))
