@@ -6,7 +6,7 @@ layout: ../../layouts/WhatsNewPost.astro
 # Overview
 Not much happened this month in terms of released features. However, behind the scenes, [Bronley](https://github.com/TwitchBronBron) and [Chris](https://github.com/chrisdp) were hard at work on a massive overhaul of the debugger to improve testability and also to prepare for Roku's spring 2023 OS release. You can read a little more about it [here](#debug-protocol-refactor). We'll go into more detail once the pull request is finally merged.
 
-If you weren't already aware, the debug protocol is a new binary socket-based debugger that Roku introduced in Roku OS 9.2. The debug protocol is much more stable and consistent than our regex-powered telnet debugger because instead of scraping text, we're able to communicate with the Roku device directly using established data structures. You should definitely consider giving it a test run. You can enable it by setting `"enableDebugProtocol": true"` in your `launch.json` in vscode.
+If you weren't already aware, the debug protocol is a new binary socket-based debugger that Roku introduced in Roku OS 9.2. The debug protocol is much more stable and consistent than our regex-powered telnet debugger because instead of scraping text, we're able to communicate with the Roku device directly using established data structures. You can enable the debug protocol by setting `"enableDebugProtocol": true"` in your `launch.json` in vscode.
 
 We've also made progress on the [File API](#file-api) and [Component Statement](component-statement) implementations, so stay tuned for more information on those in the coming months.
 
