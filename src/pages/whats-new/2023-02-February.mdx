@@ -1,6 +1,6 @@
 ---
 date: February 2023
-summary: Changes to
+summary: Significant internal changes to internal debugger logic, progress on BrighterScript's File API and Component Statement
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
@@ -8,7 +8,7 @@ Not much happened this month in terms of released features. However, behind the 
 
 If you weren't already aware, the debug protocol is a new binary socket-based debugger that Roku introduced in Roku OS 9.2. The debug protocol is much more stable and consistent than our regex-powered telnet debugger because instead of scraping text, we're able to communicate with the Roku device directly using established data structures. You can enable the debug protocol by setting `"enableDebugProtocol": true"` in your `launch.json` in vscode.
 
-We've also made progress on the [File API](#file-api) and [Component Statement](component-statement) implementations, so stay tuned for more information on those in the coming months.
+We've also made progress on the [File API](#file-api) and [Component Statement](#component-statement) implementations, so stay tuned for more information on those in the coming months.
 
 # Debugging
 ## Debug protocol refactor
