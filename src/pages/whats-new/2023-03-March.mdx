@@ -3,16 +3,12 @@ date: March 2023
 summary: New DeviceView, bsc severityOverride compiler option, and bsc optional chaining validations
 layout: ../../layouts/WhatsNewPost.astro
 ---
-# Overview
 
-# Editor
+# Debugging
 ## New Device View with interactive node inspector
 We introduced a new "Device View" panel in vscode extension version v2.39.0 that can be used while debugging to view the current video output of the active Roku. We achive this by capturing screenshots as fast as the Roku will provide them (roughly 1 image per second). We've also added a new interactive node inspector which is similar to the "inspect element" feature in modern web based developer tools. ([#465](https://github.com/RokuCommunity/vscode-brightscript-language/pull/465))
 
  ![device view](https://user-images.githubusercontent.com/2544493/234414091-9e2e85be-51d3-4493-a0ee-92037c152938.gif)
-
-
-# Debugging
 
 # Formatting
 
@@ -75,11 +71,6 @@ __After fix:__
  - move not-referenced check into ProgramValidator ([#773](https://github.com/RokuCommunity/brighterscript/pull/773))
  - simplify the ast range logic ([#784](https://github.com/RokuCommunity/brighterscript/pull/784))
 
-
-# Preview features
-
-# Documentation
-
 # Misc
 ## roku-deploy now uses micromatch instead of picomatch
 roku-deploy internally uses [fast-glob](https://www.npmjs.com/package/fast-glob) for file discovery (which uses [micromatch](https://www.npmjs.com/package/micromatch) for glob logic), but for some reason was using [picomatch](https://www.npmjs.com/package/picomatch) for the path filtering logic.
@@ -111,9 +102,6 @@ back into this:
 # Contributing
 ## Exclude node_modules when debugging roku-debug in Node.js
 When debugging the typescript code in roku-debug, breakpoints should work a lot better now. There was a bug that was incorrectly resolving the sourcemaps in the wrong locations, which often meant that contributors had to fall back to using hardcoded `debugger;` statements in their typescript code. ([a4a3de2](https://github.com/RokuCommunity/vscode-brightscript-language/commit/a4a3de2))
-
-
-# TODO
 
 # Thank you
 Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:
