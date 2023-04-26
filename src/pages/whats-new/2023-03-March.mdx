@@ -45,8 +45,8 @@ Here's a quick demo showing it in action:
 ![diagnostic-severity-override](https://user-images.githubusercontent.com/2544493/234058500-4510e12b-9d5f-4a49-aaf5-1fd6901a034d.gif)
 
 # BrighterScript
-## Fixed transpile bug with optional chaning
-Transpiling optional chaning expressions had a bug where the final `?.` in the chain would lose the `?` when used in an assignment statement. As of brighterscript@0.62.0, the bsc compiler will now produce proper output. ([PR #781](https://github.com/RokuCommunity/brighterscript/pull/781)). However, keep in mind that this is not valid syntax and the device will throw a runtime error if this syntax is used. To help with that, brighterscript will flag whenever optional chaining is used in assignments. 
+## Fixed transpile bug with optional chaining
+When transpiling optional chaining expressions, there was a bug where the final `?.` in the chain would lose the `?` when used in an assignment statement. As of brighterscript@0.62.0, the bsc compiler will now produce proper output. ([PR #781](https://github.com/RokuCommunity/brighterscript/pull/781)). However, keep in mind that this is not valid syntax and the device will throw a runtime error if this syntax is used. To help with that, brighterscript will flag whenever optional chaining is used in assignments. 
 
 __Before:__
 ![image](https://user-images.githubusercontent.com/2544493/234055473-5598d7a9-f172-43b6-b647-6d24d4f50dd5.png)
