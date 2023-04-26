@@ -31,7 +31,7 @@ The vscode extension (and BrighterScript) now properly flags when using optional
 ## New `severityOverride` option
 BrighterScript v0.62.0 added a new 'severityOverride' option that can be used to increase or decrease the severity of diagnostics. ([#725](https://github.com/RokuCommunity/brighterscript/pull/725))
 
-For example, consider the `bs1013` warning which says `"This file is not referenced by any other file in the project"`.If you wanted to turn that into an error, update the bsconfig as follows:
+For example, consider the `bs1013` warning which says `"This file is not referenced by any other file in the project"`. If you wanted to turn that warning into an error, update the bsconfig as follows:
 
 ```jsonc
 {
@@ -78,7 +78,7 @@ __After fix:__
 ## roku-deploy now uses micromatch instead of picomatch
 roku-deploy internally uses [fast-glob](https://www.npmjs.com/package/fast-glob) for file discovery (which uses [micromatch](https://www.npmjs.com/package/micromatch) for glob logic), but for some reason was using [picomatch](https://www.npmjs.com/package/picomatch) for the path filtering logic.
 
-This PR aligns on [micromatch](https://www.npmjs.com/package/micromatch) for path filtering logic, meaning that now all glob logic within roku-deploy is handled using the same library.(see [#109](https://github.com/RokuCommunity/roku-deploy/pull/109))
+[roku-deploy#109](https://github.com/RokuCommunity/roku-deploy/pull/109) aligns on [micromatch](https://www.npmjs.com/package/micromatch) for path filtering logic, meaning that now all glob logic within roku-deploy is handled using the same library.
 
 ## @rokucommunity/logger BigInt crash fix
 Fixed a crash in @rokucommunity/logger (used by all our RokuCommunity projects) when trying to serialize bigint ([@rokucommunity/logger#3](https://github.com/RokuCommunity/logger/pull/3))
