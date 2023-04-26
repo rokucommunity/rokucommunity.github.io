@@ -1,58 +1,119 @@
 ---
 date: March 2023
-summary: Changes to vscode-brightscript-language, brighterscript, roku-deploy, logger, roku-debug, brighterscript-formatter, bslint, ropm, roku-report-analyzer
+summary: New DeviceView, bsc severityOverride compiler option, and bsc optional chaining validations
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
 
 # Editor
+## New Device View with interactive node inspector
+We introduced a new "Device View" panel in vscode extension version v2.39.0 that can be used while debugging to view the current video output of the active Roku. We achive this by capturing screenshots as fast as the Roku will provide them (roughly 1 image per second). We've also added a new interactive node inspector which is similar to the "inspect element" feature in modern web based developer tools. ([#465](https://github.com/RokuCommunity/vscode-brightscript-language/pull/465))
+
+ ![device view](https://user-images.githubusercontent.com/2544493/234414091-9e2e85be-51d3-4493-a0ee-92037c152938.gif)
+
 
 # Debugging
 
 # Formatting
 
+## Fix formatting for indenting optional chaining expressions inside arrays ([#71](https://github.com/RokuCommunity/brighterscript-formatter/pull/71))
+We fixed a bug in the indent formatter that would incorrectly de-indent whenever the `?[` token was encountered.
+**Before:**
+![image](https://user-images.githubusercontent.com/2544493/234303880-e09eb226-a5c9-44c2-970b-26ae35a182d1.png)
+
+**After:**
+![image](https://user-images.githubusercontent.com/2544493/234317169-eaf98411-26ef-4745-9790-35baf38c58d6.png)
+
 # Language Features
+## Flag using optional chaining in left-hand-side of assignments
+The vscode extension (and BrighterScript) now properly flags when using optional chaining in the left-hand-side of assignments since doing that will cause a runtime error on-device. ([#782](https://github.com/RokuCommunity/brighterscript/pull/782))
+![image](https://user-images.githubusercontent.com/2544493/233837189-3c3dc798-2b6f-4d22-8bdf-0d210eafaf62.png)
+
+## New `severityOverride` option
+BrighterScript v0.62.0 added a new 'severityOverride' option that can be used to increase or decrease the severity of diagnostics. ([#725](https://github.com/RokuCommunity/brighterscript/pull/725))
+
+For example, consider the `bs1013` warning which says `"This file is not referenced by any other file in the project"`.If you wanted to turn that into an error, update the bsconfig as follows:
+
+```jsonc
+{
+   "diagnosticSeverityOverrides": {
+      "1013": "error"
+   }
+}
+```
+Here's a quick demo showing it in action:
+
+![diagnostic-severity-override](https://user-images.githubusercontent.com/2544493/234058500-4510e12b-9d5f-4a49-aaf5-1fd6901a034d.gif)
 
 # BrighterScript
+## Fixed transpile bug with optional chaning
+Transpiling optional chaning expressions had a bug where the final `?.` in the chain would lose the `?` when used in an assignment statement. As of brighterscript@0.62.0, the bsc compiler will now produce proper output. ([PR #781](https://github.com/RokuCommunity/brighterscript/pull/781)). However, keep in mind that this is not valid syntax and the device will throw a runtime error if this syntax is used. To help with that, brighterscript will flag whenever optional chaining is used in assignments. 
+
+__Before:__
+![image](https://user-images.githubusercontent.com/2544493/234055473-5598d7a9-f172-43b6-b647-6d24d4f50dd5.png)
+
+__After__:
+![image](https://user-images.githubusercontent.com/2544493/234250966-d51a064a-5701-4af9-8b6e-5e57a8f9454b.png)
+
+
+## Safer template string output
+BrighterScript@0.63.0 fixed a bug in the template string transpiler where trailing function attached to the last chunk of the template string instead of the full transpiled string. That has been fixed by wrapping the entire template string output in parentheses. ([#788](https://github.com/RokuCommunity/brighterscript/pull/788))
+
+__Before fix:__
+
+![image](https://user-images.githubusercontent.com/2544493/234248849-80b2c10f-f8a6-49d0-964c-f153bb93b28a.png)
+
+__After fix:__
+
+![image](https://user-images.githubusercontent.com/2544493/234249265-1d5276aa-038d-4b80-ae05-bde940bb9c74.png)
+
+ - brighterscript: Wrap transpiled template strings in parens 
+
+
+## Changes for BrighterScript plugin authors
+ - fix crash when func has no block ([#774](https://github.com/RokuCommunity/brighterscript/pull/774))
+ - move not-referenced check into ProgramValidator ([#773](https://github.com/RokuCommunity/brighterscript/pull/773))
+ - simplify the ast range logic ([#784](https://github.com/RokuCommunity/brighterscript/pull/784))
+
 
 # Preview features
 
 # Documentation
 
+# Misc
+## roku-deploy now uses micromatch instead of picomatch
+roku-deploy internally uses [fast-glob](https://www.npmjs.com/package/fast-glob) for file discovery (which uses [micromatch](https://www.npmjs.com/package/micromatch) for glob logic), but for some reason was using [picomatch](https://www.npmjs.com/package/picomatch) for the path filtering logic.
+
+This PR aligns on [micromatch](https://www.npmjs.com/package/micromatch) for path filtering logic, meaning that now all glob logic within roku-deploy is handled using the same library.(see [#109](https://github.com/RokuCommunity/roku-deploy/pull/109))
+
+## @rokucommunity/logger BigInt crash fix
+Fixed a crash in @rokucommunity/logger (used by all our RokuCommunity projects) when trying to serialize bigint ([@rokucommunity/logger#3](https://github.com/RokuCommunity/logger/pull/3))
+
+
+## Build status badges
+All of our "build status" badges stopped working in December 2022 because shields.io change the URL format for the badge. This month we spent a little time to fix them all 
+([1b31d04](https://github.com/RokuCommunity/brighterscript/commit/1b31d04),
+   [9df64c6](https://github.com/RokuCommunity/brighterscript-formatter/commit/9df64c6),
+   [248a853](https://github.com/RokuCommunity/roku-report-analyzer/commit/248a853),
+   [fc087d8](https://github.com/RokuCommunity/ropm/commit/fc087d8),
+   [cf63684](https://github.com/RokuCommunity/bslint/commit/cf63684),
+   [a9573f1](https://github.com/RokuCommunity/roku-debug/commit/a9573f1)
+   [b3f0b0d](https://github.com/rokucommunity/vscode-brightscript-language/commit/b3f0b0d)
+)
+
+We turned this: 
+[![build status](https://img.shields.io/github/workflow/status/rokucommunity/brighterscript/build.svg?logo=github)](https://github.com/rokucommunity/brighterscript/actions?query=workflow%3Abuild)
+
+back into this:
+[![build status](https://img.shields.io/github/actions/workflow/status/rokucommunity/brighterscript/build.yml?logo=github)](https://github.com/rokucommunity/brighterscript/actions?query=branch%3Amaster+workflow%3Abuild)
+
+
+# Contributing
+## Exclude node_modules when debugging roku-debug in Node.js
+When debugging the typescript code in roku-debug, breakpoints should work a lot better now. There was a bug that was incorrectly resolving the sourcemaps in the wrong locations, which often meant that contributors had to fall back to using hardcoded `debugger;` statements in their typescript code. ([a4a3de2](https://github.com/RokuCommunity/vscode-brightscript-language/commit/a4a3de2))
+
 
 # TODO
-***Move the items in this list to the appropriate section above, then delete this section***
- - vscode-brightscript-language: Fix Roku Commands view, start using createCommandMessage more consist… ([#471](https://github.com/RokuCommunity/vscode-brightscript-language/pull/471))
- - vscode-brightscript-language: Add device view with direct node selection ([#465](https://github.com/RokuCommunity/vscode-brightscript-language/pull/465))
- - vscode-brightscript-language: Use ubuntu-latest ([f62b506](https://github.com/RokuCommunity/vscode-brightscript-language/commit/f62b506))
- - vscode-brightscript-language: Fix roku-debug breakpoints ([a4a3de2](https://github.com/RokuCommunity/vscode-brightscript-language/commit/a4a3de2))
- - brighterscript: Add github icon back into build status badge ([30d25ae](https://github.com/RokuCommunity/brighterscript/commit/30d25ae))
- - brighterscript: Another build status badge fix ([9250656](https://github.com/RokuCommunity/brighterscript/commit/9250656))
- - brighterscript: Fix build status badge ([1b31d04](https://github.com/RokuCommunity/brighterscript/commit/1b31d04))
- - brighterscript: Optional chaining assignment validation ([#782](https://github.com/RokuCommunity/brighterscript/pull/782))
- - brighterscript: Fix transpile bug with optional chaning ([#781](https://github.com/RokuCommunity/brighterscript/pull/781))
- - brighterscript: Add 'severityOverride' option ([#725](https://github.com/RokuCommunity/brighterscript/pull/725))
- - brighterscript: Fix crash when func has no block ([#774](https://github.com/RokuCommunity/brighterscript/pull/774))
- - brighterscript: Remove invalid annotation example ([8d3d74e](https://github.com/RokuCommunity/brighterscript/commit/8d3d74e))
- - brighterscript: Move not-referenced check into ProgramValidator ([#773](https://github.com/RokuCommunity/brighterscript/pull/773))
- - brighterscript: Wrap transpiled template strings in parens ([#788](https://github.com/RokuCommunity/brighterscript/pull/788))
- - brighterscript: Simplify the ast range logic ([#784](https://github.com/RokuCommunity/brighterscript/pull/784))
- - roku-deploy: Use micromatch instead of picomatch ([#109](https://github.com/RokuCommunity/roku-deploy/pull/109))
- - roku-deploy: Bump qs from 6.5.2 to 6.5.3 ([#105](https://github.com/RokuCommunity/roku-deploy/pull/105))
- - roku-deploy: Bump jszip from 3.7.1 to 3.8.0 ([#108](https://github.com/RokuCommunity/roku-deploy/pull/108))
- - logger: Fix crash when encountering bigint ([#3](https://github.com/RokuCommunity/logger/pull/3))
- - logger: Reduce CI builds for PRs ([7787a00](https://github.com/RokuCommunity/logger/commit/7787a00))
- - roku-debug: Fix build status badge ([a9573f1](https://github.com/RokuCommunity/roku-debug/commit/a9573f1))
- - roku-debug: Bump jszip from 3.7.1 to 3.10.1 ([#135](https://github.com/RokuCommunity/roku-debug/pull/135))
- - brighterscript-formatter: Add github logo back to build status badge ([5f0d04b](https://github.com/RokuCommunity/brighterscript-formatter/commit/5f0d04b))
- - brighterscript-formatter: Fix build status badge ([9df64c6](https://github.com/RokuCommunity/brighterscript-formatter/commit/9df64c6))
- - brighterscript-formatter: update readme ([#72](https://github.com/RokuCommunity/brighterscript-formatter/pull/72))
- - brighterscript-formatter: Fix indent format issue related to optional chaining array access ([#71](https://github.com/RokuCommunity/brighterscript-formatter/pull/71))
- - bslint: Fix build status badge ([cf63684](https://github.com/RokuCommunity/bslint/commit/cf63684))
- - bslint: add "eol-last" to list of default rules ([#84](https://github.com/RokuCommunity/bslint/pull/84))
- - ropm: fix build status badge ([fc087d8](https://github.com/RokuCommunity/ropm/commit/fc087d8))
- - ropm: Bump jszip from 3.7.1 to 3.10.1 ([#68](https://github.com/RokuCommunity/ropm/pull/68))
- - roku-report-analyzer: Fix gh workflow badge svg ([248a853](https://github.com/RokuCommunity/roku-report-analyzer/commit/248a853))
 
 # Thank you
 Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:
