@@ -263,9 +263,9 @@ class Runner {
          *      2022-10-28 13:02:25 -0400  (tag: v0.60.4)
          */
         const execResult = await exec('git log --tags --simplify-by-decoration --pretty="format:%ci %d"', { cwd: project.dir });
-        //https://regex101.com/r/cGcKUj/2
+        //https://regex101.com/r/cGcKUj/3
         const releases = [
-            ...execResult.stdout.matchAll(/(\d+-\d+-\d+\s*(?:\d+:\d+:\d+(?:\s*[+-]?\d+))?).*?\(tag:[ \t]*(v.*?)\)/g)
+            ...execResult.stdout.matchAll(/(\d+-\d+-\d+\s*(?:\d+:\d+:\d+(?:\s*[+-]?\d+))?).*?\(.*\btag:[ \t]*(v.*?)[,)]/g)
         ].map(x => ({
             date: new Date(x[1]),
             version: x[2]
