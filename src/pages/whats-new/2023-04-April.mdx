@@ -5,46 +5,157 @@ layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
 
-# Editor
+This month (April 2003) we have seen a number of improvements across VSCode including
+
+- Improved sideloading speed by excluding sourcemaps
+- Improving stability of RALE 
+- Improving debug session notifications 
+- Improving BSLinting including no longer consider `const` as an unused variable 
+- Improved use of namespaces and enums in Brighterscript
+- Added the ability to create .cpuprofile files when performance benchmarking 
+- Ensure the GitHub build badge is correctly reporting the build status 
+- Improvements to automation including finding nodes by location 
+- Improve DNS lookup failover when the primary lookup fails
+
+Many thanks to our regular and willing contributors, without whom this would not be possible!
+
+VSCode Brightscript team!
+
+
+
+# Building
+
+## Exclude sourcemaps when sideloading ([#145](https://github.com/RokuCommunity/roku-debug/pull/145))
+
+- Exclude sourcemaps from the sideloaded zips, because sourcemaps are large and they cause longer zipping, uploading, and on-device compile times when present.
+
+Timing results for a large internal brighterscript app:
+
+- Sourcemaps INCLUDED
+
+```
+Packaging projects took: 3s180ms, Uploading zip took 7731ms, AppCompileComplete --------> Duration(5565ms)
+Packaging projects took: 2s912ms, Uploading zip took 7118ms, AppCompileComplete --------> Duration(5467ms)
+Packaging projects took: 2s907ms, Uploading zip took 7072ms, AppCompileComplete --------> Duration(5681ms)
+```
+
+- Sourcemaps EXCLUDED
+
+```
+Packaging projects took: 2s331ms, Uploading zip took 5927ms, AppCompileComplete --------> Duration(4143ms)
+Packaging projects took: 2s305ms, Uploading zip took 5899ms, AppCompileComplete --------> Duration(3959ms)
+Packaging projects took: 2s411ms, Uploading zip took 5920ms, AppCompileComplete --------> Duration(3972ms)
+```
 
 # Debugging
 
-# Formatting
+## Fix crash during launch due to missing rale option ([#476](https://github.com/RokuCommunity/vscode-brightscript-language/pull/476))
 
-# Language Features
+- Fixes an issue during launch that would crash if injectRaleTrackerTask was true, but no tracker task path was specified.
+- Wraps the entire launch config sanitization in a try/catch so we can write any exception to the output channel
+
+
+## Ensures the location specified in raleTrackerTaskFileLocation is valid ([#472](https://github.com/RokuCommunity/vscode-brightscript-language/pull/472))
+
+- checks the location used in raleTrackerTaskFileLocation is valid
+- also informs the user with appropriate error if an invalid location is used
+
+## Add better error for failed session starts ([#147](https://github.com/RokuCommunity/roku-debug/pull/147))
+
+- Add clearer failed-to-start-debug-session notifications
+
+## adds device query info to debug session ([#130](https://github.com/RokuCommunity/roku-debug/pull/130))
+
+- Certain functionality requires knowledge of what firmware or debug session version we're running, so run a device-info query at the start of a debug session and store that on the session so it's available for the lifetime of that debug session.
+
+The request looks something like this:
+http://192.168.1.37:8060/query/device-info
+
+- The results should be parsed from xml into a usable javascript object /json structure.
+
+- Also create a typescript interface called DeviceInfo for all of the known fields.
+
+# Linting
+
+- fixed some small lint issues ([#479](https://github.com/RokuCommunity/vscode-brightscript-language/pull/479))
+- BSLint: fix: do not consider consts as unused variables ([#85](https://github.com/RokuCommunity/bslint/pull/85))
+
 
 # BrighterScript
 
-# Preview features
+## Fix namespace-relative items ([#789](https://github.com/RokuCommunity/brighterscript/pull/789))
 
-# Documentation
+- Fixes several issues related to namespace-relative items, such as:
+  - semantic tokens for namespaces in assignment statements
+  - semantic tokens for namespaces as function parameters
+  - enum member lookups are now case INsensitive
+  - validation for using namespaces in assignment statements and function parameters
+
+## Fix namespace-relative enum value ([#793](https://github.com/RokuCommunity/brighterscript/pull/793))
+
+- Fixes a bug that was incorrectly flagging namespace-relative enum values.
+
+## Improves performance in symbol table fetching ([#797](https://github.com/RokuCommunity/brighterscript/pull/797))
+
+- Small performance boost by optimizing the AstNode.getSymbolTable() method.
+
+Before:
+
+![image](https://user-images.githubusercontent.com/2544493/233732854-1577e2c5-e2eb-489b-b49e-9c5464b97e04.png)
+
+After: 
+
+![image](https://user-images.githubusercontent.com/2544493/233732843-42f08221-45de-49ea-99b7-1707567ac1f8.png)
+
+## Add cpuprofile ability to the benchmarks ([#796](https://github.com/RokuCommunity/brighterscript/pull/796))
+
+- Adds ability to generate .cpuprofile files when running benchmarks.
+- Don't delete installed bsc versions after test (for benchmarking results)
+
+## Fix benchmark crashes ([#795](https://github.com/RokuCommunity/brighterscript/pull/795))
+ 
+- Fixes stability issues in the benchmark project
 
 
-# TODO
-***Move the items in this list to the appropriate section above, then delete this section***
- - vscode-brightscript-language: Run find node calculations in webview and other improvements ([#477](https://github.com/RokuCommunity/vscode-brightscript-language/pull/477))
- - vscode-brightscript-language: Fix crash during launch due to missing rale option ([#476](https://github.com/RokuCommunity/vscode-brightscript-language/pull/476))
- - vscode-brightscript-language: Wrap the dnsLookup for host in a try/catch ([#473](https://github.com/RokuCommunity/vscode-brightscript-language/pull/473))
- - vscode-brightscript-language: Fix build badge ([#474](https://github.com/RokuCommunity/vscode-brightscript-language/pull/474))
- - vscode-brightscript-language: Added validation for raleTrackerTaskFileLocation setting existence. ([#472](https://github.com/RokuCommunity/vscode-brightscript-language/pull/472))
- - vscode-brightscript-language: Fix small lint issues ([#479](https://github.com/RokuCommunity/vscode-brightscript-language/pull/479))
- - vscode-brightscript-language: Fix wsl rdb bugs ([#478](https://github.com/RokuCommunity/vscode-brightscript-language/pull/478))
- - brighterscript: Fix namespace-relative items ([#789](https://github.com/RokuCommunity/brighterscript/pull/789))
- - brighterscript: Bump xml2js from 0.4.23 to 0.5.0 ([#790](https://github.com/RokuCommunity/brighterscript/pull/790))
- - brighterscript: Fix namespace-relative enum value ([#793](https://github.com/RokuCommunity/brighterscript/pull/793))
- - brighterscript: Improves performance in symbol table fetching ([#797](https://github.com/RokuCommunity/brighterscript/pull/797))
- - brighterscript: Add cpuprofile ability to the benchmarks ([#796](https://github.com/RokuCommunity/brighterscript/pull/796))
- - brighterscript: Fix benchmark crashes ([#795](https://github.com/RokuCommunity/brighterscript/pull/795))
- - roku-deploy: Bump xml2js from 0.4.23 to 0.5.0 ([#112](https://github.com/RokuCommunity/roku-deploy/pull/112))
- - roku-deploy: Fix build status badge ([ad2c9ec](https://github.com/RokuCommunity/roku-deploy/commit/ad2c9ec))
- - roku-debug: Exclude sourcemaps when sideloading ([#145](https://github.com/RokuCommunity/roku-debug/pull/145))
- - roku-debug: Add better error for failed session starts ([#147](https://github.com/RokuCommunity/roku-debug/pull/147))
- - roku-debug: Bump xml2js from 0.4.23 to 0.5.0 ([#146](https://github.com/RokuCommunity/roku-debug/pull/146))
- - roku-debug: adds device query info to debug session ([#130](https://github.com/RokuCommunity/roku-debug/pull/130))
- - roku-debug: Make axios a prod dependency ([#148](https://github.com/RokuCommunity/roku-debug/pull/148))
- - bslint: fix: do not consider consts as unused variables ([#85](https://github.com/RokuCommunity/bslint/pull/85))
+# GitHub workflow 
+
+## Fix build badge ([#474](https://github.com/RokuCommunity/vscode-brightscript-language/pull/474) and https://github.com/RokuCommunity/roku-deploy/commit/ad2c9ec)
+
+- Fixes an issue with the GitHub build status badge icon is incorrectly reporting 'passing' or 'failing' and thus cannot be relied upon.
+- One can now click to view the workflow results at build.yml
+
+<img src="../../../public/images/screenshots/github-build-badge.png" />
+
+# Unit Testing 
+
+## Fix wsl rdb bugs ([#478](https://github.com/RokuCommunity/vscode-brightscript-language/pull/478))
+
+# Automation
+
+## Switched to finding nodes at a given location (x,y) in webview directly ([#477](https://github.com/RokuCommunity/vscode-brightscript-language/pull/477))
+
+
+
+## Switched from ChromeClose icon to ArrowLeft icon to avoid confusion when closing detail page ([#477](https://github.com/RokuCommunity/vscode-brightscript-language/pull/477))
+
+**From:**
+
+<img src="https://www.svgrepo.com/show/361066/chrome-close.svg" width="50" />
+
+**To:**
+
+<img src="https://cdn-icons-png.flaticon.com/512/109/109618.png" width="50" />
+
+# Networking
+
+## Wrap the dnsLookup for host in a try/catch ([#473](https://github.com/RokuCommunity/vscode-brightscript-language/pull/473))
+
+- Wrap the dnsLookup in the BrightScriptCommands file in a try/catch, so even if the dns lookup fails, it will still at least try to use what we have.
+
+
 
 # Thank you
+
 Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:
 
 Contributions to [vscode-brightscript-language](https://github.com/RokuCommunity/vscode-brightscript-language):
@@ -67,12 +178,8 @@ Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscrip
     - Improves performance in symbol table fetching ([PR #797](https://github.com/RokuCommunity/brighterscript/pull/797))
     - Add cpuprofile ability to the benchmarks ([PR #796](https://github.com/RokuCommunity/brighterscript/pull/796))
     - Fix benchmark crashes ([PR #795](https://github.com/RokuCommunity/brighterscript/pull/795))
- - [@dependabot[bot] (dependabot[bot])](https://github.com/apps/dependabot)
-    - Bump xml2js from 0.4.23 to 0.5.0 ([PR #790](https://github.com/RokuCommunity/brighterscript/pull/790))
-
+ 
 Contributions to [roku-deploy](https://github.com/RokuCommunity/roku-deploy):
- - [@dependabot[bot] (dependabot[bot])](https://github.com/apps/dependabot)
-    - Bump xml2js from 0.4.23 to 0.5.0 ([PR #112](https://github.com/RokuCommunity/roku-deploy/pull/112))
  - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
     - Fix build status badge ([ad2c9ec](https://github.com/RokuCommunity/roku-deploy/commit/ad2c9ec))
 
@@ -81,8 +188,6 @@ Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
     - Exclude sourcemaps when sideloading ([PR #145](https://github.com/RokuCommunity/roku-debug/pull/145))
     - Add better error for failed session starts ([PR #147](https://github.com/RokuCommunity/roku-debug/pull/147))
     - Make axios a prod dependency ([PR #148](https://github.com/RokuCommunity/roku-debug/pull/148))
- - [@dependabot[bot] (dependabot[bot])](https://github.com/apps/dependabot)
-    - Bump xml2js from 0.4.23 to 0.5.0 ([PR #146](https://github.com/RokuCommunity/roku-debug/pull/146))
  - [@sethmaclean (sethmaclean)](https://github.com/sethmaclean)
     - adds device query info to debug session ([PR #130](https://github.com/RokuCommunity/roku-debug/pull/130))
 
