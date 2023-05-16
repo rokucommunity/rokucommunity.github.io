@@ -21,17 +21,20 @@ Many thanks to our regular and willing contributors, without whom this would not
 
 VSCode Brightscript team!
 
+# Editor
 
+# Debugging
 
-# Building
+## Exclude sourcemaps when sideloading
+Many preprocessors such as BrighterScript or gulp plugins will generate sourcemaps alongside the generated files, which are a way to link a generated file, line, and column location back to its original location. The BrightScript language extension for VSCode fully supports reading these sourcemaps to improve the debugging experience with projects that leverage a preprocessor. However, sourcemaps are fairly large, sometimes even as large as the generated file itself. 
 
-## Exclude sourcemaps when sideloading ([#145](https://github.com/RokuCommunity/roku-debug/pull/145))
+![image](https://github.com/rokucommunity/rokucommunity.github.io/assets/2544493/c5a172a3-fec3-4035-9ae3-669a43858298)
 
-- Exclude sourcemaps from the sideloaded zips, because sourcemaps are large and they cause longer zipping, uploading, and on-device compile times when present.
+Also, it seems that on-Roku compile times are slower anytiime sourcemaps are present (perhaps they try to parse them?), which results in measurably longer on-device compile times. 
 
-Timing results for a large internal brighterscript app:
+Thanks to [roku-debug#145](https://github.com/RokuCommunity/roku-debug/pull/145), the BrightScript Language extension for VSCode will now exclude sourceamps from sideloaded zips starting in [v2.40.0](https://github.com/rokucommunity/vscode-brightscript-language/compare/v2.39.0...v2.40.0) . This speeds up zip times, upload times, _and_ compile times. Here are some timing results from a large brighterscript app. The results speak for themselves:
 
-- Sourcemaps INCLUDED
+**Sourcemaps INCLUDED:**
 
 ```
 Packaging projects took: 3s180ms, Uploading zip took 7731ms, AppCompileComplete --------> Duration(5565ms)
@@ -39,7 +42,7 @@ Packaging projects took: 2s912ms, Uploading zip took 7118ms, AppCompileComplete 
 Packaging projects took: 2s907ms, Uploading zip took 7072ms, AppCompileComplete --------> Duration(5681ms)
 ```
 
-- Sourcemaps EXCLUDED
+**Sourcemaps EXCLUDED:**
 
 ```
 Packaging projects took: 2s331ms, Uploading zip took 5927ms, AppCompileComplete --------> Duration(4143ms)
@@ -47,43 +50,39 @@ Packaging projects took: 2s305ms, Uploading zip took 5899ms, AppCompileComplete 
 Packaging projects took: 2s411ms, Uploading zip took 5920ms, AppCompileComplete --------> Duration(3972ms)
 ```
 
-# Debugging
+## Better error handling for RALE integration
+If you aren't aware, the vscode extension has some basic support for [RALE integration](https://rokucommunity.github.io/vscode-brightscript-language/Debugging/rale.html). When enabled, the extension can auto-inject the RALE tracker task init code into your project by replacing a specific comment with the tracker task init logic. However, there was a bug where the debug session would crash with a very obscure message if `injectRaleTrackerTask` was enabled but the file at `raleTrackerTaskFileLocation` was missing or the property was omitted entirely. 
 
-## Fix crash during launch due to missing rale option ([#476](https://github.com/RokuCommunity/vscode-brightscript-language/pull/476))
+As of vscode extension [v2.40.0](https://github.com/rokucommunity/vscode-brightscript-language/compare/v2.39.0...v2.40.0), this flow has been improved to now show a much more helpful error notification. 
 
-- Fixes an issue during launch that would crash if injectRaleTrackerTask was true, but no tracker task path was specified.
-- Wraps the entire launch config sanitization in a try/catch so we can write any exception to the output channel
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/414beed6-54d5-4556-9120-19a664c9d083)
+
+## Better error reporting for launch.json validation crashes
+At the start of a debug session in VSCode, our BrightScript Language extension will validate and sanitize the selected launch.json configuration. Sometimes we encounter a runtime exception in this process. In the past, we weren't properly exposing those issues to the developer. As of vscode extension [v2.40.0](https://github.com/rokucommunity/vscode-brightscript-language/compare/v2.39.0...v2.40.0), we've also properly wrapped the entire launch config processing block in a try/catch so we can log exceptions to the output channel, which should help developers get more useful feedback for future crashes. 
+
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/bd6fcaae-cf7e-4cff-b07d-de53196ca266)
 
 
-## Ensures the location specified in raleTrackerTaskFileLocation is valid ([#472](https://github.com/RokuCommunity/vscode-brightscript-language/pull/472))
-
-- checks the location used in raleTrackerTaskFileLocation is valid
-- also informs the user with appropriate error if an invalid location is used
-
-## Add better error for failed session starts ([#147](https://github.com/RokuCommunity/roku-debug/pull/147))
-
-- Add clearer failed-to-start-debug-session notifications
-
-## adds device query info to debug session ([#130](https://github.com/RokuCommunity/roku-debug/pull/130))
-
-- Certain functionality requires knowledge of what firmware or debug session version we're running, so run a device-info query at the start of a debug session and store that on the session so it's available for the lifetime of that debug session.
-
-The request looks something like this:
-http://192.168.1.37:8060/query/device-info
-
-- The results should be parsed from xml into a usable javascript object /json structure.
-
-- Also create a typescript interface called DeviceInfo for all of the known fields.
-
-# Linting
-
-- fixed some small lint issues ([#479](https://github.com/RokuCommunity/vscode-brightscript-language/pull/479))
-- BSLint: fix: do not consider consts as unused variables ([#85](https://github.com/RokuCommunity/bslint/pull/85))
-
+## Add better error for failed session starts
+If you've been using the vscode extension for a while now, you've probably encountered situations where the debug session just randomly shuts down, with no warning or explanation. Starting in release [v2.40.1](https://github.com/rokucommunity/vscode-brightscript-language/blob/master/CHANGELOG.md#2401---2023-04-28), many of these crashes will now show a much more helpful error popup. 
 
 # BrighterScript
+## bslint now works with `const`
+If you've used the `const` feature in BrighterScript (introduced in [v0.53.0](https://github.com/rokucommunity/brighterscript/blob/master/CHANGELOG.md#0530---2022-07-14)) and also [bslint](https://github.com/rokucommunity/bslint), you may have noticed that bslint would incorrectly show errors whenever you tried to reference those consts. 
 
-## Fix namespace-relative items ([#789](https://github.com/RokuCommunity/brighterscript/pull/789))
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/c63000da-3316-400a-aebf-bf0bc3484f63)
+
+This has been fixed and is available starting in [bslint v0.8.3](https://github.com/rokucommunity/bslint/blob/master/CHANGELOG.md#083---2023-04-18)
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/bcd949c0-1b09-4552-b42b-6dd612e55a31)
+
+## Fix namespace-relative items
+BrighterScript has a feature in nested namespaces where all the items in that same namespace can be referenced _without_ needing to include the full leading namespace part. We refer to this as "namespace inference", which you can read about [here](https://github.com/rokucommunity/brighterscript/blob/master/docs/namespaces.md#namespace-inference). As a result of supporting this feature, certain names become unavailable for use as variable identifiers when they conflict with inferred namespace names. These variables are now properly flagged as errors starting in BrighterScript [v0.64.0](https://github.com/rokucommunity/brighterscript/blob/master/CHANGELOG.md#0640---2023-04-04). 
+
+## Fix semantic tokens for namespaces
+Semantic tokens are a way for the language server to improve syntax highlighting for certain tokens, based on compile-time semantics that simple textmate grammar syntax highlighting can't support. 
+
+BrighterScript now catches when namespaces are used like variables. We've also fixed some sematnic token colorization around some of 
 
 - Fixes several issues related to namespace-relative items, such as:
   - semantic tokens for namespaces in assignment statements
