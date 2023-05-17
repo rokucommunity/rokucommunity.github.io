@@ -82,13 +82,12 @@ BrighterScript has a feature in nested namespaces where all the items in that sa
 ## Fix semantic tokens for namespaces
 Semantic tokens are a way for the language server to improve syntax highlighting for certain tokens, based on compile-time semantics that simple textmate grammar syntax highlighting can't support. 
 
-BrighterScript now catches when namespaces are used like variables. We've also fixed some sematnic token colorization around some of 
+BrighterScript now catches when namespaces are used like variables, and we've fixed some semantic colorization issues: 
+- validation for using namespaces in assignment statements and function parameters
+- semantic tokens for namespaces in assignment statements
+- semantic tokens for namespaces as function parameters
+- enum member lookups are now case INsensitive
 
-- Fixes several issues related to namespace-relative items, such as:
-  - semantic tokens for namespaces in assignment statements
-  - semantic tokens for namespaces as function parameters
-  - enum member lookups are now case INsensitive
-  - validation for using namespaces in assignment statements and function parameters
 
 ## Fix namespace-relative enum value ([#793](https://github.com/RokuCommunity/brighterscript/pull/793))
 
