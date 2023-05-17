@@ -73,7 +73,7 @@ At the start of a debug session in VSCode, the BrightScript Language extension w
 ## Add better error for failed session starts
 If you've been using the vscode extension for a while now, you've probably encountered situations where the debug session just randomly shuts down, with no warning or explanation. Starting in release [v2.40.1](https://github.com/rokucommunity/vscode-brightscript-language/blob/master/CHANGELOG.md#2401---2023-04-28), many of these crashes will now show a much more helpful error popup. 
 
-## Wrap the dnsLookup for host in a try/catch ([#473](https://github.com/RokuCommunity/vscode-brightscript-language/pull/473))
+## Wrap the dnsLookup for host in a try/catch
 Rather than trying to remember several different IP addresses, another way of referencing your Rokus is by DNS name. Many routers allow statically assigning a host name to a device on the network. For example, Roku 192.168.1.25 could be given the name "`roku-streaming-stick1`". At the start of a debug session, the vscode extension will do a DNS lookup and translate that DNS name back to its local IP address. 
 
 However, in some situations, that DNS lookup could fail, and we were not properly handling that failure and instead would crash the debug session. This has been fixed in [v2.40.0](https://github.com/rokucommunity/vscode-brightscript-language/blob/master/CHANGELOG.md#2400---2023-04-18) of the BrightScript Language extension for VSCode so that, if the DNS lookup fails, we'll attempt to use the DNS name as-is, which sometimes still works.
