@@ -3,51 +3,198 @@ date: May 2023
 summary: Changes to vscode-brightscript-language, brighterscript, roku-deploy, logger, roku-debug, brighterscript-formatter, bslint, ropm, roku-report-analyzer
 layout: ../../layouts/WhatsNewPost.astro
 ---
+
+
+
 # Overview
+
+This month has been a busy month with many small fixes going through in different parts of the Brightscript ecosystem.  
+
+We have 
+
+- upgraded a few items within the both code and scenegraph editors
+- allowed an upgrade of http to use `postman-request` rather than `axios`
+- added the ability to print out the full text of hex error codes when debugging, and also fixed a bug which crashes repeat debugging sessions 
+- fixed several bugs in code signing, testing, logging and deploymnent
+- upgrade npm libraries for `logger`, `postman-request` and `coveralls-next`
+
 
 # Editor
 
-# Debugging
+## Code Colorization
 
-# Formatting
+We have removed `<` and `>` from bracket matching ([#483](https://github.com/RokuCommunity/vscode-brightscript-language/pull/483))
 
-# Language Features
+Before
 
-# BrighterScript
+![image](https://user-images.githubusercontent.com/2544493/238976357-aa9547ed-ee6d-47f3-bf64-f90199058c5e.png)
 
-# Preview features
+After
+
+![image](https://user-images.githubusercontent.com/2544493/238976432-63d8b84f-f91b-4aec-bc3a-4893677b4b5a.png)
+
+
+
+
+
+## File History
+
+Change rendezvous count for file history 
+
+([#482](https://github.com/RokuCommunity/vscode-brightscript-language/pull/482))
+
+
+
+
+## roku commands
+
+fix Roku Commands list of available requests 
+
+([#480](https://github.com/RokuCommunity/vscode-brightscript-language/pull/480))
+
+
+
+
+# scenegraph 
+
+We have improved `findChild` and `findAncestor` AstNode methods to support 
+
+- externally cancelling the walk 
+
+- enabling findAncestor to return a different node than matched, if the matcher returns the node
+
+([#807](https://github.com/RokuCommunity/brighterscript/pull/807))
+
+
+We have also fixed an infinite recursion possibility in Scenegraph Inspector 
+
+([#480](https://github.com/RokuCommunity/vscode-brightscript-language/pull/480))
+
+
+
+
+# http `postman-request`
+
+Since `postman-request` is a required dependency we are removing `axios` as it's a duplication of function
+
+([#153](https://github.com/RokuCommunity/roku-debug/pull/153))
+
+We also fixed a runtime crash casued by removing `request` module - fixed by directly declaring `postman-request`
+
+([#485](https://github.com/RokuCommunity/vscode-brightscript-language/pull/485))
+([#151](https://github.com/RokuCommunity/roku-debug/pull/151))
+
+
+
+
+# debugging
+
+
+## Render Text Meaning Of Error Codes
+
+It is now possible to print out the full error text of error codes along with the hex short code 
+
+for example, for hex error code `&h08` it is now possible to annotate with `(ERR_FC: invalid parameter passed to function/array (e.g neg matrix dim or square root))`
+
+([#467](https://github.com/RokuCommunity/vscode-brightscript-language/pull/467))
+
+
+
+## fix crash on subsequent debug session
+
+We have fixed a bug where a subsequent debug session is finding the previous session is not cleared and so a 'file already exists' error hangs the debugger
+
+([#152](https://github.com/RokuCommunity/roku-debug/pull/152))
+
+
+
+
+
+
+# deployment 
+
+
+## pkg signing
+
+This fixes a bug which overwrites the `signingPackage.pkg` file
+
+([#114](https://github.com/RokuCommunity/roku-deploy/pull/114))
+
+
+## fix deployment tests
+
+This provides a fix for broken deployment tests
+
+([fefe375](https://github.com/RokuCommunity/roku-deploy/commit/fefe375))
+
+
+## fix deployment bug 
+
+fixes a bug in roku-deploy from node 19
+
+([#115](https://github.com/RokuCommunity/roku-deploy/pull/115))
+
+
+
+# logging
+
+
+fix bug in github workflow for logger library
+
+([b1e490b](https://github.com/RokuCommunity/logger/commit/b1e490b))
+
+
+
+
+
+
+# npm changes
+
+## logger
+
+upgrade logger to version 0.3.2
+
+([cf0ed74](https://github.com/RokuCommunity/logger/commit/cf0ed74))
+
+## coveralls-next
+
+remove `coveralls` and add `coveralls-next`
+
+([43756d8](https://github.com/RokuCommunity/brighterscript/commit/43756d8))
+([b851603](https://github.com/RokuCommunity/logger/commit/b851603))
+([04af7a0](https://github.com/RokuCommunity/logger/commit/04af7a0))
+
+## postman-request
+
+remove `request` and add `postman-request`
+
+Fix audit issues ([#116](https://github.com/RokuCommunity/roku-deploy/pull/116))
+
+
+
+
+
+
 
 # Documentation
 
-# Misc
+Update the documentation for linting error with diagnostic severity overrides
 
-# For Contributors
+([#804](https://github.com/RokuCommunity/brighterscript/pull/804))
 
-# TODO
-***Move the items in this list to the appropriate section above, then delete this section***
- - vscode-brightscript-language: Remove `<` and `>` from bracket matching ([#483](https://github.com/RokuCommunity/vscode-brightscript-language/pull/483))
- - vscode-brightscript-language: Change rendezvous count for file history ([#482](https://github.com/RokuCommunity/vscode-brightscript-language/pull/482))
- - vscode-brightscript-language: fix infinite recursion possibility in Scenegraph Inspector and fix Roku Commands list of available requests ([#480](https://github.com/RokuCommunity/vscode-brightscript-language/pull/480))
- - vscode-brightscript-language: Bump http-cache-semantics from 4.1.0 to 4.1.1 ([#466](https://github.com/RokuCommunity/vscode-brightscript-language/pull/466))
- - vscode-brightscript-language: Roku Error Codes ([#467](https://github.com/RokuCommunity/vscode-brightscript-language/pull/467))
- - vscode-brightscript-language: Use postman-request instead of request ([#485](https://github.com/RokuCommunity/vscode-brightscript-language/pull/485))
- - brighterscript: Fix code formatting ([#805](https://github.com/RokuCommunity/brighterscript/pull/805))
- - brighterscript: Update README.md ([#804](https://github.com/RokuCommunity/brighterscript/pull/804))
- - brighterscript: npm audit fixes. upgrade to coveralls-next ([43756d8](https://github.com/RokuCommunity/brighterscript/commit/43756d8))
- - brighterscript: Improve findChild and findAncestor AST methods ([#807](https://github.com/RokuCommunity/brighterscript/pull/807))
- - roku-deploy: Fix audit issues ([#116](https://github.com/RokuCommunity/roku-deploy/pull/116))
- - roku-deploy: Fix bug that overwrites signing pkg during tests ([#114](https://github.com/RokuCommunity/roku-deploy/pull/114))
- - roku-deploy: TBD-67: roku-deploy: fix nodejs 19 bug ([#115](https://github.com/RokuCommunity/roku-deploy/pull/115))
- - roku-deploy: Fix broken device tests ([fefe375](https://github.com/RokuCommunity/roku-deploy/commit/fefe375))
- - logger: Fix dependencies ([04af7a0](https://github.com/RokuCommunity/logger/commit/04af7a0))
- - logger: Fix workflow build link ([b851603](https://github.com/RokuCommunity/logger/commit/b851603))
- - logger: Merge branch 'master' of https://github.com/rokucommunity/logger ([cf0ed74](https://github.com/RokuCommunity/logger/commit/cf0ed74))
- - logger: Fix build status badge ([b1e490b](https://github.com/RokuCommunity/logger/commit/b1e490b))
- - roku-debug: Fix crash by using postman-request ([#151](https://github.com/RokuCommunity/roku-debug/pull/151))
- - roku-debug: Remove axios in favor of postman-request ([#153](https://github.com/RokuCommunity/roku-debug/pull/153))
- - roku-debug: Fix `file already exists` error and hung process ([#152](https://github.com/RokuCommunity/roku-debug/pull/152))
+
+Upate the documentation for Brighterscript function calls from within a namespace
+
+([#805](https://github.com/RokuCommunity/brighterscript/pull/805))
+
+
+
+
+
+
 
 # Thank you
+
 Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:
 
 Contributions to [vscode-brightscript-language](https://github.com/RokuCommunity/vscode-brightscript-language):
@@ -91,11 +238,3 @@ Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
     - Fix crash by using postman-request ([PR #151](https://github.com/RokuCommunity/roku-debug/pull/151))
     - Remove axios in favor of postman-request ([PR #153](https://github.com/RokuCommunity/roku-debug/pull/153))
     - Fix `file already exists` error and hung process ([PR #152](https://github.com/RokuCommunity/roku-debug/pull/152))
-
-Contributions to [brighterscript-formatter](https://github.com/RokuCommunity/brighterscript-formatter):
-
-Contributions to [bslint](https://github.com/RokuCommunity/bslint):
-
-Contributions to [ropm](https://github.com/RokuCommunity/ropm):
-
-Contributions to [roku-report-analyzer](https://github.com/RokuCommunity/roku-report-analyzer):
