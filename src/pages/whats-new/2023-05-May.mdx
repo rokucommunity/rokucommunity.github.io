@@ -1,197 +1,109 @@
 ---
 date: May 2023
-summary: Changes to vscode-brightscript-language, brighterscript, roku-deploy, logger, roku-debug, brighterscript-formatter, bslint, ropm, roku-report-analyzer
+summary: file-already-exists crash fix, roku-deploy node.js v19 support, augment error codes in console
 layout: ../../layouts/WhatsNewPost.astro
 ---
 
-
-
 # Overview
 
-This month has been a busy month with many small fixes going through in different parts of the Brightscript ecosystem.  
+This month we fixed that pesky `EXIST: file already exists, mkdir...` error that was crashing debug sessions, added node.js v19 compatibility for roku-deploy, several quality of life fixes for various RokuCommunity projects, and more. 
 
-We have 
+We've also added a new section to this writeup, called [Issue of the month](#issue-of-the-month). Check it out!
 
-- upgraded a few items within the both code and scenegraph editors
-- allowed an upgrade of http to use `postman-request` rather than `axios`
-- added the ability to print out the full text of hex error codes when debugging, and also fixed a bug which crashes repeat debugging sessions 
-- fixed several bugs in code signing, testing, logging and deploymnent
-- upgrade npm libraries for `logger`, `postman-request` and `coveralls-next`
+## We need your help
 
+The RokuCommunity projects are maintained by a relatively small set of developers, and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA) or explore the existing [GitHub issues](https://github.com/rokucommunity/vscode-brightscript-language/issues).
+
+## Issue of the month
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases.
+
+This month, we'd like to draw attention to [vscode-brightscript-language#437: Add button to copy device IP](https://github.com/rokucommunity/vscode-brightscript-language/issues/437). 
+
+The `Devices` panel shows many different fields from the `device-info` ECP request. Clicking on any of these items will automatically copy the value to your clipboard, which is super helpful. However, one exception is the `IP address` entry, which when clicked will open the Roku developer upload form instead of copying the IP address to your clipboard. We'd like to update that functionality so that clicking the IP address copies the value to your clipboard, and there would be a secondary link or button that opens the developer portal. 
+
+![image](https://github.com/rokucommunity/bslint/assets/2544493/4bd0b0f1-8927-41a1-9c88-1b483173c94f)
+
+If you're interested in working on this feature, please comment on the [pull request](https://github.com/rokucommunity/vscode-brightscript-language/issues/437) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
 
 # Editor
 
-## Code Colorization
+## Better syntax highlighting in BrightScript files for `<` and `>`
 
-We have removed `<` and `>` from bracket matching ([#483](https://github.com/RokuCommunity/vscode-brightscript-language/pull/483))
+We fixed a syntax highlighting issue in BrightScript/BrighterScript files where the `<` and `>` symbols were red, due to being marked as "unclosed brackets". We've removed them from the bracket matching logic so they should now be highlighted the same as other logical operators.
 
-Before
+Before:
 
 ![image](https://user-images.githubusercontent.com/2544493/238976357-aa9547ed-ee6d-47f3-bf64-f90199058c5e.png)
 
-After
+After:
 
 ![image](https://user-images.githubusercontent.com/2544493/238976432-63d8b84f-f91b-4aec-bc3a-4893677b4b5a.png)
 
 
+# Debugging
 
+## Fix `file already exists` crash when starting debug sessions
+We fixed a critical debugger issue that would show an error `EXIST: file already exists, mkdir...` anytime you ran a debug session, requiring require a full system restart or force-quitting many of the vscode processes. The problem was introduced 
+in [v0.18.7](https://github.com/rokucommunity/roku-debug/blob/master/CHANGELOG.md#0187---2023-04-28) when we improved the error messaging around certain types of debug session failures (ironic, right?). 
 
+The actual problem is that the `.shutdown()` call in the debug session fell into an infinite async loop, causing the stagingDir to be regularly locked by the OS as we repeatedly tried to empty its contents. To solve this, we now guard the `.shutdown()` call in a promise semaphore so we can only run shutdown once, the first time called. See [#152](https://github.com/RokuCommunity/roku-debug/pull/152) for more information.
+ 
+## Rendezvous Panel `hitCount` math fix
+We fixed a math error in the `hitCount` counter in the top-level groups of the Rendezvous panel of the vscode extension. That number should now properly match the sum of all the child hit counts!
 
-## File History
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/7cdfc65b-62c1-4260-b9fa-2ef8019ac1a1)
 
-Change rendezvous count for file history 
+## Fixed infinite recursion possibility in the SceneGraph Inspector 
+We've fixed a bug that could sometimes cause infinite recursion when using the Scenegraph Inspector.  See [vscode-brightscript-language#480](https://github.com/RokuCommunity/vscode-brightscript-language/pull/480) for more details. There's not really anything to show, so here's a photo of the SceneGraph Inspector just for fun. 
 
-([#482](https://github.com/RokuCommunity/vscode-brightscript-language/pull/482))
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/c2dd1ec7-09e0-4487-a0bb-4f5c50dc3a97)
 
 
+## Augment hex error codes with text descriptions
+Whenever you encounter a runtime crash during a debug session, the device often will include a hexadecimal error code (such as `&h08`). These error codes are not overly helpful at a glance unless you've memorized all of Roku's error codes. To improve readability of these crashlogs, the BrightScript Language extension for vscode now augments those hex codes with more useful error information. 
 
+**Before:**
 
-## roku commands
+```bash
+Syntax Error. (compile error &h02) in pkg:/source/main.brs(3)
+```
 
-fix Roku Commands list of available requests 
+**After:**
+```bash
+Syntax Error. (compile error &h02 (ERR_SYNTAX): syntax error ) in pkg:/source/main.brs(3)
+```
 
-([#480](https://github.com/RokuCommunity/vscode-brightscript-language/pull/480))
+## Added missing Roku Commands options
+Many new commands have been added to the **Roku Commands** panel in the vscode extension. We won't get into listing them all here, but if you're a regular user of this feature then you'll appreciate these new commands! Here's a screenshot of that **Roku Commands** panel in vscode.
+![image](https://github.com/rokucommunity/roku-debug/assets/2544493/49dc6737-6fba-4f7b-9e9c-ed3056bdd032)
 
 
+# BrighterScript
 
+## Plugin API: Fixes for `findChild` and `findAncestor`
+We have improved the `AstNode` methods `findChild` and `findAncestor` methods to support:
 
-# scenegraph 
+- **externally cancelling the walk**. If possible, you should consider cancelling the walk once you find the node you're looking for, as this will improve performance by skipping wasted walking 
 
-We have improved `findChild` and `findAncestor` AstNode methods to support 
+- **enabling findAncestor to return a different node than matched, if the matcher returns the node**
 
-- externally cancelling the walk 
+# Misc
 
-- enabling findAncestor to return a different node than matched, if the matcher returns the node
+## roku-deploy support for Node.js v19
+You can now use roku-deploy on Node.js v19 and above! The core issue was caused by Node.js 19 changing the default keepalive settings on its internal http library. As such, roku-deploy on node 19 would fail with an `ECONNRESET` error. The fix was to pass in an [additional argument](https://github.com/rokucommunity/roku-deploy/pull/115/files#diff-a8b623936bbdbb88641b6873c33b914effcaf216de11b9a3c36d039322cd35f4R386) to the [postman-request](https://www.npmjs.com/package/postman-request) `agentOptions`.
 
-([#807](https://github.com/RokuCommunity/brighterscript/pull/807))
+# For Contributors
 
+## Goodbye `request`, hello `postman-request`
+For several years the RokuCommunity tools like roku-deploy and roku-debug have been using the [request](https://www.npmjs.com/package/request) library for our http request needs. However, the request package [was deprecated in 2019](https://github.com/request/request/issues/3142) and has started triggering all sorts of npm audit issues. Since the `request` package still perfectly suits our needs, we've migrated to a fork of the project called [postman-request](https://www.npmjs.com/package/postman-request) which is actively maintained.
 
-We have also fixed an infinite recursion possibility in Scenegraph Inspector 
+On a related note, a few recent pull requests had added a dependency on [axios](https://www.npmjs.com/package/axios). In order to keep our projects smaller, we've removed that dependency in favor of leveraging [postman-request](https://www.npmjs.com/package/postman-request) in those situations as well. 
 
-([#480](https://github.com/RokuCommunity/vscode-brightscript-language/pull/480))
+None of these changes should have any impact on your direct use of the tools, but if you have Node.js scripts or BrighterScript plugins that utilize [request](https://www.npmjs.com/package/request) as a transient dependency from our tools, you'll now need to install `request` directly or change to importing [postman-request](https://www.npmjs.com/package/postman-request) instead, as [request](https://www.npmjs.com/package/request) will no longer be present in node_modules. 
 
 
-
-
-# http `postman-request`
-
-Since `postman-request` is a required dependency we are removing `axios` as it's a duplication of function
-
-([#153](https://github.com/RokuCommunity/roku-debug/pull/153))
-
-We also fixed a runtime crash casued by removing `request` module - fixed by directly declaring `postman-request`
-
-([#485](https://github.com/RokuCommunity/vscode-brightscript-language/pull/485))
-([#151](https://github.com/RokuCommunity/roku-debug/pull/151))
-
-
-
-
-# debugging
-
-
-## Render Text Meaning Of Error Codes
-
-It is now possible to print out the full error text of error codes along with the hex short code 
-
-for example, for hex error code `&h08` it is now possible to annotate with `(ERR_FC: invalid parameter passed to function/array (e.g neg matrix dim or square root))`
-
-([#467](https://github.com/RokuCommunity/vscode-brightscript-language/pull/467))
-
-
-
-## fix crash on subsequent debug session
-
-We have fixed a bug where a subsequent debug session is finding the previous session is not cleared and so a 'file already exists' error hangs the debugger
-
-([#152](https://github.com/RokuCommunity/roku-debug/pull/152))
-
-
-
-
-
-
-# deployment 
-
-
-## pkg signing
-
-This fixes a bug which overwrites the `signingPackage.pkg` file
-
-([#114](https://github.com/RokuCommunity/roku-deploy/pull/114))
-
-
-## fix deployment tests
-
-This provides a fix for broken deployment tests
-
-([fefe375](https://github.com/RokuCommunity/roku-deploy/commit/fefe375))
-
-
-## fix deployment bug 
-
-fixes a bug in roku-deploy from node 19
-
-([#115](https://github.com/RokuCommunity/roku-deploy/pull/115))
-
-
-
-# logging
-
-
-fix bug in github workflow for logger library
-
-([b1e490b](https://github.com/RokuCommunity/logger/commit/b1e490b))
-
-
-
-
-
-
-# npm changes
-
-## logger
-
-upgrade logger to version 0.3.2
-
-([cf0ed74](https://github.com/RokuCommunity/logger/commit/cf0ed74))
-
-## coveralls-next
-
-remove `coveralls` and add `coveralls-next`
-
-([43756d8](https://github.com/RokuCommunity/brighterscript/commit/43756d8))
-([b851603](https://github.com/RokuCommunity/logger/commit/b851603))
-([04af7a0](https://github.com/RokuCommunity/logger/commit/04af7a0))
-
-## postman-request
-
-remove `request` and add `postman-request`
-
-Fix audit issues ([#116](https://github.com/RokuCommunity/roku-deploy/pull/116))
-
-
-
-
-
-
-
-# Documentation
-
-Update the documentation for linting error with diagnostic severity overrides
-
-([#804](https://github.com/RokuCommunity/brighterscript/pull/804))
-
-
-Upate the documentation for Brighterscript function calls from within a namespace
-
-([#805](https://github.com/RokuCommunity/brighterscript/pull/805))
-
-
-
-
-
-
+## Fixed roku-deploy device tests
+If you've contributed to roku-deploy in the past, you might have noticed that some of the device tests were failing. This was because we had accidentally replaced our `signingPackage.pkg` with an empty file (oops!). Turns out one of our unit tests was using the wrong directory and was replacing the file on every test suite run. That's been fixed and the correct `signingPackage.pkg` file has been restored, so those device tests should now work properly moving forward. 
 
 # Thank you
 
