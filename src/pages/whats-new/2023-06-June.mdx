@@ -9,39 +9,292 @@ layout: ../../layouts/WhatsNewPost.astro
 
 # Debugging
 
+- roku-debug: File logging ([#155](https://github.com/RokuCommunity/roku-debug/pull/155))
+- roku-debug: Move @types/request to deps to fix d.bs files ([691a7be](https://github.com/RokuCommunity/roku-debug/commit/691a7be))
+
 # Formatting
 
 # Language Features
 
 # BrighterScript
 
-# Preview features
+## Prevent injection of duplicate super calls into classes
 
-# Documentation
+We fixed an issue which was affecting unit tests whereby duplicate calls to a class 'super' method were injected - this has now been removed.
 
-# Misc
+([#823](https://github.com/RokuCommunity/brighterscript/pull/823))
 
-# For Contributors
+## Namespace declaration order
 
-# TODO
-***Move the items in this list to the appropriate section above, then delete this section***
- - brighterscript: Fix injection of duplicate super calls into classes ([#823](https://github.com/RokuCommunity/brighterscript/pull/823))
- - brighterscript: Merge branch 'master' of https://github.com/rokucommunity/brighterscript into release-0.66.0 ([f6343a6](https://github.com/RokuCommunity/brighterscript/commit/f6343a6))
- - brighterscript: Fixes issue with Namespace Declaration order ([#822](https://github.com/RokuCommunity/brighterscript/pull/822))
- - brighterscript: Better prop diagnostic range. add ProgramBuilder.load func ([#821](https://github.com/RokuCommunity/brighterscript/pull/821))
- - brighterscript: Remove deprecated stuff ([#820](https://github.com/RokuCommunity/brighterscript/pull/820))
- - brighterscript: Rename SymbolTypeFlags to SymbolTypeFlag ([#819](https://github.com/RokuCommunity/brighterscript/pull/819))
- - brighterscript: Xml ast refactor ([#818](https://github.com/RokuCommunity/brighterscript/pull/818))
- - brighterscript: Adds .kind prop to AstNode. ([#799](https://github.com/RokuCommunity/brighterscript/pull/799))
- - brighterscript: Type Tracking ([#783](https://github.com/RokuCommunity/brighterscript/pull/783))
- - brighterscript: Add warning to top of readme ([c943bf2](https://github.com/RokuCommunity/brighterscript/commit/c943bf2))
- - brighterscript: Fixes issue with multiple namespace symbol tables ([#825](https://github.com/RokuCommunity/brighterscript/pull/825))
- - brighterscript: Convert plugin params to single event object ([#824](https://github.com/RokuCommunity/brighterscript/pull/824))
- - brighterscript: Fixes some issues related to Classes as Properties and Consts validation ([#826](https://github.com/RokuCommunity/brighterscript/pull/826))
- - roku-debug: File logging ([#155](https://github.com/RokuCommunity/roku-debug/pull/155))
- - roku-debug: Move @types/request to deps to fix d.bs files ([691a7be](https://github.com/RokuCommunity/roku-debug/commit/691a7be))
+We fixed an issue with namespace declaration which now enables us to declare namespaces in any order
+
+([#822](https://github.com/RokuCommunity/brighterscript/pull/822))
+
+## new ProgramBuild.load function 
+
+We added a new `ProgramBuilder.load` function which decouples loading from running.  This improves functionality during testing.
+
+([#821](https://github.com/RokuCommunity/brighterscript/pull/821))
+
+## Improved "Can't find this property" highlighting
+
+We fixed an issue with highlighting of "can't find this property" diagnostic so it only highlights the property instead of the entire starting expression.
+
+Before 
+
+![image](https://user-images.githubusercontent.com/2544493/244416322-846b23f8-83a0-47ce-a52d-9da0983c2301.png)
+
+After
+
+![image](https://user-images.githubusercontent.com/2544493/244416204-8d7d046a-56c0-4da4-8cea-9dbb89559431.png)
+
+([#821](https://github.com/RokuCommunity/brighterscript/pull/821))
+
+
+## Rename SymbolTypeFlags to SymbolTypeFlag
+
+([#819](https://github.com/RokuCommunity/brighterscript/pull/819))
+
+
+## XML AST refactor 
+
+Refactors the XML AST to enable plugins to manipulate during transpile.
+
+There's no noticeable performance hit for most things, but you can see a large boost in transpile performance for xml files!
+
+![image](https://user-images.githubusercontent.com/2544493/243781262-ae0f3326-5913-4365-9848-dedd578b7434.png)
+
+
+([#818](https://github.com/RokuCommunity/brighterscript/pull/818))
+
+
+
+## .kind prop added to AstNode 
+
+Adds a .kind to AstNode, and an AstNodeKind enum.
+
+converts the reflection methods to check for .kind instead of the thing?.constructor?.name === 'Whatever' logic.
+
+Raw benchmarks show this as a fairly significant boost:
+
+![image](https://user-images.githubusercontent.com/2544493/234745941-ecf12cfd-cb6b-4755-8497-ac03817fb38c.png)
+
+What that means in practice is validation speeds improve by 10-12 percent.
+
+![image](https://user-images.githubusercontent.com/2544493/234746091-cacae55f-a825-4007-91da-23b26a4e0c7f.png)
+
+Downsides:
+
+This is a breaking change, as all plugins that produce AST would need to be upgraded to the latest version of brighterscript in order to work with the version of brighterscript shipped with the vscode extension. Or, for example, latest version of brighterscript being used with a plugin that depends on an older version of brighterscript.
+
+([#799](https://github.com/RokuCommunity/brighterscript/pull/799))
+
+
+## Type Tracking 
+
+We have a lot of work regarding type tracking, and there is more of these changes to come as well :-
+
+### 1. Add a new AstNode class called TypeExpression.
+
+It will be the base AstNode for all future type expressions. The following existing code will be parsed in this way:
+
+the as type in function paramenters
+
+```vb
+'the `string`, `integer`, and `SomeInterface` parts should be TypeExpression. The `as` belongs to the 
+`FunctionParameterExpression`
+sub doSomething(p1 as string, p2 as integer, p3 as SomeInterface)
+end sub
+```
+
+as ReturnType for function return types
+
+```vb
+'the `boolean` should be a TypeExpression. the `as` belongs to the FunctionExpression
+function doSomething() as boolean
+```
+
+as MemberType for class and interface types
+
+```vb
+class Video
+    ' the `boolean` should be a TypeExpression, the `as` belongs to the FieldStatement
+    public isPlaying as boolean
+end class
+
+interface Metadata
+    ' the `string` should be a TypeExpression, the `as` belongs to the FieldStatement
+    url as string
+end interface
+```
+
+This is a breaking change to the AST. For example, FunctionParameterExpression will no longer have a typeToken, but will instead have a typeExpression.
+
+Here's a rough idea of the structure of the TypeExpression class
+
+```vb
+class TypeExpression extends Expression
+    constructor(
+        public expression:Expression
+    ){}
+
+    public getType(){
+        if (isVariableExpression(this.expression) ){
+            return this.getSymbolTable().getType(this.expression.name.text);
+        } else if (isDottedGetExpression(this.expression)) { 
+            //look up the leftmost variable (i.e. `ns1.ns2.ns3.Iface` would get us `ns1`
+            //then, use the BscType interfaces to dig down into the type to get the type
+        } else {
+            //maybe other stuff?
+        }
+    }
+```
+
+### 2. Update the parser to properly create subclasses that extend TypeExpression for (no longer necessary)
+
+Since all AstNode instances are equipped with a .getSymbolTable() function and BrighterScript already links the symbol tables to the correct node level, the TypeExpression nodes will not need any type of linking phase. These will be automatically resolved and avaiable to the SymbolTable
+
+### 3. Add a getType() method to the base AstNode, which can then be overridden by all AstNode descendents.
+
+Moving forward, every AstNode will have the potential to have a type. To improve stability of the project, the nodes should return "DynamicType" when the type is not known.
+
+```vb
+abstract class AstNode
+    public abstract getType(): BscType {
+        //TODO implement for every node. 
+   }
+    //...all the other props
+end class
+```
+
+
+### 4. Enhance the SymbolTable BscType logic
+
+The current SymbolTable implementation only adds names, but no types (they're all added as dynamic). This needs to be enhanced to actually add symbol types.
+
+Consider the following code example.
+
+```vb
+function main()
+    name1 = "John" 
+    name2 = name1 '
+    name3 = name2 '
+end function
+```
+
+The symbol table logic might look something like this:
+
+```vb
+const table = new SymbolTable();
+table.AddSymbol("name1", new StringType());
+table.addSymbol("name2", new ReferenceType("name1"));
+table.addSymbol("name3", new ReferenceType("name2"));
+```
+
+This would happen at the start of onProgramValidate for every file. Then, for every scope, the scope symbol tables would be linked to the file, and these Types would be able to derive their information from the parent symbol table accordingly.
+
+We should probably cache the type lookups during every scope validation, and clear it at the end of each scope validation. Otherwise we'd spend many cycles reevaluating the same types.
+
+### 5. Validate all TypeExpression AstNodes to ensure they reference valid types that can be found in the symbol table
+
+### 6
+
+### 6a. Modify SymbolTable to always return a single type. That means if there are multiple different symbol types represented, they should be merged into a UnionType.
+
+#### 6b. Add way to actually declare a Union Type in code:
+
+```vb
+function intValue(num as string or integer) as integer
+   if type(num) = "Integer"
+     return num
+   end if
+   return Val(num, 10)
+end function 
+```
+
+### 6c. Make UnionType.getMemberTypes look at the intersection of member types of all the UnionTypes' types. And since this will require coding, I will probably also need to type it (with a keyboard!)
+
+### 7. Type chains - For DottedGets, IndexedGets, etc. how do we let the developer know where the chain failed its understanding the current type.
+
+### 8. Remove NamespacedVariableExpression in favour of TypeExpression except NamespaceStatement.name which should be DottedGetExpression
+
+### 9. Add type caching, at the appropriate (scope?) level. We must make sure that non-resolved types don't get cached
+
+([#783](https://github.com/RokuCommunity/brighterscript/pull/783))
+
+
+## Multiple Namespace Table issue 
+
+There was an issue with namespaces having multiple symbol tables for each time they were created. This fixes that by building a SINGLE namespacetype at the scope level and adding the aggregate namespace symbol table as a sibling.
+
+([#825](https://github.com/RokuCommunity/brighterscript/pull/825))
+
+## Plugin Parameters 
+
+Converts all plugin event parameters to be a single event object rather than ordered parameters.
+
+([#824](https://github.com/RokuCommunity/brighterscript/pull/824))
+
+## Issues with classes as properties 
+
+Fixes when a Class is a Property of another class, and being unable to resolve it
+
+([#826](https://github.com/RokuCommunity/brighterscript/pull/826))
+
+## consts validation 
+
+Fixes issue with Consts value looking at a typetime value of the RHS
+
+([#826](https://github.com/RokuCommunity/brighterscript/pull/826))
+
+## Performance / caching improvements
+
+Does a better job of caching symbol lookups on memberTables
+
+([#820](https://github.com/RokuCommunity/brighterscript/pull/820))
+
+## Deprecated Material Tidy Up 
+
+We removed deprecated items from the code 
+
+- retainStagingFolder removed - use `retainStagingDir` instead
+- stagingFolderPath removed - use `stagingDir` instead
+- PluginInterface `logger` removed - use `options` parameter instead
+- getFileByPkgPath removed - use `getFile` instead 
+- pathAbslute removed - use `srcPath` instead
+
+([#820](https://github.com/RokuCommunity/brighterscript/pull/820))
+
+## Version 0.66.0 of brighterscript with us shortly
+
+Version 0.66.0 of brighterscript will be with us shortly and have the following features and fixes 
+
+- add abstract TypeExpression class 
+- add UnionType
+- convert type tokens to TypeExpressions 
+- work on SymbolTypeFlags
+- improved use of enums as variables 
+- improved use of namespace declaration
+- improved use of enableTypeValidation
+- improved linting
+- add ReferenceType 
+- improved use of BscType
+- refactor use of 
+  - ClassType
+  - InterfaceType
+  - Inheritance
+  - InterfaceStatement
+- add .kind prop to AstNode 
+- XML AST refactor and improvement
+- performance enhancements including
+  - symbol type caching 
+  - cache speed boost 
+  - fixed scope linking speed issue
+  - improved use of CacheVerifier
+  - optimise symbol table linking 
 
 # Thank you
+
 Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:
 
 Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscript):
@@ -66,3 +319,4 @@ Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
  - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
     - File logging ([PR #155](https://github.com/RokuCommunity/roku-debug/pull/155))
     - Move @types/request to deps to fix d.bs files ([691a7be](https://github.com/RokuCommunity/roku-debug/commit/691a7be))
+    
