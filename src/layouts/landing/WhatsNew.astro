@@ -1,9 +1,9 @@
 ---
 import NewsletterCTA from '../../components/landing/NewsletterCTA.astro';
 
-const _posts = await Astro.glob('../../pages/whats-new/**/*.mdx');
+const _posts = await Astro.glob('../../pages/whats-new/**/*.md*');
 const posts = _posts
-    // Exclude the readme and any .mdx files starting with "_".
+    // Exclude the readme and any .md* files starting with "_".
     .filter(
         (p) =>
             !p.file.includes('readme.md') &&
