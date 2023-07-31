@@ -14,7 +14,7 @@ export interface Props {
 
 const { frontmatter } = Astro.props;
 
-const allPosts = (await Astro.glob('/src/pages/whats-new/**/*.mdx'))
+const allPosts = (await Astro.glob('/src/pages/whats-new/**/*.md*'))
     // Exclude the readme and any .md files starting with "_".
     .filter(
         (p) =>
