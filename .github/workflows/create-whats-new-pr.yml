@@ -45,7 +45,7 @@ jobs:
 
       - name: Get the name of the new file
         id: getFilename
-        run: echo "filename=$(git status | grep -Ei .mdx | grep -oEi '[0-9]+-[0-9]+-[a-z]+')" >> $GITHUB_OUTPUT
+        run: echo "filename=$(git status | grep -Ei .md | grep -oEi '[0-9]+-[0-9]+-[a-z]+')" >> $GITHUB_OUTPUT
 
       - name: Open PR for new whats-new page
         if: steps.verify-changed-files.outputs.files_changed == 'true'
