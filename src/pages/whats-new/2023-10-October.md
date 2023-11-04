@@ -533,8 +533,8 @@ Usefully as a way to get comments from expressions/statements
 - Only available in brighterscript
 - Fixes Union types being available in ParseMode.BrightScript
 
-<video controls="controls"  name="Brighterscript Array Types">
-  <source src="https://user-images.githubusercontent.com/810290/264099979-a32c8a12-73a6-4d16-8d01-6a95f91c5006.mov" />
+
+<video src="https://user-images.githubusercontent.com/810290/264099979-a32c8a12-73a6-4d16-8d01-6a95f91c5006.mov" data-canonical-src="https://user-images.githubusercontent.com/810290/264099979-a32c8a12-73a6-4d16-8d01-6a95f91c5006.mov" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
 </video>
 
 
@@ -550,8 +550,7 @@ Usefully as a way to get comments from expressions/statements
 - Subs and void functions will have validation errors when an actual type is included
 - works in Brs and Bs files
 
-<video controls="controls"  name="Brighterscript Return Validation">
-  <source src="https://user-images.githubusercontent.com/810290/264360339-d065c1ee-30f2-496f-ad4d-2e66182b166b.mov">
+<video src="https://user-images.githubusercontent.com/810290/264360339-d065c1ee-30f2-496f-ad4d-2e66182b166b.mov" data-canonical-src="https://user-images.githubusercontent.com/810290/264360339-d065c1ee-30f2-496f-ad4d-2e66182b166b.mov" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
 </video>
 
 [#876](https://github.com/RokuCommunity/brighterscript/pull/876)
