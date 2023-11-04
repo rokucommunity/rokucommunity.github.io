@@ -535,7 +535,7 @@ Usefully as a way to get comments from expressions/statements
 
 
 <video controls="controls"  name="Brighterscript Array Types">
-  <source src="https://user-images.githubusercontent.com/810290/264099979-a32c8a12-73a6-4d16-8d01-6a95f91c5006.mov">
+  <source src="https://user-images.githubusercontent.com/810290/264099979-a32c8a12-73a6-4d16-8d01-6a95f91c5006.mov" />
 </video>
 
 
