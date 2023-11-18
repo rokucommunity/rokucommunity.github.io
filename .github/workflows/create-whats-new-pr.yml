@@ -34,7 +34,7 @@ jobs:
       - name: Generate whats-new page
         run: |
           npm ci
-          npm run create-whats-new -- --year ${{ github.event.inputs.year }} --month ${{ github.event.inputs.month }}
+          npm run create-whats-new -- --year ${{ github.event.inputs.year }} --month ${{ github.event.inputs.month }} --token ${{ steps.generate-token.outputs.token }}
 
       - name: Commit a new branch if there are changes
         uses: tj-actions/verify-changed-files@v13
@@ -60,8 +60,3 @@ jobs:
             git commit -m "What's new for ${{ steps.getFilename.outputs.filename }}"
             git push
             gh pr create --title "What's new: ${{ steps.getFilename.outputs.filename  }}" --body "All changes in RokuCommunity for ${{ steps.getFilename.outputs.filename }}"
-
-
-
-
-

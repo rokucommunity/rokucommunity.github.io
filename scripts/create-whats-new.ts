@@ -22,11 +22,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
-
-const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? process.env.TOKEN
-});
-
 const projects = [
     'vscode-brightscript-language',
     'brighterscript',
@@ -77,7 +72,20 @@ class Runner {
      */
     private emptyTempDirOnRun = false;
 
+    private octokit: Octokit;
+
     private configure(options: RunnerOptions) {
+        options.token ??= process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? process.env.TOKEN;
+        if (options.token) {
+            console.log('github token was defined. using it!');
+        } else {
+            console.log('github token was NOT defined');
+        }
+
+        this.octokit = new Octokit({
+            auth: options.token
+        });
+
         this.emptyTempDirOnRun = options.noclear === true ? false : true;
         this.force = options.force ?? false;
         this.cwd = s(options.cwd ?? process.cwd());
@@ -336,7 +344,7 @@ class Runner {
         this.log(project, `Hydrating #${commit.ref}`);
         //load info about this commit
         const githubCommit = await this.cache.getOrAdd([project.repositoryUrl, 'commits', commit.ref], async () => {
-            return (await octokit.rest.repos.getCommit({
+            return (await this.octokit.rest.repos.getCommit({
                 repo: project.repoName,
                 owner: project.repoOwner,
                 ref: commit.ref
@@ -454,6 +462,7 @@ interface RunnerOptions {
     month?: number | string;
     noclear?: boolean;
     today?: string;
+    token?: string;
 }
 
 const options = yargs(hideBin(process.argv))
@@ -465,6 +474,7 @@ const options = yargs(hideBin(process.argv))
     .option('month', { type: 'string', description: 'The month the post should be generated for' })
     .option('year', { type: 'number', description: 'The year the should be generated for' })
     .option('today', { type: 'string', description: 'A string used to construct a new new date, used for any `today` variables' })
+    .option('token', { type: 'string', description: 'A github auth token that can be used to help work around rate limits' })
     .argv as unknown as RunnerOptions;
 
 const runner = new Runner(options);
