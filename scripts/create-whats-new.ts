@@ -81,8 +81,6 @@ class Runner {
         } else {
             console.log('github token was NOT defined');
         }
-        //exit early just because I want to know if the token is defined
-        process.exit(1);
 
         this.octokit = new Octokit({
             auth: options.token
