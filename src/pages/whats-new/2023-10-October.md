@@ -8,6 +8,27 @@ layout: ../../layouts/WhatsNewPost.astro
 
 This month has seen some very significant improvements to the brighterscript type tracking initiative, and a complete overhaul of the internals of the debug session logic, as well as many other smaller changes to bslint, the formatter, and the vscode extension. Many thanks to all who have worked so hard and contributed this month!
 
+## We need your help
+
+The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
+
+-   [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language/issues)
+-   [brighterscript](https://github.com/rokucommunity/brighterscript/issues)
+-   [brighterscript-formatter](https://github.com/rokucommunity/brighterscript-formatter/issues)
+-   [roku-deploy](https://github.com/rokucommunity/roku-deploy/issues)
+-   [roku-debug](https://github.com/rokucommunity/roku-debug/issues)
+-   [bslint](https://github.com/rokucommunity/bslint/issues)
+-   [ropm](https://github.com/rokucommunity/ropm/issues)
+
+## Issue of the month
+
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases.
+
+This month, we'd like to draw attention to [vscode-brightscript-language#470](https://github.com/rokucommunity/vscode-brightscript-language/issues/470). BrighterScript has support for regular expressions, so we added some syntax highlighting to help make those stand out more. However, there's a bug in the syntax logic, and it's incorrectly treating valid math expressions like they're regex expressions.
+
+![image](https://user-images.githubusercontent.com/2544493/226361636-1078820c-9b26-4a1f-b5fd-377508ac5796.png)
+
+We'd like to get that fixed so math looks right again!
 
 # Editor
 
