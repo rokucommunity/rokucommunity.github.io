@@ -60,8 +60,3 @@ jobs:
             git commit -m "What's new for ${{ steps.getFilename.outputs.filename }}"
             git push
             gh pr create --title "What's new: ${{ steps.getFilename.outputs.filename  }}" --body "All changes in RokuCommunity for ${{ steps.getFilename.outputs.filename }}"
-
-
-
-
-

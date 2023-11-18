@@ -22,9 +22,13 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
+const githubToken = process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? process.env.TOKEN;
+if (githubToken) {
+    console.log('github token was defined. using it!');
+}
 
 const octokit = new Octokit({
-    auth: process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? process.env.TOKEN
+    auth: githubToken
 });
 
 const projects = [
