@@ -5,9 +5,10 @@
 import yargs from 'yargs';
 import { hideBin } from 'yargs/helpers';
 import fsExtra from 'fs-extra';
-import * as childProcess from 'child_process';
+import * as child_process from 'child_process';
 import * as util from 'util';
-const exec = util.promisify(childProcess.exec);
+const exec = util.promisify(child_process.exec);
+const { execSync } = child_process;
 import chalk from 'chalk';
 import { standardizePath as s } from 'brighterscript';
 import dayjs from 'dayjs';
@@ -118,7 +119,7 @@ class Runner {
 
         this.projects = (options.projects ?? projects).map(x => {
             let project = {
-                releases: []
+                commits: []
             } as Project;
             if (typeof x === 'string') {
                 project.name = x;
@@ -165,7 +166,7 @@ class Runner {
     private async processProject(project: Project) {
         await this.cloneProject(project);
         //get all commits grouped by their release
-        project.releases = await this.getReleases(project);
+        project.commits = await this.getCommits(project);
     }
 
     private async cloneProject(project: Project) {
@@ -180,7 +181,7 @@ class Runner {
         let result = [
             `---`,
             `date: ${monthNames[this.startDate.getMonth()]} ${this.startDate.getFullYear()}`,
-            `summary: Changes to ${this.projects.filter(x => x.releases.length > 0).map(x => x.name).join(', ')}`,
+            `summary: Changes to ${this.projects.filter(x => x.commits.length > 0).map(x => x.name).join(', ')}`,
             `layout: ../../layouts/WhatsNewPost.astro`,
             `---`,
             `# Overview`,
@@ -206,14 +207,13 @@ class Runner {
             `# TODO`,
             `***Move the items in this list to the appropriate section above, then delete this section***`,
             ...this.projects.map(project => {
-                return project.releases.map(release => {
-                    return release.commits.map(commit => {
-                        if (commit.pullRequestId) {
-                            return `${project.name}: ${commit.message} ([#${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`;
-                        } else {
-                            return `${project.name}: ${commit.message} ([${commit.ref}](${project.repositoryUrl}/commit/${commit.ref}))`;
-                        }
-                    });
+                return project.commits.map(commit => {
+                    const date = `${commit.date.getFullYear()}-${(commit.date.getMonth() + 1).toString().padStart(2, '0')}-${commit.date.getDate().toString().padStart(2, '0')}`;
+                    if (commit.pullRequestId) {
+                        return `${project.name} (${date}): ${commit.message} ([#${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`;
+                    } else {
+                        return `${project.name} (${date}): ${commit.message} ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
+                    }
                 });
             }).flat().flat().map(x => ` - ${x}`)
         ] as string[];
@@ -225,7 +225,7 @@ class Runner {
         );
         for (const project of this.projects) {
             //skip projects that had no releases this month
-            if (project.releases.length === 0) {
+            if (project.commits.length === 0) {
                 continue;
             }
             result.push('', `Contributions to [${project.name}](${project.repositoryUrl}):`);
@@ -237,7 +237,7 @@ class Runner {
                         '    - ' + (
                             commit.pullRequestId
                                 ? `${commit.message} ([PR #${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`
-                                : `${commit.message} ([${commit.ref}](${project.repositoryUrl}/commit/${commit.ref}))`
+                                : `${commit.message} ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`
                         )
                     );
                 }
@@ -248,17 +248,15 @@ class Runner {
 
     private groupCommitsByUser(project: Project) {
         const result = new Map<string, Commit[]>();
-        for (const release of project.releases) {
-            const commits = [...release.commits];
-            //group the commits by email address
-            while (commits.length > 0) {
-                const commit = commits.shift();
-                const username = commit.author.username.toLowerCase();
-                if (!result.has(username)) {
-                    result.set(username, []);
-                }
-                result.get(username).push(commit);
+        const commits = [...project.commits];
+        //group the commits by email address
+        while (commits.length > 0) {
+            const commit = commits.shift();
+            const username = commit.author.username.toLowerCase();
+            if (!result.has(username)) {
+                result.set(username, []);
             }
+            result.get(username).push(commit);
         }
         return result;
     }
@@ -266,7 +264,7 @@ class Runner {
     /**
      * Find all the releases for a given date range, including the leading and trailing releases that are outside the date range
      */
-    private async getReleases(project: Project): Promise<Release[]> {
+    private async getCommits(project: Project): Promise<Commit[]> {
         this.log(project, `Finding releases between ${dayjs(this.startDate).format('YYYY-MM-DD')
             } and ${dayjs(this.endDate).format('YYYY-MM-DD')} `);
         /**
@@ -283,84 +281,108 @@ class Runner {
             version: x[2]
         })).sort((a, b) => a.date.getTime() - b.date.getTime());
 
-        const allReleaseVersionsInOrder = semver.sort(
-            releases.map(x => x.version)
-        );
         const matchedReleases = releases.map((release, index) => {
             return {
                 date: release.date,
                 version: release.version,
-                previousRef: allReleaseVersionsInOrder[allReleaseVersionsInOrder.indexOf(release.version) - 1],
+                previousRef: undefined,
                 commits: [] as Commit[]
             };
-        }).filter(x => {
+
             //only keep releases that happened within the specified range
-            return x.date >= this.startDate && x.date < this.endDate;
-        });
+        }).filter(x => x.date >= this.startDate && x.date < this.endDate);
+
         //if there's no leading release, use the first commit as the baseline for changes in this release
         if (matchedReleases[0] && !matchedReleases[0].previousRef) {
             const execResult2 = await exec('git rev-list --max-parents=0 HEAD', { cwd: project.dir });
             matchedReleases[0].previousRef = execResult2.stdout?.trim();
         }
+
+        //find all commits that were included for all of these releases, and dedupe them by hash
+        const commitMap = new Map<string, Commit>();
         for (const release of matchedReleases) {
             this.log(project, `finding commits for ${release.version}`);
-            release.commits = await this.getCommits(project, release.previousRef, release.version);
+            for (const commit of this.getCommitsForReleaseVersion(project, release.version)) {
+                commitMap.set(commit.hash, commit);
+            }
         }
-        return matchedReleases;
-    }
 
-    private async getCommits(project: Project, startRef: string, endRef: string): Promise<Commit[]> {
-        const commits = (await exec(`git log ${startRef}...${endRef} --oneline`, {
-            cwd: project?.dir
-        })).stdout.toString()
-            .split(/\r?\n/g)
-            //exclude empty lines
-            .filter(x => x.trim())
-            .map(x => {
-                const [, ref, branchInfo, message, prNumber] = /\s*([a-z0-9]+)\s*(?:\((.*?)\))?\s*(.*?)\s*(?:\(#(\d+)\))?$/gm.exec(x) ?? [];
-                return {
-                    ref: ref,
-                    branchInfo: branchInfo,
-                    message: message ?? x,
-                    pullRequestId: prNumber,
-                    author: undefined as Commit['author']
-                };
-            })
+        const commits = [...commitMap.values()]
+            .sort((a, b) => a.date.getTime() - b.date.getTime())
             //exclude version-only commit messages
             .filter(x => !semver.valid(x.message))
             //exclude those "update changelog for..." message
-            .filter(x => !x.message.toLowerCase().startsWith('update changelog for '));
+            .filter(x => !x.message.toLowerCase().startsWith('update changelog for '))
+            //exclude "merge branch 'xyz' of ... messages
+            .filter(x => !/\s*merge branch '.*?'/i.test(x.message));
 
-        //hydrate with author info
+        //enrich each commit
         for (const commit of commits) {
             await this.hydrateCommit(project, commit);
-            // {
-            //     name: 'Bronley Plumb',
-            //     email: 'bronley@gmail.com',
-            //     username: 'TwitchBronBron',
-            //     profileUrl: 'https://github.com/TwitchBronBron'
-            // }
         }
         return commits;
     }
 
+    /**
+     * Given a release version tag, walk backwards in the commit history until we find the first commit message with a release version with a tag earlier than the start date
+     */
+    private getCommitsForReleaseVersion(project: Project, releaseTag: string) {
+        const command = `git log "${releaseTag}" --pretty=format:"%h%x09%ad%x09%an%x09%d%x09%s" --decorate=short`;
+        const execResult = execSync(command, { cwd: project.dir }).toString();
+        const commits = execResult.split(/\r?\n/g).map(x => {
+            let [hash, date, authorName, refs, message] = x.split('\t');
+            const pullRequestId = /\(#(\d+)\)/.exec(message)?.[1];
+            message = message.replace(/\(#(\d+)\)/, '').trim();
+            return {
+                hash: hash,
+                date: new Date(date),
+                author: {
+                    name: authorName
+                } as Commit['author'],
+                tag: /.*\btag:[ \t]*(v.*?)[,)]/.exec(refs)?.[1],
+                message: message,
+                pullRequestId: pullRequestId
+            } as Commit;
+            //sort by date descending
+        }).sort((a, b) => b.date.getTime() - a.date.getTime());
+
+        // find the release that occurred right before the first release in this month
+        for (let i = 0; i < commits.length; i++) {
+            let commit = commits[i];
+
+            //this commit date is earlier than this month's start date, and it has a tag. we found it!
+            if (commit.date < this.startDate && commit.hash) {
+                return commits.slice(0, i - 1);
+            }
+        }
+        return commits;
+    }
+
+
     private async hydrateCommit(project: Project, commit: Commit) {
-        this.log(project, `Hydrating #${commit.ref}`);
+        const keys = [project.repositoryUrl, 'commits', commit.hash];
+        let githubCommit: Awaited<ReturnType<Octokit['rest']['repos']['getCommit']>>['data'];
         //load info about this commit
-        const githubCommit = await this.cache.getOrAdd([project.repositoryUrl, 'commits', commit.ref], async () => {
-            return (await this.octokit.rest.repos.getCommit({
-                repo: project.repoName,
-                owner: project.repoOwner,
-                ref: commit.ref
-            })).data;
-        });
+        if (this.cache.has(keys)) {
+            this.log(project, `Hydrating #${commit.hash} (from cache)`);
+            githubCommit = this.cache.get(keys);
+        } else {
+            this.log(project, `Hydrating #${commit.hash} (from github.com)`);
+            githubCommit = await this.cache.getOrAdd([project.repositoryUrl, 'commits', commit.hash], async () => {
+                return (await this.octokit.rest.repos.getCommit({
+                    repo: project.repoName,
+                    owner: project.repoOwner,
+                    ref: commit.hash
+                })).data;
+            });
+        }
         //temporarily write the cache after every read so we don't annoy the github api
         this.cache.write();
         commit.author = {
-            email: githubCommit.author.email,
-            name: githubCommit.commit.author.name,
-            profileUrl: githubCommit.author.html_url,
-            username: githubCommit.author.login
+            email: githubCommit.author?.email,
+            name: githubCommit.commit.author?.name,
+            profileUrl: githubCommit.author?.html_url,
+            username: githubCommit.author?.login
         };
     }
 }
@@ -372,7 +394,7 @@ class Cache {
         this.load();
     }
 
-    private get(keys: string[]) {
+    public get<R = any>(keys: string[]) {
         keys = [...keys ?? []];
         let value: any = this.data;
         while (keys.length > 0) {
@@ -381,7 +403,11 @@ class Cache {
                 return value;
             }
         }
-        return value;
+        return value as R;
+    }
+
+    public has(keys: string[]) {
+        return !!this.get(keys);
     }
 
     public async getOrAdd<T>(keys: string[], factory: () => T | Promise<T>) {
@@ -431,13 +457,13 @@ interface Project {
     repoOwner: string;
     repoName: string;
     dir: string;
-    releases: Release[];
+    commits: Commit[];
 }
 
 interface Commit {
-    ref: string;
-    branchInfo: string;
+    hash: string;
     message: string;
+    date: Date;
     author: {
         name: string;
         username: string;
