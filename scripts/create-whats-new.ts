@@ -39,15 +39,22 @@ const projects = [
 ];
 
 class Runner {
-    constructor(
+    public cache = new Cache(s`${__dirname}/.cache/${path.basename(__filename)}.json`);
+
+    public async run(
         options: RunnerOptions
     ) {
         this.configure(options);
-    }
+        options.count--;
 
-    public cache = new Cache(s`${__dirname}/.cache/${path.basename(__filename)}.json`);
+        console.log([
+            '\n', '-'.repeat(30),
+            '\nProcessing ',
+            monthNames[this.startDate.getMonth()], ' ', this.startDate.getFullYear(), ', ',
+            options.count, ' months remaining\n',
+            '-'.repeat(30), '\n'
+        ].join(''));
 
-    public async run() {
         //fail if we already have a document, and we're not forcing
         if (fsExtra.pathExistsSync(this.outputPath) && !this.force) {
             throw new Error(`what's new doc already exists at ${this.outputPath}. Use --force to overwrite.`);
@@ -58,15 +65,24 @@ class Runner {
             fsExtra.emptyDirSync(this.tempDir);
         }
 
-        // await Promise.all(
-        //     this.projects.map(async project => {
         for (const project of this.projects) {
             await this.processProject(project);
         }
-        //     })
-        // );
 
         await this.write();
+
+        //if a count was specified, generate another month whatsnew
+        if (options.count > 0) {
+            options.year = undefined;
+            options.month = undefined;
+
+            //add over a month to the end date to make sure we're soundly in the NEXT month
+            const nextDate = new Date(this.endDate.getTime());
+            nextDate.setDate(this.endDate.getDate() + 40);
+            options.today = nextDate.toISOString();
+
+            await this.run(options);
+        }
     }
 
     /**
@@ -77,6 +93,7 @@ class Runner {
     private octokit: Octokit;
 
     private configure(options: RunnerOptions) {
+        options.count ??= 1;
         options.token ??= process.env.GITHUB_TOKEN ?? process.env.GH_TOKEN ?? process.env.TOKEN;
         if (options.token) {
             console.log('github token was defined. using it!');
@@ -92,30 +109,6 @@ class Runner {
         this.force = options.force ?? false;
         this.cwd = s(options.cwd ?? process.cwd());
         this.tempDir = path.resolve(this.cwd, options.tempDir ?? s`${__dirname}/../.tmp/whatsnew`);
-
-        //construct the date range
-        let today: Date;
-        if (options.today) {
-            today = new Date(options.today);
-        } else {
-            today = new Date();
-        }
-        console.log('today', today);
-        const firstDayOfCurrentMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        const firstDayOfPreviousMonth = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth() - 1, 1);
-        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
-        let monthIndex = monthNames.findIndex(x => x.toLocaleLowerCase().startsWith(options.month?.toString().toLowerCase() || undefined));
-        if (monthIndex < 0) {
-            monthIndex = firstDayOfPreviousMonth.getMonth();
-        }
-        let year = parseInt(options.year?.toString());
-        if (isNaN(year) || typeof year !== 'number') {
-            year = firstDayOfPreviousMonth.getFullYear();
-        }
-
-        //build start and end dates so we can do >= startDate && < endDate
-        this.startDate = new Date(year, monthIndex, 1);
-        this.endDate = new Date(year, monthIndex + 1, 1);
 
         this.projects = (options.projects ?? projects).map(x => {
             let project = {
@@ -136,7 +129,39 @@ class Runner {
             return project;
         });
 
+        this.configureDate();
+
         this.outputPath = s`${__dirname}/../src/pages/whats-new/${this.startDate.getFullYear()}-${(this.startDate.getMonth() + 1).toString().padStart(2, '0')}-${monthNames[this.startDate.getMonth()]}.md`;
+    }
+
+    private getFirstDayOfMonth(date: Date) {
+        return new Date(date.getFullYear(), date.getMonth(), 1);
+    }
+
+    private configureDate() {
+        //construct the date range
+        let today: Date;
+        if (options.today) {
+            today = new Date(options.today);
+        } else {
+            today = new Date();
+        }
+        console.log('today', today);
+        const firstDayOfCurrentMonth = this.getFirstDayOfMonth(today);
+        const firstDayOfPreviousMonth = new Date(firstDayOfCurrentMonth.getFullYear(), firstDayOfCurrentMonth.getMonth() - 1, 1);
+        // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
+        let monthIndex = monthNames.findIndex(x => x.toLocaleLowerCase().startsWith(options.month?.toString().toLowerCase() || undefined));
+        if (monthIndex < 0) {
+            monthIndex = firstDayOfPreviousMonth.getMonth();
+        }
+        let year = parseInt(options.year?.toString());
+        if (isNaN(year) || typeof year !== 'number') {
+            year = firstDayOfPreviousMonth.getFullYear();
+        }
+
+        //build start and end dates so we can do >= startDate && < endDate
+        this.startDate = new Date(year, monthIndex, 1);
+        this.endDate = new Date(year, monthIndex + 1, 1);
     }
 
     private projects: Project[];
@@ -314,7 +339,9 @@ class Runner {
             //exclude those "update changelog for..." message
             .filter(x => !x.message.toLowerCase().startsWith('update changelog for '))
             //exclude "merge branch 'xyz' of ... messages
-            .filter(x => !/\s*merge branch '.*?'/i.test(x.message));
+            .filter(x => !/\s*merge branch '.*?'/i.test(x.message))
+            //exclude dependabot commits
+            .filter(x => !x.author?.name?.toLowerCase().includes('dependabot'));
 
         //enrich each commit
         for (const commit of commits) {
@@ -351,10 +378,11 @@ class Runner {
             let commit = commits[i];
 
             //this commit date is earlier than this month's start date, and it has a tag. we found it!
-            if (commit.date < this.startDate && commit.hash) {
-                return commits.slice(0, i - 1);
+            if (commit.date < this.startDate && commit.tag) {
+                return commits.slice(0, i);
             }
         }
+        //we didn't find a release...so assume ALL the commits were part of a release found within the date range
         return commits;
     }
 
@@ -474,6 +502,10 @@ interface Commit {
      * The ID of the pull request on github
      */
     pullRequestId: string;
+    /**
+     * The value of a tag on the commit (if it has one)
+     */
+    tag?: string;
 }
 
 interface Release {
@@ -490,6 +522,7 @@ interface RunnerOptions {
     force?: boolean;
     year?: number;
     month?: number | string;
+    count?: number;
     noclear?: boolean;
     today?: string;
     token?: string;
@@ -503,12 +536,13 @@ const options = yargs(hideBin(process.argv))
     .option('noclear', { type: 'boolean', description: 'Don\'t clear the temp dir (mostly useful for testing)', default: false })
     .option('month', { type: 'string', description: 'The month the post should be generated for' })
     .option('year', { type: 'number', description: 'The year the should be generated for' })
+    .option('count', { type: 'number', description: 'Number of months that should be generated starting at the supplied month and year' })
     .option('today', { type: 'string', description: 'A string used to construct a new new date, used for any `today` variables' })
     .option('token', { type: 'string', description: 'A github auth token that can be used to help work around rate limits' })
     .argv as unknown as RunnerOptions;
 
-const runner = new Runner(options);
-runner.run().catch((error) => {
+const runner = new Runner();
+runner.run(options).catch((error) => {
     console.error(error);
     process.exit(1);
 }).finally(() => {
