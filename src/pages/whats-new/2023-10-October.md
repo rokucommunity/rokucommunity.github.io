@@ -144,15 +144,9 @@ You can also specify some other settings such as `color-case` to enforce upper-c
 # BrighterScript
 
 
-## Add interface parameter support
-
-Somehow when we were implementing brighterscript `interfaces`, we forgot to support parameters in function declarations. That has now been fixed, so you can property define your functions parameters in interfaces.
-
-![image](https://github.com/rokucommunity/brighterscript/assets/2544493/e94251c8-61fd-47ab-8e6b-a2859ecb9056)
-
 
 # BrighterScript Preview features
-This month we're giving the brighterscript v0.66 branch its own entire section, because there has been a _LOT_ of significant progress made. Almost all of this work has been implemented by [@markwpearce (Mark Pearce)](https://github.com/markwpearce), who is doing an incredible job moving us closer to the finish line.
+This month we're giving the brighterscript v0.66 branch its own entire section again, because there has been a _LOT_ of significant progress made. Almost all of this work has been implemented by [@markwpearce (Mark Pearce)](https://github.com/markwpearce), who is doing an incredible job moving us closer to the finish line.
 
 You can try most of these out by installing the latest v0.66 alphas:
 
@@ -183,51 +177,6 @@ In order to keep the native scenegraph/brightscript data up-to-date, we regularl
 
 ## Adds `callFunc` as member method to Custom Components
 The type system now supports adding callfunc members to custom components. This will allow us to detect when an unknown function is callfunc'd.
-
-## Adds Native Brightscript Component Types and Custom Components (Nodes) to Type System
-In order to significantly improve the type validation experience, we have now integrated all of the native BrightScript component types, SGNode types, and custom components into the type system. This will allow you to declare variables as those types, and then get a much richer editor experience and better type safety when you interact with those items. Here are some highlights:
-
-Additions:
-
-- All native Brightscript Components (eg. roDeviceInfo, roBitmap, roDateTime, etc.) as types usable in Brighterscript, including completions on methods and documentation
-- Same for native interfaces (ifDraw2d, ifAppManager, etc)
-- Same for native events (roInputEvent, roSGNodeEvent)
-- Adds AssociativeArrayType that can be built from an AA literal (eg. myAA = {name: "Mark", coolFactor: 100}), and will correctly be compatible with interface types that have declared the same members, eg:
-
-```vb
-interface Developer
-   name as string
-   coolFactor as integer
-end interface
-
-sub takesDeveloper(dev as Developer)
-   print dev
-end sub
-
-sub foo()
-   ' no validation error, because AA meets required interface
-   takesDeveloper({name: "Mark", coolFactor: 100})
-end sub
-```
-
-
-Adds Scenegraph nodes to type system. The type's name is the component's name prefixed with roSGNode ... so roSGNodePoster, roSGNodeRowList, roSGNodeStdDlgTextItem are all available as types (with completions, documentation, etc)
-
-Custom components are also added (again, prefixed with roSgNode). Eg:
-
-```xml
-<?xml version="1.0" encoding="utf-8" ?>
-<component name="Widget" extends="Group">
-    <interface>
-        <field id="alpha" type="assocArray" />
-        <field id="beta" type="float" />
-        <field id="charlie" type="nodeArray" />
-    </interface>
-</component>
-```
-
-will create a type in the type system with name roSGNodeWidget, with completions and type inferences for properties alpha, beta, charlie, as well as validation on methods like 'getChildren(), subType(), etc.
-
 
 ## Semantic Tokes for Native Components and Type completion in Type Expressions
 We added support for better semantic token highlighting for component types and interfaces:
@@ -282,25 +231,6 @@ Here's how it looks now:
 
 ![image](https://user-images.githubusercontent.com/2544493/269661562-1e216018-5607-4e53-bb71-8d0c5a322ada.png)
 
-
-## Adds validation for binary operators
-Adding string and number now gets flagged as a compile error.
-
-![image](https://user-images.githubusercontent.com/810290/268829734-a6c8c704-2bfd-4739-90ed-cfb4d104f56d.png)
-
-## Validates DottedSetStatements for type compatibility
-We can now assign a specific type to classes, which then allow us to validate type mismatches for class members.
-
-Line 3 should be an error because we're assigning an integer to a string.
-
-![image](https://user-images.githubusercontent.com/2544493/265223561-19fa45fd-3021-4010-bea2-58024a6206cd.png)
-
-
-## Use Symbol Tables for Completions
-Historically the completions logic was fairly involved to write and maintain, because we were doing very specific lookups against specific AST items. With the new symbol table and type system, that can be significantly simplified, while also being far more accurate.
-
-There's not really a screenshot or demo to show with this, but just know that the completions are now much more maintainable and should more easily adapt to the changing type system.
-
 ## Fixed some bugs in hovers
 
 Adds more incomplete expressions to the AST, so they can be used for completions.
@@ -312,58 +242,6 @@ Fixes:
 - Fixes Enum completions and hovers Completions for enum is wrong
 
 You can read more about it here: [brighterscript#874](https://github.com/RokuCommunity/brighterscript/pull/874)
-
-## Adds Leading Trivia to all tokens, as a way to get comments from expressions
-As plugin authors, you may sometimes want to know about leading/trailing comments for a given expression or token. [brighterscript#885](https://github.com/RokuCommunity/brighterscript/pull/885) introduces a concept of "leading trivia" which will currently just contain leading comments. Function, class, method, field, interface, namespace statements return valid data from getLeadingTrivia() function. This should work with annotations as well.
-
-
-## Adds Typed Arrays
-Arrays can now have a type by defining them like `<type>[]` (e.g. `string[]` or `SomeClass[]`). We also support multidimensional arrays (e.g. `integer[][]`), as well as support overrides for built in methods for arrays (eg. `push()`, `pop()`) so it is consistent with the type. We will infer types from array literals as well, which can be very helpful for reducing needless `as <someType>` code.
-
-This feature is only available in BrighterScript.
-
-<video src="https://user-images.githubusercontent.com/810290/264099979-a32c8a12-73a6-4d16-8d01-6a95f91c5006.mov" data-canonical-src="https://user-images.githubusercontent.com/810290/264099979-a32c8a12-73a6-4d16-8d01-6a95f91c5006.mov" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
-</video>
-
-
-## Return type validation
-We now validate the actual return type vs. the declared return type. Subs and void functions will have validation errors when an actual type is included, and this works in `.brs` _and_ `.bs` files!
-
-<video src="https://user-images.githubusercontent.com/810290/264360339-d065c1ee-30f2-496f-ad4d-2e66182b166b.mov" data-canonical-src="https://user-images.githubusercontent.com/810290/264360339-d065c1ee-30f2-496f-ad4d-2e66182b166b.mov" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
-</video>
-
-
-## Fix tab issue when printing diagnostics
-If your development team prefers to use tabs in your source code (instead of spaces), you may have noticed that sometimes the diagnostics printed in the console by bsc are not properly formatted. [#f616265](https://github.com/RokuCommunity/brighterscript/commit/f616265) fixes that now so everything should now line up properly!
-
-Before:
-
-![image](https://github.com/rokucommunity/brighterscript/assets/2544493/ecc9de19-1d94-469c-94f2-3eaef228de45)
-
-After (fixed!):
-
-![image](https://github.com/rokucommunity/brighterscript/assets/2544493/4541d735-6f5b-4098-b002-5f0c640527b2)
-
-
-## Type casts are not allowed in BrightScript
-In some of the initial v0.66 alphas, we accidentally allowed users to write type cast expressions (`thing as SomeType`) in plain brightscript projects. We now properly warn that the feature is only supported in BrighterScript.
-
-![image](https://user-images.githubusercontent.com/810290/256878508-7280d101-0214-4973-b961-fd727642b90a.png)
-
-
-## Validate class and interface method calls
-
-We now validate class method calls!
-
-![image](https://user-images.githubusercontent.com/810290/256335937-ae33c514-f9ec-4e96-a8bc-d04e010f5293.png)
-
-<br />
-
-![image](https://github.com/rokucommunity/brighterscript/assets/2544493/fd820dd5-0211-439b-b8d3-9bfa646e8ed3)
-
-<br />
-
-![image](https://user-images.githubusercontent.com/810290/256336719-11daba64-77c3-4f02-abfd-6f25a5edacdf.png)
 
 
 ## Wider support for `as object`
