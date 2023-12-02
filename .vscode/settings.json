@@ -12,5 +12,11 @@
   "eslint.validate": [
     "astro", // Enable .astro
     "typescript", // Enable .ts
+  ],
+  "cSpell.words": [
+    "bsconfig",
+    "iface",
+    "noproject",
+    "transpiling"
   ]
 }
