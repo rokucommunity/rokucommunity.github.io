@@ -3,8 +3,8 @@ date: October 2023
 summary: Changes to vscode-brightscript-language, brighterscript, roku-debug, brighterscript-formatter, bslint, ropm, roku-report-analyzer
 layout: ../../layouts/WhatsNewPost.astro
 ---
-# Overview
 
+# Overview
 
 This month has seen some very significant improvements to the brighterscript type tracking initiative, and a complete overhaul of the internals of the debug session logic, as well as many other smaller changes to bslint, the formatter, and the vscode extension. Many thanks to all who have worked so hard and contributed this month!
 
@@ -32,7 +32,6 @@ We'd like to get that fixed so math looks right again!
 
 # Editor
 
-
 ## Align device picker name with name from the devices tab
 
 We standardized the device names in the device picker to match the names from the devices tree view panel. We now use the user-defined name when available.
@@ -45,17 +44,15 @@ After:
 
 ![image](https://user-images.githubusercontent.com/2544493/274648768-ad97a8c3-507a-411d-bb4f-d5fae360b582.png)
 
-
 ## Enhance host picker during launch
 
 We've significantly improved the experience interacting with the device picker dropdown that is shown when using the `"${promptForHost}"` option when launching a debug session:
 
-- add "last used" separator for the last used device
-- add "devices/other devices" separator for devices not last used
-- add separator line to separate the "enter manually" option
-- refresh the list any time a new device is discovered, instead of a blanket "wait 5 seconds" that was there previously
-- show a loader when we think there are more devices to be discovered
-
+-   add "last used" separator for the last used device
+-   add "devices/other devices" separator for devices not last used
+-   add separator line to separate the "enter manually" option
+-   refresh the list any time a new device is discovered, instead of a blanket "wait 5 seconds" that was there previously
+-   show a loader when we think there are more devices to be discovered
 
 Here's a preview of the feature:
 
@@ -74,14 +71,15 @@ Next month we'll be adding the ability to pick what channel you want to view the
 # Debugging
 
 ## Enable remote control on launch
+
 A new launch setting called `remoteControlMode` has been added. This will allow you to automate the [remote control mode](https://rokucommunity.github.io/vscode-brightscript-language/Debugging/remote-control-mode.html). You can configure `activateOnSessionStart` and `deactivateOnSessionEnd` independently to fully customize how you want the feature to work. Check it out!
 
 We'd like to give kudos to [@iBicha (Brahim Hadriche)](https://github.com/iBicha) for the awesome work on this feature, as it was highlighted in our [June 2023](http://localhost:3000/whats-new/2023-06-June) edition as the [Issue of the month](http://localhost:3000/whats-new/2023-06-June#issue-of-the-month).
 
 ![remoteControlMode](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/da1d55c5-a9bf-44c2-8c74-ab2436244eb3)
 
-
 ## Fix automation view crash when no config found
+
 We fixed a bug in the automation view panel where it would crash if there was no config defined. Users could easily encounter this bug if they had never set any custom automation values.
 
 Before the fix:
@@ -90,12 +88,11 @@ Before the fix:
 
 After the fix: ....it just works. 😀
 
-
 ## Fix that pesky "local variables" spinner in telnet
+
 A common issue lately with the telnet debugger is that it gets in these strange "stuck" states, where the local variables panel seems to load infinitely. Like this:
 
 ![local-spin](https://github.com/rokucommunity/logger/assets/2544493/4d6e299f-52c0-435c-b511-884b957513b4)
-
 
 The telnet debugger is extremely brittle. This is because we essentially wrote a [regular expression](https://en.wikipedia.org/wiki/Regular_expression) output log scraping state machine. Roku changing even a single character of their telnet output logs puts us at risk of falling into an unstable state.
 
@@ -114,17 +111,18 @@ Each ProtocolRequest and ProtocolResponse class will support loading from json, 
 You can check out the [roku-debug#107](https://github.com/RokuCommunity/roku-debug/pull/107) if you're interested in reviewing the 17,000 lines of added/changed/removed code.
 
 ## Better compile error handling
+
 Our compile error handling broke sometime in the last year or two. We used to highlight the line that had the error, but lately it just silently fails and only sometimes shows the error in the output logs.
 
 This month we released some significant improvements to that experience. Now when a debug session detects a compile error, we will highlight the failed line in a similar style to runtime exceptions. We also keep the debug session alive, so you will need to click "stop" to terminate the session. This more closely aligns us with other debuggers like Node and dotnet. This works for both telnet _and_ the debug protocol.
 
 ![compile-error](https://github.com/rokucommunity/roku-debug/assets/2544493/c1c144e8-f6ca-48bd-beb3-13c409795853)
 
-
 ## Better debug session process cleanup
+
 Some of our users have been experiencing some high CPU usage after a debug session has ended. This seems to be caused by the roku-debug process not properly shutting down. This month we squashed several bugs related to that. We do a much better job cleaning up opened sockets, event listeners, telnet connections, etc.
 
-There's not much to show here, but hopefully we found all the areas that were blocking the process shutdown.  Please [raise an issue](https://github.com/rokucommunity/roku-debug/issues) if you encounter any more of these unstable situations.
+There's not much to show here, but hopefully we found all the areas that were blocking the process shutdown. Please [raise an issue](https://github.com/rokucommunity/roku-debug/issues) if you encounter any more of these unstable situations.
 
 # Formatting
 
@@ -132,20 +130,19 @@ There's not much to show here, but hopefully we found all the areas that were bl
 
 We've added several new bslint rules to enforce specific color formats in your code. Here are some of the details:
 
-- `color-format`: ensures that all the color values follow the same prefix formatting. Can also use to prevent any colors values from being defined in the code-base (brs or bs files), except for values in a stand-alone file (ie. theme file).
+-   `color-format`: ensures that all the color values follow the same prefix formatting. Can also use to prevent any colors values from being defined in the code-base (brs or bs files), except for values in a stand-alone file (ie. theme file).
 
-    - `hash-hex`: enforces all color values are type string or template string and use a `#` prefix
-    - `quoted-numeric-hex`: enforces all color values are type string or template string and use a `0x` prefix
-    - `never`: enforces that no color values can be defined in the code-base (brs or bs files). Useful if you define colors in a separate stand-alone file. To use this option you would list your stand-alone file in the `ignore` list or `diagnosticFilters`.
-    - `off`: do not validate (**default**)
+    -   `hash-hex`: enforces all color values are type string or template string and use a `#` prefix
+    -   `quoted-numeric-hex`: enforces all color values are type string or template string and use a `0x` prefix
+    -   `never`: enforces that no color values can be defined in the code-base (brs or bs files). Useful if you define colors in a separate stand-alone file. To use this option you would list your stand-alone file in the `ignore` list or `diagnosticFilters`.
+    -   `off`: do not validate (**default**)
 
 You can also specify some other settings such as `color-case` to enforce upper-case or lower-case characters, `color-alpha` to require alpha to be defined (or not defined), and `color-cert` to enforce Roku's [broadcast safe color 6.4 certification requirement](https://developer.roku.com/en-gb/docs/developer-program/certification/certification.md)
 
 # BrighterScript
 
-
-
 # BrighterScript Preview features
+
 This month we're giving the brighterscript v0.66 branch its own entire section again, because there has been a _LOT_ of significant progress made. Almost all of this work has been implemented by [@markwpearce (Mark Pearce)](https://github.com/markwpearce), who is doing an incredible job moving us closer to the finish line.
 
 You can try most of these out by installing the latest v0.66 alphas:
@@ -155,16 +152,18 @@ npm install brighterscript@next
 ```
 
 ## File api
+
 At long last, the file api has been merged! (into the upcoming v0.66 release branch). We had hoped to land this in mainline back in the spring, but there were a few breaking changes that we had to work through. Since v0.66 will bring several other breaking changes, it made more sense to go ahead and group the file API changes in with that release. We won't get into too much detail on the file api, but here are some highlights:
 
-- all files matched by the `files` array are now loaded into the program. Known files (like `xml` and `brs`/`bs` will be handled by BrighterScript, and all other files will be passed through as-is.
-- plugins can now intercept the `provideFile` plugin hook and contribute their own enriched files (like json validation, non-scenegraph xml support, etc).
+-   all files matched by the `files` array are now loaded into the program. Known files (like `xml` and `brs`/`bs` will be handled by BrighterScript, and all other files will be passed through as-is.
+-   plugins can now intercept the `provideFile` plugin hook and contribute their own enriched files (like json validation, non-scenegraph xml support, etc).
 
 You can review pull request at [brighterscript#408](https://github.com/RokuCommunity/brighterscript/pull/408), or read the file api docs [here](https://github.com/rokucommunity/brighterscript/blob/release-0.66.0/docs/plugins.md#file-api)
 
 Also note that this feature is still in preview. We may still need to make some changes to the API as developers start to more heavily leverage the file API, so just keep that in mind.
 
 ## Support overloaded methods in BrightScript interfaces
+
 In order to keep the native scenegraph/brightscript data up-to-date, we regularly maintain a JSON file of all the various built-in types provided by the Roku platform. We have added support for BrightScript interface method overloads so that there is now a single definition of the method that can be added to the type system. We also fixed some incorrect function signatures like `array.sort()` `flags` param being optional.
 
 ![image](https://user-images.githubusercontent.com/810290/275030780-0d37c1a2-c39b-47b2-80c9-404563f8371a.png)
@@ -173,23 +172,24 @@ In order to keep the native scenegraph/brightscript data up-to-date, we regularl
 
 ![image](https://user-images.githubusercontent.com/810290/275031209-cbd8802a-1552-44d4-b693-8ff7ba12484a.png)
 
-
-
 ## Adds `callFunc` as member method to Custom Components
+
 The type system now supports adding callfunc members to custom components. This will allow us to detect when an unknown function is callfunc'd.
 
 ## Semantic Tokes for Native Components and Type completion in Type Expressions
+
 We added support for better semantic token highlighting for component types and interfaces:
 
 ![image](https://user-images.githubusercontent.com/810290/272982938-c2b0fa22-e5f5-4360-b874-add0c71c0b15.png)
 
 ## Code completion in Type Cast/Type Expression:
+
 We've updated the code completions to now show all of the native interfaces.
 
 ![image](https://user-images.githubusercontent.com/810290/272983536-547db5d2-1d6c-41b7-9aaf-a55d07d64213.png)
 
-
 ## Fixes compatibility of built in types (roArray -> typed arrays)
+
 [brighterscript#925](https://github.com/RokuCommunity/brighterscript/pull/925) fixes some bugs in the type tracking related to assignability between `string` and `roString` and also when comparing typed arrays
 
 ## Fixes enum validation
@@ -204,8 +204,8 @@ We [fixed](https://github.com/RokuCommunity/brighterscript/pull/919) a bug When 
 
 ![image](https://user-images.githubusercontent.com/810290/269942800-689f5aad-b7e9-4779-976a-ad5283ccdbae.png)
 
-
 ## Improve type compatibility diagnostic messages
+
 We've improved some of the "type a is not compatible with type b" messages. One change is that we now truncate the list of items with a `...and x more` message.
 
 Similar to typescript, this will show exclusively the "missing members" message if there are any missing members. Then, if there are no missing members, it'll show the "members are incompatible" message if there are any incompatible members. This helps reduce the size of these large errors in some codebases. You've got to address the missing members and the incompatible types, so it doesn't hurt to just show one at a time.
@@ -222,7 +222,6 @@ Incompatible members after:
 
 ![image](https://user-images.githubusercontent.com/2544493/269929522-edecc769-3c18-4e16-8e05-74cd7be44ce0.png)
 
-
 ## Better multi scope messages
 
 We improved the multi-scope diagnostic messaging for related infos more relevant (and concise). Also truncate that list since seeing 95 related infos is just noise...
@@ -237,25 +236,25 @@ Adds more incomplete expressions to the AST, so they can be used for completions
 
 Fixes:
 
-- Union type completions are only symbols available in all types Completion on union type should only show shared properties
-- Array toString() uses default type Reduce like types for hovers
-- Fixes Enum completions and hovers Completions for enum is wrong
+-   Union type completions are only symbols available in all types Completion on union type should only show shared properties
+-   Array toString() uses default type Reduce like types for hovers
+-   Fixes Enum completions and hovers Completions for enum is wrong
 
 You can read more about it here: [brighterscript#874](https://github.com/RokuCommunity/brighterscript/pull/874)
 
-
 ## Wider support for `as object`
+
 We've fixed some type validation issues related to `as object` variable types. They are permitted to be passed to any function type (just like dynamic), so we've fixed a bug that was marking those as errors.
 
 ## Various other type validation enhancements
 
-- BinaryExpressions and UnaryExpressions should be able to infer resultant types (eg. Integer * Integer => Integer, String + String => String, etc.)
+-   BinaryExpressions and UnaryExpressions should be able to infer resultant types (eg. Integer \* Integer => Integer, String + String => String, etc.)
 
-- Change Hover & Completion to use SymbolTable instead of variableDeclarations/callables
+-   Change Hover & Completion to use SymbolTable instead of variableDeclarations/callables
 
 This will complete the refactor to move away from using these lookup tables to unify how a symbol can be discovered/known. When this is done, the concept of VariableDeclarations can be removed from the code.
 
-- Validate function calls for argument type validity
+-   Validate function calls for argument type validity
 
 Function argument equality
 
@@ -271,6 +270,7 @@ end function
 ```
 
 ## Better diagnostic ranges for unknown dotted get expressions
+
 We've tightened the range for the "can't find this property" diagnostics so it only highlights the property instead of the entire starting expression.
 
 Before:
@@ -282,6 +282,7 @@ After:
 ![image](https://user-images.githubusercontent.com/2544493/244416204-8d7d046a-56c0-4da4-8cea-9dbb89559431.png)
 
 ## Adds .kind prop to AstNode.
+
 The `is<SomeAstNodeType>` functions from `reflections.ts` are used _heavily_ across brighterscript. As such, we found that this expression `thing?.constructor?.name === 'Whatever'` was fairly slow. To speed it up, we added a `.kind` property to `AstNode`, an `AstNodeKind` enum., and then converted the reflection methods to check for `.kind` instead of the `thing?.constructor?.name === 'Whatever'` logic. Raw benchmarks show this as a fairly significant boost:
 
 ![image](https://user-images.githubusercontent.com/2544493/234745941-ecf12cfd-cb6b-4755-8497-ac03817fb38c.png)
@@ -294,13 +295,14 @@ Downsides:
 
 This is a breaking change, as all plugins that produce AST would need to be upgraded to the latest version of brighterscript in order to work with the version of brighterscript shipped with the vscode extension. Or, for example, latest version of brighterscript being used with a plugin that depends on an older version of brighterscript.
 
-
 ## Breaking changes
+
 We've introduced some additional breaking changes to brighterscript as we move closer to the release of v0.66.0.
-- all plugin event handler parameters have been converted single event objects. ([brighterscript#824](https://github.com/RokuCommunity/brighterscript/pull/824))
-- several plugin event names have changed as a result of the file api. We've added warnings if your plugins use them, but plugins will need to update to the new names.
-- the XML AST has been refactored to better support being modified by plugins during transpile. ([brighterscript#818](https://github.com/RokuCommunity/brighterscript/pull/818))
-- the `.kind` property on AstNode has been added, and all the reflection methods exclusively check for that now ([#799](https://github.com/RokuCommunity/brighterscript/pull/799))
+
+-   all plugin event handler parameters have been converted single event objects. ([brighterscript#824](https://github.com/RokuCommunity/brighterscript/pull/824))
+-   several plugin event names have changed as a result of the file api. We've added warnings if your plugins use them, but plugins will need to update to the new names.
+-   the XML AST has been refactored to better support being modified by plugins during transpile. ([brighterscript#818](https://github.com/RokuCommunity/brighterscript/pull/818))
+-   the `.kind` property on AstNode has been added, and all the reflection methods exclusively check for that now ([#799](https://github.com/RokuCommunity/brighterscript/pull/799))
 
 # Thank you
 
