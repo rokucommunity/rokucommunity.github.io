@@ -131,6 +131,7 @@ BrighterScript has supported emitting type definitions (similar to [TypeScript's
 Type definitions are super useful if you're writing a library in brighterscript, but then distributing your library as brightscript code. The type definitions will support describing the way your code was originally written so that other brighterscript projects will be able to get better type validation.
 
 **someFile.d.bs**
+
 ```vb
 namespace player
    enum PlayState
@@ -159,7 +160,7 @@ We fixed a bug in the brighterscript [template string](https://github.com/rokuco
 console.log(`
     yay, I don't mess up line numbers
     anymore
-`)
+`);
 ```
 
 ## Update plugins docs
@@ -180,9 +181,9 @@ export default function plugin() {
             }
 
             builder.options.files.push({
-                src: "path/to/plugin/file.bs",
-                dest: "some/destination/path/goes/here"
-            })
+                src: 'path/to/plugin/file.bs',
+                dest: 'some/destination/path/goes/here'
+            });
         }
     } as CompilerPlugin;
 }
@@ -321,16 +322,16 @@ We've fixed several issues around validation interface usage, as well as adding 
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/a34595d8-4702-41ac-9b7b-1c97e0ef68d4)
 
-
 ## BrighterScript 0.66 alpha changes for plugin authors
+
 This section is still related to the 0.66 alphas, but focuses on BrighterScript plugin authors and how they interact with the BrighterScript lifecycle and AST.
 
 ### Add Leading Trivia to all tokens as a way to get comments from expressions
 
 As plugin authors, you may sometimes want to know about leading/trailing comments for a given expression or token. [brighterscript#885](https://github.com/RokuCommunity/brighterscript/pull/885) introduces a concept of "leading trivia" which will currently just contain leading comments. Function, class, method, field, interface, namespace statements return valid data from getLeadingTrivia() function. This should work with annotations as well.
 
-
 Here's an example showing how to get all comment statements for the first function in the file
+
 ```typescript
 import { Parser, TokenKind } from 'brighterscript';
 const parser = Parser.parse(`
@@ -341,20 +342,18 @@ const parser = Parser.parse(`
 `);
 
 const trivia = this.ast.findChild(isFunctionStatement).getLeadingTrivia();
-const comments = trivia.filter(x=> x.kind === TokenKind.Comment);
+const comments = trivia.filter((x) => x.kind === TokenKind.Comment);
 ```
 
 ## Fixed `isLiteralInvalid` reflection method and added other `isLiteral*` methods
 
 BrighterScript plugin authors can leverage the `isLiteral*` methods to make certain decisions about the AST they are interacting with. As a result of adding the type system, several of these methods got broken. We've fixed them, and also added any missing methods for types. ([#902](https://github.com/RokuCommunity/brighterscript/pull/902))
 
-
 ## Use Symbol Tables for Completions
 
 Historically the completions logic was fairly involved to write and maintain, because we were doing very specific lookups against specific AST items. With the new symbol table and type system, that can be significantly simplified, while also being far more accurate.
 
 There's not really a screenshot or demo to show with this, but just know that the completions are now much more maintainable and should more easily adapt to the changing type system.
-
 
 # Thank you
 
