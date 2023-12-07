@@ -272,8 +272,11 @@ class Runner {
     }
 
     private groupCommitsByUser(project: Project) {
-        const result = new Map<string, Commit[]>();
         const commits = [...project.commits];
+        //pre-create the results list sorted alphabetically by username
+        const result = new Map<string, Commit[]>(
+            commits.map(x => x.author.username.toLowerCase()).sort().map(x => [x, []])
+        );
         //group the commits by email address
         while (commits.length > 0) {
             const commit = commits.shift();
@@ -297,10 +300,13 @@ class Runner {
          *      2022-11-03 16:01:48 -0400  (tag: v0.60.5)
          *      2022-10-28 13:02:25 -0400  (tag: v0.60.4)
          */
-        const execResult = await exec('git log --tags --simplify-by-decoration --pretty="format:%ci %d"', { cwd: project.dir });
+        const execResult = this.execSync(
+            `git log --tags --simplify-by-decoration --pretty="format:%ci %d" --since="${dayjs(this.startDate).format('YYYY-MM-DD')}" --until="${dayjs(this.endDate).format('YYYY-MM-DD')}"`,
+            project
+        );
         //https://regex101.com/r/cGcKUj/3
         const releases = [
-            ...execResult.stdout.matchAll(/(\d+-\d+-\d+\s*(?:\d+:\d+:\d+(?:\s*[+-]?\d+))?).*?\(.*\btag:[ \t]*(v.*?)[,)]/g)
+            ...execResult.matchAll(/(\d+-\d+-\d+\s*(?:\d+:\d+:\d+(?:\s*[+-]?\d+))?).*?\(.*\btag:[ \t]*(v.*?)[,)]/g)
         ].map(x => ({
             date: new Date(x[1]),
             version: x[2]
@@ -310,14 +316,14 @@ class Runner {
             return {
                 date: release.date,
                 version: release.version,
-                previousRef: undefined,
+                previousRef: this.getPreviousReleaseTagOrRef(project, release.version),
                 commits: [] as Commit[]
             };
 
             //only keep releases that happened within the specified range
         }).filter(x => x.date >= this.startDate && x.date < this.endDate);
 
-        //if there's no leading release, use the first commit as the baseline for changes in this release
+        //if there's no previous release, use the first commit as the baseline for changes in this release
         if (matchedReleases[0] && !matchedReleases[0].previousRef) {
             const execResult2 = await exec('git rev-list --max-parents=0 HEAD', { cwd: project.dir });
             matchedReleases[0].previousRef = execResult2.stdout?.trim();
@@ -327,12 +333,13 @@ class Runner {
         const commitMap = new Map<string, Commit>();
         for (const release of matchedReleases) {
             this.log(project, `finding commits for ${release.version}`);
-            for (const commit of this.getCommitsForReleaseVersion(project, release.version)) {
+            for (const commit of this.getCommitsForReleaseVersion(project, release.version, release.previousRef)) {
                 commitMap.set(commit.hash, commit);
             }
         }
+        let commits = [...commitMap.values()];
 
-        const commits = [...commitMap.values()]
+        commits = commits
             .sort((a, b) => a.date.getTime() - b.date.getTime())
             //exclude version-only commit messages
             .filter(x => !semver.valid(x.message))
@@ -350,12 +357,43 @@ class Runner {
         return commits;
     }
 
+    private execSync(command: string, project: Project) {
+        return execSync(command, { cwd: project.dir }).toString();
+    }
+
+    /**
+     * Find the previous release tag, relative to the current release tag. If no tag found, returns the earliest ref
+     * @param project
+     * @param releaseTag
+     * @returns
+     */
+    private getPreviousReleaseTagOrRef(project: Project, releaseTag: string) {
+        //find the commit where this branch merged from
+        let [, mergePointHash] = /^commit\s+([a-z0-9]+)/i.exec(
+            this.execSync(`git log master..${releaseTag} --reverse`, project)
+        ) ?? [];
+
+        if (!mergePointHash) {
+            //look up and use the hash of the first commit in the repo
+            mergePointHash = this.execSync('git rev-list --max-parents=0 HEAD --first-parent', project).trim();
+        }
+
+        //get only releases found on this branch
+        const releases = execSync(
+            `git log --no-merges --oneline --first-parent --decorate ${mergePointHash}..${releaseTag}`,
+            { cwd: project.dir }
+        ).toString().split(/[\r\n]/g).map(x => {
+            return /.*\btag:[ \t]*(v.*?)[,)]/.exec(x.trim())?.[1];
+        }).filter(x => !!x && x !== releaseTag);
+        return releases[0] ?? mergePointHash;
+    }
+
     /**
      * Given a release version tag, walk backwards in the commit history until we find the first commit message with a release version with a tag earlier than the start date
      */
-    private getCommitsForReleaseVersion(project: Project, releaseTag: string) {
-        const command = `git log "${releaseTag}" --pretty=format:"%h%x09%ad%x09%an%x09%d%x09%s" --decorate=short`;
-        const execResult = execSync(command, { cwd: project.dir }).toString();
+    private getCommitsForReleaseVersion(project: Project, releaseTag: string, previousRef: string) {
+        const command = `git log ${previousRef}..${releaseTag} --pretty=format:"%h%x09%ad%x09%an%x09%d%x09%s" --decorate=short`;
+        const execResult = this.execSync(command, project);
         const commits = execResult.split(/\r?\n/g).map(x => {
             let [hash, date, authorName, refs, message] = x.split('\t');
             const pullRequestId = /\(#(\d+)\)/.exec(message)?.[1];
@@ -379,7 +417,8 @@ class Runner {
 
             //this commit date is earlier than this month's start date, and it has a tag. we found it!
             if (commit.date < this.startDate && commit.tag) {
-                return commits.slice(0, i);
+                const result = commits.slice(0, i);
+                return result;
             }
         }
         //we didn't find a release...so assume ALL the commits were part of a release found within the date range
