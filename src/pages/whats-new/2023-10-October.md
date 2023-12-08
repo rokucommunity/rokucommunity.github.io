@@ -310,37 +310,37 @@ Last but certainly not least, a big **_Thank You_** to the following people who 
 
 Contributions to [vscode-brightscript-language](https://github.com/RokuCommunity/vscode-brightscript-language):
 
--   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
-    -   Fix automation view crash when no config found ([PR #504](https://github.com/RokuCommunity/vscode-brightscript-language/pull/504))
-    -   Fix error when generating the docs ([12dfb27](https://github.com/RokuCommunity/vscode-brightscript-language/commit/12dfb27))
-    -   Make device picker name same as tree view item ([PR #508](https://github.com/RokuCommunity/vscode-brightscript-language/pull/508))
-    -   Diagnostic manager ([PR #502](https://github.com/RokuCommunity/vscode-brightscript-language/pull/502))
-    -   Enhance host picker during launch ([PR #512](https://github.com/RokuCommunity/vscode-brightscript-language/pull/512))
-    -   Add brs to releases script ([5c6622b](https://github.com/RokuCommunity/vscode-brightscript-language/commit/5c6622b))
--   [@iBicha (Brahim Hadriche)](https://github.com/iBicha)
-    -   Enable remote control on launch ([PR #503](https://github.com/RokuCommunity/vscode-brightscript-language/pull/503))
 -   [@fumer-fubotv (fumer-fubotv)](https://github.com/fumer-fubotv)
     -   Add ability to capture device screenshots ([PR #505](https://github.com/RokuCommunity/vscode-brightscript-language/pull/505))
+-   [@iBicha (Brahim Hadriche)](https://github.com/iBicha)
+    -   Enable remote control on launch ([PR #503](https://github.com/RokuCommunity/vscode-brightscript-language/pull/503))
 -   [@MilapNaik (Milap Naik)](https://github.com/MilapNaik)
     -   Add link for ECP registry ([PR #511](https://github.com/RokuCommunity/vscode-brightscript-language/pull/511))
+-   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    -   Fix error when generating the docs ([12dfb27](https://github.com/RokuCommunity/vscode-brightscript-language/commit/12dfb27))
+    -   Fix automation view crash when no config found ([PR #504](https://github.com/RokuCommunity/vscode-brightscript-language/pull/504))
+    -   Diagnostic manager ([PR #502](https://github.com/RokuCommunity/vscode-brightscript-language/pull/502))
+    -   Make device picker name same as tree view item ([PR #508](https://github.com/RokuCommunity/vscode-brightscript-language/pull/508))
+    -   Add brs to releases script ([5c6622b](https://github.com/RokuCommunity/vscode-brightscript-language/commit/5c6622b))
+    -   Enhance host picker during launch ([PR #512](https://github.com/RokuCommunity/vscode-brightscript-language/pull/512))
 
 Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscript):
 
--   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
-    -   Add interface parameter support ([PR #924](https://github.com/RokuCommunity/brighterscript/pull/924))
-    -   Better typing for `Deferred` ([PR #923](https://github.com/RokuCommunity/brighterscript/pull/923))
-    -   Fix stagingDir issue in transpiler test ([8a31693](https://github.com/RokuCommunity/brighterscript/commit/8a31693))
-    -   File api ([PR #408](https://github.com/RokuCommunity/brighterscript/pull/408))
-    -   ci: Don't run `test-related-projects` on release since it already ran on build ([157fc2e](https://github.com/RokuCommunity/brighterscript/commit/157fc2e))
-    -   Refine type compat message ([PR #908](https://github.com/RokuCommunity/brighterscript/pull/908))
-    -   Better multi scope messages ([PR #904](https://github.com/RokuCommunity/brighterscript/pull/904))
 -   [@markwpearce (Mark Pearce)](https://github.com/markwpearce)
-    -   Allows `scrape-roku-docs` to consolidate overloaded methods ([PR #930](https://github.com/RokuCommunity/brighterscript/pull/930))
-    -   Adds `callFunc` as member method to Custom Components ([PR #929](https://github.com/RokuCommunity/brighterscript/pull/929))
-    -   Semantic Tokes for Native Components and Type completion in Type Expressions ([PR #927](https://github.com/RokuCommunity/brighterscript/pull/927))
-    -   Fixes compatibility of built in types (roArray -> typed arrays) ([PR #925](https://github.com/RokuCommunity/brighterscript/pull/925))
     -   Fixes some enum validation stuff ([PR #920](https://github.com/RokuCommunity/brighterscript/pull/920))
     -   Allow classes and native components in Typed Arrays ([PR #919](https://github.com/RokuCommunity/brighterscript/pull/919))
+    -   Fixes compatibility of built in types (roArray -> typed arrays) ([PR #925](https://github.com/RokuCommunity/brighterscript/pull/925))
+    -   Semantic Tokes for Native Components and Type completion in Type Expressions ([PR #927](https://github.com/RokuCommunity/brighterscript/pull/927))
+    -   Adds `callFunc` as member method to Custom Components ([PR #929](https://github.com/RokuCommunity/brighterscript/pull/929))
+    -   Allows `scrape-roku-docs` to consolidate overloaded methods ([PR #930](https://github.com/RokuCommunity/brighterscript/pull/930))
+-   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    -   Better multi scope messages ([PR #904](https://github.com/RokuCommunity/brighterscript/pull/904))
+    -   Refine type compat message ([PR #908](https://github.com/RokuCommunity/brighterscript/pull/908))
+    -   Better typing for `Deferred` ([PR #923](https://github.com/RokuCommunity/brighterscript/pull/923))
+    -   Add interface parameter support ([PR #924](https://github.com/RokuCommunity/brighterscript/pull/924))
+    -   ci: Don't run `test-related-projects` on release since it already ran on build ([157fc2e](https://github.com/RokuCommunity/brighterscript/commit/157fc2e))
+    -   File api ([PR #408](https://github.com/RokuCommunity/brighterscript/pull/408))
+    -   Fix stagingDir issue in transpiler test ([8a31693](https://github.com/RokuCommunity/brighterscript/commit/8a31693))
 
 Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
 
@@ -351,10 +351,10 @@ Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
 
 Contributions to [bslint](https://github.com/RokuCommunity/bslint):
 
--   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
-    -   Fixing issues before release 0.8.11 ([051fd4c](https://github.com/RokuCommunity/bslint/commit/051fd4c))
-    -   copy expectDiagnostics from brighterscript for tests ([PR #95](https://github.com/RokuCommunity/bslint/pull/95))
 -   [@disc7 (Charlie Abbott)](https://github.com/disc7)
     -   [WIP] Color format checking for bslint ([PR #94](https://github.com/RokuCommunity/bslint/pull/94))
+-   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    -   copy expectDiagnostics from brighterscript for tests ([PR #95](https://github.com/RokuCommunity/bslint/pull/95))
+    -   Fixing issues before release 0.8.11 ([051fd4c](https://github.com/RokuCommunity/bslint/commit/051fd4c))
 -   [@markwpearce (Mark Pearce)](https://github.com/markwpearce)
-    -   Fixes for Brighterscript Typing-Phase-1 breaking changes ([53f8f9c](https://github.com/RokuCommunity/bslint/commit/53f8f9c))
+    -   Fixes for BrighterScript Typing-Phase-1 breaking changes ([53f8f9c](https://github.com/RokuCommunity/bslint/commit/53f8f9c))
