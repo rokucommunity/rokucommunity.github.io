@@ -356,5 +356,3 @@ Contributions to [bslint](https://github.com/RokuCommunity/bslint):
 -   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
     -   copy expectDiagnostics from brighterscript for tests ([PR #95](https://github.com/RokuCommunity/bslint/pull/95))
     -   Fixing issues before release 0.8.11 ([051fd4c](https://github.com/RokuCommunity/bslint/commit/051fd4c))
--   [@markwpearce (Mark Pearce)](https://github.com/markwpearce)
-    -   Fixes for BrighterScript Typing-Phase-1 breaking changes ([53f8f9c](https://github.com/RokuCommunity/bslint/commit/53f8f9c))
