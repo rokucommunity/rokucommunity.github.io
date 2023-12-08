@@ -327,8 +327,8 @@ Contributions to [vscode-brightscript-language](https://github.com/RokuCommunity
 Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscript):
 
 -   [@markwpearce (Mark Pearce)](https://github.com/markwpearce)
-    -   Fixes some enum validation stuff ([PR #920](https://github.com/RokuCommunity/brighterscript/pull/920))
     -   Allow classes and native components in Typed Arrays ([PR #919](https://github.com/RokuCommunity/brighterscript/pull/919))
+    -   Fixes some enum validation stuff ([PR #920](https://github.com/RokuCommunity/brighterscript/pull/920))
     -   Fixes compatibility of built in types (roArray -> typed arrays) ([PR #925](https://github.com/RokuCommunity/brighterscript/pull/925))
     -   Semantic Tokes for Native Components and Type completion in Type Expressions ([PR #927](https://github.com/RokuCommunity/brighterscript/pull/927))
     -   Adds `callFunc` as member method to Custom Components ([PR #929](https://github.com/RokuCommunity/brighterscript/pull/929))

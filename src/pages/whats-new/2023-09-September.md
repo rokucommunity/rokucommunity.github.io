@@ -421,6 +421,8 @@ Contributions to [bslint](https://github.com/RokuCommunity/bslint):
 -   [@elsassph (Philippe Elsass)](https://github.com/elsassph)
     -   Silence one bsc diagnostic ([8c49713](https://github.com/RokuCommunity/bslint/commit/8c49713))
 -   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    -   Fix event structure ([61481e1](https://github.com/RokuCommunity/bslint/commit/61481e1))
+    -   Performance boost by lifting some global lookups ([81aa853](https://github.com/RokuCommunity/bslint/commit/81aa853))
     -   brighterscript@0.66.0-alpha.4 ([c495fb9](https://github.com/RokuCommunity/bslint/commit/c495fb9))
     -   Add bsc-0.66-alpha.6. Fix tests ([5a4de6f](https://github.com/RokuCommunity/bslint/commit/5a4de6f))
 
