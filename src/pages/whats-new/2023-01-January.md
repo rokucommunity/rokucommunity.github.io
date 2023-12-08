@@ -93,33 +93,38 @@ The link to the instalation instructions was broken. Now we have updated it to o
 Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:
 
 Contributions to [vscode-brightscript-language](https://github.com/RokuCommunity/vscode-brightscript-language):
- - [@triwav (Brian Leighty)](https://github.com/triwav)
-    - Fix rdb keypaths and focus scrolling ([PR #455](https://github.com/RokuCommunity/vscode-brightscript-language/pull/455))
- - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
-    - watch-all ([PR #456](https://github.com/RokuCommunity/vscode-brightscript-language/pull/456))
-    - Use png instead of svg ([d1e3d29](https://github.com/RokuCommunity/vscode-brightscript-language/commit/d1e3d29))
-    - Fix vsmarketplace badge ([b2153a3](https://github.com/RokuCommunity/vscode-brightscript-language/commit/b2153a3))
-    - Fix dependency order in watch-all ([b7843a7](https://github.com/RokuCommunity/vscode-brightscript-language/commit/b7843a7))
-    - fix: continue keyword colorization ([PR #459](https://github.com/RokuCommunity/vscode-brightscript-language/pull/459))
  - [@Christian-Holbrook (Christian-Holbrook)](https://github.com/Christian-Holbrook)
     - Watch all dependency and configuration updates ([PR #460](https://github.com/RokuCommunity/vscode-brightscript-language/pull/460))
  - [@iBicha (Brahim Hadriche)](https://github.com/iBicha)
     - Allow relative injectRaleTrackerTask ([PR #462](https://github.com/RokuCommunity/vscode-brightscript-language/pull/462))
+ - [@triwav (Brian Leighty)](https://github.com/triwav)
+    - Fix rdb keypaths and focus scrolling ([PR #455](https://github.com/RokuCommunity/vscode-brightscript-language/pull/455))
+ - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    - watch-all ([PR #456](https://github.com/RokuCommunity/vscode-brightscript-language/pull/456))
+    - Fix vsmarketplace badge ([b2153a3](https://github.com/RokuCommunity/vscode-brightscript-language/commit/b2153a3))
+    - Use png instead of svg ([d1e3d29](https://github.com/RokuCommunity/vscode-brightscript-language/commit/d1e3d29))
+    - fix: continue keyword colorization ([PR #459](https://github.com/RokuCommunity/vscode-brightscript-language/pull/459))
+    - Fix dependency order in watch-all ([b7843a7](https://github.com/RokuCommunity/vscode-brightscript-language/commit/b7843a7))
 
 Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscript):
- - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
-    - Fixing issues before release 0.61.3 ([fd841a0](https://github.com/RokuCommunity/brighterscript/commit/fd841a0))
-    - Fix test-related-projects. Reenable rooibos ([PR #761](https://github.com/RokuCommunity/brighterscript/pull/761))
  - [@iObject (Tyler Smith)](https://github.com/iObject)
     - Add diagnostic for passing more than 5 arguments to a callFunc ([PR #765](https://github.com/RokuCommunity/brighterscript/pull/765))
+ - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    - Fix test-related-projects. Reenable rooibos ([PR #761](https://github.com/RokuCommunity/brighterscript/pull/761))
+    - Fixing issues before release 0.61.3 ([fd841a0](https://github.com/RokuCommunity/brighterscript/commit/fd841a0))
+
+Contributions to [logger](https://github.com/RokuCommunity/logger):
+ - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
+    - Update build.yml ([6b13d47](https://github.com/RokuCommunity/logger/commit/6b13d47))
+    - Fix audit issues ([0583c2b](https://github.com/RokuCommunity/logger/commit/0583c2b))
 
 Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
- - [@Christian-Holbrook (Christian-Holbrook)](https://github.com/Christian-Holbrook)
-    - Execute command for repl expressions ([PR #119](https://github.com/RokuCommunity/roku-debug/pull/119))
-    - Hiding prefixed variables in the debug variable panel ([PR #127](https://github.com/RokuCommunity/roku-debug/pull/127))
-    - Fix isAssignableExpression to correctly support dotted and indexed statements ([PR #128](https://github.com/RokuCommunity/roku-debug/pull/128))
  - [@adellhk (adellhk)](https://github.com/adellhk)
     - Update create-vsix.yml ([PR #126](https://github.com/RokuCommunity/roku-debug/pull/126))
+ - [@Christian-Holbrook (Christian-Holbrook)](https://github.com/Christian-Holbrook)
+    - Execute command for repl expressions ([PR #119](https://github.com/RokuCommunity/roku-debug/pull/119))
+    - Fix isAssignableExpression to correctly support dotted and indexed statements ([PR #128](https://github.com/RokuCommunity/roku-debug/pull/128))
+    - Hiding prefixed variables in the debug variable panel ([PR #127](https://github.com/RokuCommunity/roku-debug/pull/127))
  - [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
     - Fix inifinite-spin for unloaded vars ([PR #120](https://github.com/RokuCommunity/roku-debug/pull/120))
     - Fix off-by-1 bug with threads over protocol ([PR #132](https://github.com/RokuCommunity/roku-debug/pull/132))
