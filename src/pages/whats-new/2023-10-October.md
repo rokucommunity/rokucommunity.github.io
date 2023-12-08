@@ -341,6 +341,8 @@ Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscrip
     -   Fixes compatibility of built in types (roArray -> typed arrays) ([PR #925](https://github.com/RokuCommunity/brighterscript/pull/925))
     -   Fixes some enum validation stuff ([PR #920](https://github.com/RokuCommunity/brighterscript/pull/920))
     -   Allow classes and native components in Typed Arrays ([PR #919](https://github.com/RokuCommunity/brighterscript/pull/919))
+    -   Adds `callFunc` as member method to Custom Components ([PR #929](https://github.com/RokuCommunity/brighterscript/pull/929))
+    -   Allows `scrape-roku-docs` to consolidate overloaded methods ([PR #930](https://github.com/RokuCommunity/brighterscript/pull/930))
 
 Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
 
