@@ -245,21 +245,21 @@ class Runner {
 
         result.push(
             '',
-            '# Thank you',
-            `Last but certainly not least, a big ***Thank You*** to the following people who contributed this month:`
+            '# Thank you\n',
+            `Last but certainly not least, a big **_Thank You_** to the following people who contributed this month:`
         );
         for (const project of this.projects) {
             //skip projects that had no releases this month
             if (project.commits.length === 0) {
                 continue;
             }
-            result.push('', `Contributions to [${project.name}](${project.repositoryUrl}):`);
+            result.push('', `Contributions to [${project.name}](${project.repositoryUrl}):\n`);
             for (const [, commits] of this.groupCommitsByUser(project)) {
                 const { author } = commits[0];
-                result.push(` - [@${author.username} (${author.name})](${author.profileUrl})`);
+                result.push(`-   [@${author.username} (${author.name})](${author.profileUrl})`);
                 for (const commit of commits) {
                     result.push(
-                        '    - ' + (
+                        '    -   ' + (
                             commit.pullRequestId
                                 ? `${commit.message} ([PR #${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`
                                 : `${commit.message} ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`
@@ -293,15 +293,17 @@ class Runner {
      * Find all the releases for a given date range, including the leading and trailing releases that are outside the date range
      */
     private async getCommits(project: Project): Promise<Commit[]> {
-        this.log(project, `Finding releases between ${dayjs(this.startDate).format('YYYY-MM-DD')
-            } and ${dayjs(this.endDate).format('YYYY-MM-DD')} `);
+        this.log(project, `Finding releases between ${dayjs(this.startDate).format('YYYY-MM-DD')} and ${dayjs(this.endDate).format('YYYY-MM-DD')} `);
         /**
          * generates output like:
          *      2022-11-03 16:01:48 -0400  (tag: v0.60.5)
          *      2022-10-28 13:02:25 -0400  (tag: v0.60.4)
          */
+        //widen the dates by 2 days to overscan a bit (avoids weird UTC issues)
+        const startDateText = dayjs(this.startDate).subtract(2, 'days').format('YYYY-MM-DD');
+        const endDateText = dayjs(this.endDate).add(2, 'days').format('YYYY-MM-DD');
         const execResult = this.execSync(
-            `git log --tags --simplify-by-decoration --pretty="format:%ci %d" --since="${dayjs(this.startDate).format('YYYY-MM-DD')}" --until="${dayjs(this.endDate).format('YYYY-MM-DD')}"`,
+            `git log --tags --simplify-by-decoration --pretty="format:%ci %d" --since="${startDateText}" --until="${endDateText}"`,
             project
         );
         //https://regex101.com/r/cGcKUj/3
