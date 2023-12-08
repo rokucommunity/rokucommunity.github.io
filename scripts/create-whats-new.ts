@@ -17,6 +17,7 @@ import { fileURLToPath } from 'url';
 import semver from 'semver';
 import { Octokit } from 'octokit';
 import * as dotenv from 'dotenv';
+import fastGlob from 'fast-glob';
 dotenv.config();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -54,6 +55,9 @@ class Runner {
             options.count, ' months remaining\n',
             '-'.repeat(30), '\n'
         ].join(''));
+
+        //load all historic referenced commits up to this point
+        this.loadReferencedCommits();
 
         //fail if we already have a document, and we're not forcing
         if (fsExtra.pathExistsSync(this.outputPath) && !this.force) {
@@ -351,7 +355,15 @@ class Runner {
             //exclude "merge branch 'xyz' of ... messages
             .filter(x => !/\s*merge branch '.*?'/i.test(x.message))
             //exclude dependabot commits
-            .filter(x => !x.author?.name?.toLowerCase().includes('dependabot'));
+            .filter(x => !x.author?.name?.toLowerCase().includes('dependabot'))
+            //exclude commits referenced by previous writeups
+            .filter(x => {
+                if (this.isReferencedInPreviousWriteup(x, project)) {
+                    console.log(`skipping commit because it was referenced in a previous writeup: ${x.hash}`, x.pullRequestId ? `#${x.pullRequestId})` : '');
+                    return false;
+                }
+                return true;
+            });
 
         //enrich each commit
         for (const commit of commits) {
@@ -441,6 +453,107 @@ class Runner {
             profileUrl: githubCommit.author?.html_url,
             username: githubCommit.author?.login
         };
+    }
+
+    /**
+     * look through all previous writeups to see if this commit was already mentioned
+     * @param commit
+     * @param projectName
+     */
+    private isReferencedInPreviousWriteup(commit: Commit, project: Project) {
+        // this is a PR
+        if (commit.pullRequestId) {
+            return this.refs.has(
+                `${project.repositoryUrl}/pull/${commit.pullRequestId}`
+            );
+
+            //this is a commit hash
+        } else {
+            return this.refs.has(
+                `${project.repositoryUrl}/commit/${commit.hash}`
+            );
+        }
+    }
+
+    /**
+     * As list of every ref that we've used in previous writeups
+     */
+    private refs = new Set<string>();
+
+    /**
+     * A list of writeups that we've already processed for loading previously-used refs
+     */
+    private processedWriteups = new Set<string>();
+
+    /**
+     * Load all the commits listed in each "#thanks" block for each month. This will help us filter already-documented commits
+     */
+    private loadReferencedCommits() {
+        const files = fastGlob.sync('**/*.md', {
+            cwd: `${__dirname}/../src/pages/whats-new`,
+            absolute: true
+        }).sort();
+        for (const file of files) {
+            const [, year, month] = /(\d\d\d\d)-(\d\d)/.exec(path.basename(file)) ?? [];
+            //skip this file if we couldn't parse the file format
+            if (!year || !month) {
+                continue;
+            }
+
+            //set the date to the 3rd of the month so it definitely falls within the current date range if on same month
+            const fileDate = new Date(parseInt(year), parseInt(month) - 1, 3);
+            //TODO skip the rest of the files this file if it's during or after the current time range.
+            if (fileDate > this.startDate && fileDate < this.endDate) {
+                break;
+            }
+
+            //skip this file if it has already been loaded
+            if (this.processedWriteups.has(file)) {
+                continue;
+            }
+            this.processedWriteups.add(file);
+
+            console.log(`Loading referenced commits from ${path.basename(file)}`);
+
+            const contents = fsExtra.readFileSync(file).toString();
+            const md = contents.split(/#\s+Thank\s+you/g)?.[1] ?? '';
+            const lines = md.split(/\r?\n/g)
+                .map(x => x.trim())
+                //remove empty lines
+                .filter(x => x !== '')
+                //remove author lines
+                .filter(x => !/^-\s*\[@/.test(x));
+
+            let project: Project;
+            for (const line of lines) {
+                //grab the project name
+                const [, projectName] = /contributions to \[(.*)\]/i.exec(line) ?? [];
+                if (projectName) {
+                    project = this.projects.find(x => x.name === projectName);
+                    //this line only contains project name info so skip to next line
+                    continue;
+                }
+                //move to next line if we don't have a project
+                if (!project) {
+                    continue;
+                }
+                //grab the PR number or commit hash
+                const ref = (
+                    /\(\[((?:PR\s+#)?.+?)\]\(/.exec(line)?.[1] ?? ''
+                ).trim();
+                if (!ref) {
+                    continue;
+                }
+                // this is a PR
+                if (ref.startsWith('PR')) {
+                    this.refs.add(`${project.repositoryUrl}/pull/${ref.replace(/^\s*PR\s*\#/i, '')}`);
+
+                    //this is a commit hash
+                } else {
+                    this.refs.add(`${project.repositoryUrl}/commit/${ref}`);
+                }
+            }
+        }
     }
 }
 
