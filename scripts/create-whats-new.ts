@@ -335,7 +335,8 @@ class Runner {
         const commitMap = new Map<string, Commit>();
         for (const release of matchedReleases) {
             this.log(project, `finding commits for ${release.version}`);
-            for (const commit of this.getCommitsForReleaseVersion(project, release.version, release.previousRef)) {
+            const commits = this.getCommitsForReleaseVersion(project, release.version, release.previousRef);
+            for (const commit of commits) {
                 commitMap.set(commit.hash, commit);
             }
         }
@@ -412,21 +413,8 @@ class Runner {
             } as Commit;
             //sort by date descending
         }).sort((a, b) => b.date.getTime() - a.date.getTime());
-
-        // find the release that occurred right before the first release in this month
-        for (let i = 0; i < commits.length; i++) {
-            let commit = commits[i];
-
-            //this commit date is earlier than this month's start date, and it has a tag. we found it!
-            if (commit.date < this.startDate && commit.tag) {
-                const result = commits.slice(0, i);
-                return result;
-            }
-        }
-        //we didn't find a release...so assume ALL the commits were part of a release found within the date range
         return commits;
     }
-
 
     private async hydrateCommit(project: Project, commit: Commit) {
         const keys = [project.repositoryUrl, 'commits', commit.hash];
@@ -547,13 +535,6 @@ interface Commit {
      * The value of a tag on the commit (if it has one)
      */
     tag?: string;
-}
-
-interface Release {
-    date: Date;
-    version: string;
-    previousRef: string;
-    commits: Commit[];
 }
 
 interface RunnerOptions {
