@@ -516,8 +516,16 @@ class Runner {
             console.log(`Loading referenced commits from ${path.basename(file)}`);
 
             const contents = fsExtra.readFileSync(file).toString();
-            const md = contents.split(/#\s+Thank\s+you/g)?.[1] ?? '';
-            const lines = md.split(/\r?\n/g)
+
+            let lines = contents.split(/\r?\n/g);
+            //walk up from the bottom to find the final # Thank You section. throw away everything above
+            for (let i = lines.length - 1; i >= 0; i--) {
+                if (/^\s*#\s*Thank\s+you/g.test(lines[i])) {
+                    lines.splice(0, i);
+                    break;
+                }
+            }
+            lines = lines
                 .map(x => x.trim())
                 //remove empty lines
                 .filter(x => x !== '')
