@@ -6,6 +6,33 @@ layout: ../../layouts/WhatsNewPost.astro
 
 # Overview
 
+## We need your help
+
+The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
+
+-   [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language/issues)
+-   [brighterscript](https://github.com/rokucommunity/brighterscript/issues)
+-   [brighterscript-formatter](https://github.com/rokucommunity/brighterscript-formatter/issues)
+-   [roku-deploy](https://github.com/rokucommunity/roku-deploy/issues)
+-   [roku-debug](https://github.com/rokucommunity/roku-debug/issues)
+-   [bslint](https://github.com/rokucommunity/bslint/issues)
+-   [ropm](https://github.com/rokucommunity/ropm/issues)
+
+## Issue of the month
+
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases.
+
+This month, we'd like to draw attention to [bslint#46: declutter multi-scope diagnostics](https://github.com/rokucommunity/bslint/issues/46). If you've been using bslint, you may have noticed many duplicate diagnostics whenever a lint issue is discovered across multiple components.
+
+![image](https://github.com/rokucommunity/bslint/assets/2544493/4c984883-2369-43d1-aca7-9f677d2c9133)
+
+We'd like to improve this by emitting a _single_ diagnostic that has `relatedInformation`, which can be collapsed in vscode and generally is much easier for developers to interact with.
+![image](https://github.com/rokucommunity/bslint/assets/2544493/8c798f7e-b8c6-4789-b5ba-ee98e9165421)
+
+If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/bslint/issues/46) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
+
+
+
 # New projects
 
 ## We adopted brs!
