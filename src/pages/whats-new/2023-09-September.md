@@ -1,12 +1,40 @@
 ---
 date: September 2023
-summary: Changes to vscode-brightscript-language, brighterscript, brighterscript-formatter, bslint, brs
+summary: brs adopted by RokuCommunity, new vscode automation panel, lots of brighterscript type validations
 layout: ../../layouts/WhatsNewPost.astro
 ---
 
 # Overview
 
-# brs
+## We need your help
+
+The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
+
+-   [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language/issues)
+-   [brighterscript](https://github.com/rokucommunity/brighterscript/issues)
+-   [brighterscript-formatter](https://github.com/rokucommunity/brighterscript-formatter/issues)
+-   [roku-deploy](https://github.com/rokucommunity/roku-deploy/issues)
+-   [roku-debug](https://github.com/rokucommunity/roku-debug/issues)
+-   [bslint](https://github.com/rokucommunity/bslint/issues)
+-   [ropm](https://github.com/rokucommunity/ropm/issues)
+-   [brs](https://github.com/rokucommunity/brs/issues)
+-   [@rokucommunity/promises](https://github.com/rokucommunity/promises/issues)
+
+## Issue of the month
+
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases.
+
+This month, we'd like to draw attention to [bslint#46: declutter multi-scope diagnostics](https://github.com/rokucommunity/bslint/issues/46). If you've been using bslint, you may have noticed many duplicate diagnostics whenever a lint issue is discovered across multiple components.
+
+![image](https://github.com/rokucommunity/bslint/assets/2544493/4c984883-2369-43d1-aca7-9f677d2c9133)
+
+We'd like to improve this by emitting a _single_ diagnostic that has `relatedInformation`, which can be collapsed in vscode and generally is much easier for developers to interact with.
+![image](https://github.com/rokucommunity/bslint/assets/2544493/8c798f7e-b8c6-4789-b5ba-ee98e9165421)
+
+If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/bslint/issues/46) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
+
+
+# New projects
 
 ## We adopted brs!
 
@@ -16,7 +44,64 @@ Development on the original project stalled in September of 2021. We at RokuComm
 
 Many thanks to [@sjbarag (Sean Barag)](https://github.com/sjbarag) for the incredible work building and guiding brs to what it is today, and to [@lvcabral (Marcelo Cabral)](https://github.com/lvcabral) for agreeing to pick up and maintain [@rokucommunity/brs](https://github.com/rokucommunity/brs) under the umbrella of RokuCommunity!
 
-# Debugging
+
+
+## @rokucommunity/promises
+We are proud to announce the release of the [@rokucommunity/promises](https://github.com/rokucommunity/promises) library!
+
+Much of this design is based on JavaScript Promises. However, there are some differences:
+
+- BrightScript does not have closures, so we couldn't implement the standard then function on the Promise SGNode because it would strip out the callback function and lose all context.
+- Our promises are also deferred objects. Due to the nature of scenegraph nodes, we have no way of separating the promise instance from its resolution. In practice this isn't a big deal, but just keep in mind, there's no way to prevent a consumer of your promise instance from resolving it themselves, even though they shouldn't do that.
+
+If you've been around the community for a while, you may have seen [roku-promise](https://github.com/rokucommunity/roku-promise) which is a popular promise-like library that was created by [@briandunnington](https://github.com/briandunnington) back in 2018. [@rokucommunity/promises](https://github.com/rokucommunity/promises) is fundamentally different than [roku-promise](https://github.com/rokucommunity/roku-promise). [roku-promise](https://github.com/rokucommunity/roku-promise) creates tasks for you, executes the work, then returns some type of response to your code in the form of a callback.
+
+The big difference is, [@rokucommunity/promises](https://github.com/rokucommunity/promises) does not manage tasks at all. The puropose of a promise is to create an object that represents the future completion of an asynchronous operation. It's not supposed to initiate or execute that operation, just represent its status.
+
+So by using [@rokucommunity/promises](https://github.com/rokucommunity/promises), you'll need to create `Task` nodes yourself (or timer, or observer), create the promises yourself (using our helper library), then mark the promise as "completed" when the task has finished its work.
+
+Here's a quick example of some of the awesome things you can do with promises. Assume you want to run the following logical flow:
+
+- (async) fetch the username from the registry
+- (async) fetch an auth token from the server using the username
+- (async) fetch the user's profileImageUrl using the authToken
+- we have all the user data. set it on scene and move on
+- if anything fails in this flow, print an error message
+
+Here's an example of how you can do that using promises:
+
+```vb
+function logIn()
+    context = {
+        username: invalid,
+        authToken: invalid,
+        profileImageUrl: invalid
+    }
+    ' assume this function returns a promise
+    usernamePromise = getUsernameFromRegistryAsync()
+    promises.chain(usernamePromise, context).then(function(response, context)
+        context.username = response.username
+        'return a promise that forces the next callback to wait for it
+        return getAuthToken(context.username)
+
+    end function).then(function(response, context)
+        context.authToken = response.authToken
+        return getProfileImageUrl(context.authToken)
+
+    end function).then(function(response, context)
+        context.profileImageUrl = response.profileImageUrl
+
+        'yay, we signed in. Set the user data on our scene so we can start watching stuff!
+        m.top.userData = context
+
+        'this catch function is called if any runtime exception or promise rejection happened during the async flows above
+    end function).catch(function(error, context)
+        print "Something went wrong logging the user in", error, context
+    end function)
+end function
+
+```
+
 
 ## Improvements to SceneGraph Node Inspector
 

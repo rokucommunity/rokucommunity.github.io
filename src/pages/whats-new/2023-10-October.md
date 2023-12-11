@@ -1,6 +1,6 @@
 ---
 date: October 2023
-summary: Changes to vscode-brightscript-language, brighterscript, roku-debug, brighterscript-formatter, bslint, ropm, roku-report-analyzer
+summary: better names in device picker, improve host picker, significant debugger fixes, native brs interface types in brighterscript
 layout: ../../layouts/WhatsNewPost.astro
 ---
 
@@ -19,16 +19,21 @@ The RokuCommunity projects are maintained by a relatively small group of develop
 -   [roku-debug](https://github.com/rokucommunity/roku-debug/issues)
 -   [bslint](https://github.com/rokucommunity/bslint/issues)
 -   [ropm](https://github.com/rokucommunity/ropm/issues)
+-   [brs](https://github.com/rokucommunity/brs/issues)
+-   [@rokucommunity/promises](https://github.com/rokucommunity/promises/issues)
 
 ## Issue of the month
 
-In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases.
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases. Thanks to [@iBicha (Brahim Hadriche)](https://github.com/iBicha) for the awesome job solving the [June 2023 issue of the month](https://rokucommunity.github.io/whats-new/2023-06-June/#issue-of-the-month)!
 
 This month, we'd like to draw attention to [vscode-brightscript-language#470](https://github.com/rokucommunity/vscode-brightscript-language/issues/470). BrighterScript has support for regular expressions, so we added some syntax highlighting to help make those stand out more. However, there's a bug in the syntax logic, and it's incorrectly treating valid math expressions like they're regex expressions.
 
 ![image](https://user-images.githubusercontent.com/2544493/226361636-1078820c-9b26-4a1f-b5fd-377508ac5796.png)
 
 We'd like to get that fixed so math looks right again!
+
+If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/vscode-brightscript-language/issues/470) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
+
 
 # Editor
 
