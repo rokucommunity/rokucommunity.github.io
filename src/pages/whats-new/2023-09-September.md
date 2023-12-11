@@ -6,7 +6,7 @@ layout: ../../layouts/WhatsNewPost.astro
 
 # Overview
 
-# brs
+# New projects
 
 ## We adopted brs!
 
@@ -16,7 +16,64 @@ Development on the original project stalled in September of 2021. We at RokuComm
 
 Many thanks to [@sjbarag (Sean Barag)](https://github.com/sjbarag) for the incredible work building and guiding brs to what it is today, and to [@lvcabral (Marcelo Cabral)](https://github.com/lvcabral) for agreeing to pick up and maintain [@rokucommunity/brs](https://github.com/rokucommunity/brs) under the umbrella of RokuCommunity!
 
-# Debugging
+
+
+## @rokucommunity/promises
+We are proud to announce the release of the [@rokucommunity/promises](https://github.com/rokucommunity/promises) library!
+
+Much of this design is based on JavaScript Promises. However, there are some differences:
+
+- BrightScript does not have closures, so we couldn't implement the standard then function on the Promise SGNode because it would strip out the callback function and lose all context.
+- Our promises are also deferred objects. Due to the nature of scenegraph nodes, we have no way of separating the promise instance from its resolution. In practice this isn't a big deal, but just keep in mind, there's no way to prevent a consumer of your promise instance from resolving it themselves, even though they shouldn't do that.
+
+If you've been around the community for a while, you may have seen [roku-promise](https://github.com/rokucommunity/roku-promise) which is a popular promise-like library that was created by [@briandunnington](https://github.com/briandunnington) back in 2018. [@rokucommunity/promises](https://github.com/rokucommunity/promises) is fundamentally different than [roku-promise](https://github.com/rokucommunity/roku-promise). [roku-promise](https://github.com/rokucommunity/roku-promise) creates tasks for you, executes the work, then returns some type of response to your code in the form of a callback.
+
+The big difference is, [@rokucommunity/promises](https://github.com/rokucommunity/promises) does not manage tasks at all. The puropose of a promise is to create an object that represents the future completion of an asynchronous operation. It's not supposed to initiate or execute that operation, just represent its status.
+
+So by using [@rokucommunity/promises](https://github.com/rokucommunity/promises), you'll need to create `Task` nodes yourself (or timer, or observer), create the promises yourself (using our helper library), then mark the promise as "completed" when the task has finished its work.
+
+Here's a quick example of some of the awesome things you can do with promises. Assume you want to run the following logical flow:
+
+- (async) fetch the username from the registry
+- (async) fetch an auth token from the server using the username
+- (async) fetch the user's profileImageUrl using the authToken
+- we have all the user data. set it on scene and move on
+- if anything fails in this flow, print an error message
+
+Here's an example of how you can do that using promises:
+
+```vb
+function logIn()
+    context = {
+        username: invalid,
+        authToken: invalid,
+        profileImageUrl: invalid
+    }
+    ' assume this function returns a promise
+    usernamePromise = getUsernameFromRegistryAsync()
+    promises.chain(usernamePromise, context).then(function(response, context)
+        context.username = response.username
+        'return a promise that forces the next callback to wait for it
+        return getAuthToken(context.username)
+
+    end function).then(function(response, context)
+        context.authToken = response.authToken
+        return getProfileImageUrl(context.authToken)
+
+    end function).then(function(response, context)
+        context.profileImageUrl = response.profileImageUrl
+
+        'yay, we signed in. Set the user data on our scene so we can start watching stuff!
+        m.top.userData = context
+
+        'this catch function is called if any runtime exception or promise rejection happened during the async flows above
+    end function).catch(function(error, context)
+        print "Something went wrong logging the user in", error, context
+    end function)
+end function
+
+```
+
 
 ## Improvements to SceneGraph Node Inspector
 
