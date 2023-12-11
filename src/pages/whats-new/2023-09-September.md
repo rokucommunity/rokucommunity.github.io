@@ -102,6 +102,7 @@ end function
 
 ```
 
+# Editor
 
 ## Improvements to SceneGraph Node Inspector
 
