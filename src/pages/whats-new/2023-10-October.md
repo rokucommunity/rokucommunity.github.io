@@ -24,7 +24,7 @@ The RokuCommunity projects are maintained by a relatively small group of develop
 
 ## Issue of the month
 
-In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases.
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases. Thanks to [@iBicha (Brahim Hadriche)](https://github.com/iBicha) for the awesome job solving the [June 2023 issue of the month](https://rokucommunity.github.io/whats-new/2023-06-June/#issue-of-the-month)!
 
 This month, we'd like to draw attention to [vscode-brightscript-language#470](https://github.com/rokucommunity/vscode-brightscript-language/issues/470). BrighterScript has support for regular expressions, so we added some syntax highlighting to help make those stand out more. However, there's a bug in the syntax logic, and it's incorrectly treating valid math expressions like they're regex expressions.
 
