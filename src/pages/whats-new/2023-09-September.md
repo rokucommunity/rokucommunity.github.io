@@ -1,6 +1,6 @@
 ---
 date: September 2023
-summary: Changes to vscode-brightscript-language, brighterscript, brighterscript-formatter, bslint, brs
+summary: brs adopted by RokuCommunity, new vscode automation panel, lots of brighterscript type validations
 layout: ../../layouts/WhatsNewPost.astro
 ---
 

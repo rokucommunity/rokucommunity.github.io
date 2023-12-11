@@ -1,6 +1,6 @@
 ---
 date: October 2023
-summary: Changes to vscode-brightscript-language, brighterscript, roku-debug, brighterscript-formatter, bslint, ropm, roku-report-analyzer
+summary: better names in device picker, improve host picker, significant debugger fixes, native brs interface types in brighterscript
 layout: ../../layouts/WhatsNewPost.astro
 ---
 
