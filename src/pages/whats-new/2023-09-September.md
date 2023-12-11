@@ -17,6 +17,8 @@ The RokuCommunity projects are maintained by a relatively small group of develop
 -   [roku-debug](https://github.com/rokucommunity/roku-debug/issues)
 -   [bslint](https://github.com/rokucommunity/bslint/issues)
 -   [ropm](https://github.com/rokucommunity/ropm/issues)
+-   [brs](https://github.com/rokucommunity/brs/issues)
+-   [@rokucommunity/promises](https://github.com/rokucommunity/promises/issues)
 
 ## Issue of the month
 
@@ -30,7 +32,6 @@ We'd like to improve this by emitting a _single_ diagnostic that has `relatedInf
 ![image](https://github.com/rokucommunity/bslint/assets/2544493/8c798f7e-b8c6-4789-b5ba-ee98e9165421)
 
 If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/bslint/issues/46) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
-
 
 
 # New projects
