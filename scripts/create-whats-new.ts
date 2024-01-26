@@ -382,9 +382,9 @@ class Runner {
 
             })
             //only keep releases that happened within the specified range
-            .filter(x => x.date >= this.startDate && x.date < this.endDate);
-        // //discard the v0.0.0-packages releases
-        // .filter(x => x.version !== 'v0.0.0-packages');
+            .filter(x => x.date >= this.startDate && x.date < this.endDate)
+            //discard the v0.0.0-packages releases
+            .filter(x => x.version !== 'v0.0.0-packages');
 
         //if there's no previous release, use the first commit as the baseline for changes in this release
         if (matchedReleases[0] && !matchedReleases[0].previousRef) {
@@ -454,9 +454,15 @@ class Runner {
         const releases = execSync(
             `git log --no-merges --oneline --first-parent --decorate ${mergePointHash}..${releaseTag}`,
             { cwd: project.dir }
-        ).toString().split(/[\r\n]/g).map(x => {
-            return /.*\btag:[ \t]*(v.*?)[,)]/.exec(x.trim())?.[1];
-        }).filter(x => !!x && x !== releaseTag);
+        )
+            .toString()
+            .split(/[\r\n]/g)
+            .map(x => {
+                return /.*\btag:[ \t]*(v.*?)[,)]/.exec(x.trim())?.[1];
+            })
+            .filter(x => !!x && x !== releaseTag)
+            //exclude releases called `v0.0.0-packages`
+            .filter(x => x !== 'v0.0.0-packages');
         return releases[0] ?? mergePointHash;
     }
 
