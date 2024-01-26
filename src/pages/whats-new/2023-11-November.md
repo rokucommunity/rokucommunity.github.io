@@ -6,13 +6,13 @@ layout: ../../layouts/WhatsNewPost.astro
 # Overview
 
 # Editor
-## Enable `noUnusedLocals` tsconfig flag https://github.com/RokuCommunity/vscode-brightscript-language/pull/515
+## Enable `noUnusedLocals` tsconfig flag
 <!-- 2023-11-03 (for v2.45.0 released on 2023-11-06), https://github.com/RokuCommunity/vscode-brightscript-language/pull/515 -->
 
 Enable the `noUnusedLocals` flag in the tsconfig, and cleaned up all those warnings.
 
 
-## Telemetry tracking for roku OS version https://github.com/RokuCommunity/vscode-brightscript-language/pull/516
+## Telemetry tracking for roku OS version
 <!-- 2023-11-05 (for v2.45.0 released on 2023-11-06), https://github.com/RokuCommunity/vscode-brightscript-language/pull/516 -->
 
 Track Roku OS version during the `startDebugSession` telemetry event. 
@@ -22,13 +22,13 @@ Also warn if launching to a device that has dev mode disabled
 
 
 
-## roku-deploy@0.20.9 ([23208f0](https://github.com/RokuCommunity/vscode-brightscript-language/commit/23208f0))
+## roku-deploy@0.20.9
 <!-- 2023-11-05 (for v2.45.0 released on 2023-11-06), ([23208f0](https://github.com/RokuCommunity/vscode-brightscript-language/commit/23208f0)) -->
 
 
 
 
-## Auto-enable debug protocol on 12.5 devices https://github.com/RokuCommunity/vscode-brightscript-language/pull/517
+## Auto-enable debug protocol on 12.5 devices
 <!-- 2023-11-06 (for v2.45.0 released on 2023-11-06), https://github.com/RokuCommunity/vscode-brightscript-language/pull/517 -->
 
 Auto-enables the debug protocol for any launch to a 12.5 devices that doesn't explicitly have `enableDebugProtocol` defined. 
@@ -48,19 +48,19 @@ here's the "report issue" dialog:
 
 
 
-## Fix extension crash in 2.45.0 https://github.com/RokuCommunity/vscode-brightscript-language/pull/520
+## Fix extension crash in 2.45.0
 <!-- 2023-11-06 (for v2.45.1 released on 2023-11-06), https://github.com/RokuCommunity/vscode-brightscript-language/pull/520 -->
 
 Make undent a prod dependency to prevent the extension from crashing.
 
 
-## upgrade roku-test-automation to 2.0.0-beta.22 to fix issue with RDB https://github.com/RokuCommunity/vscode-brightscript-language/pull/521
+## upgrade roku-test-automation to 2.0.0-beta.22 to fix issue with RDB
 <!-- 2023-11-07 (for v2.45.2 released on 2023-11-08), https://github.com/RokuCommunity/vscode-brightscript-language/pull/521 -->
 
 
 
 
-## Better messaging around debugProtocol popup https://github.com/RokuCommunity/vscode-brightscript-language/pull/522
+## Better messaging around debugProtocol popup
 <!-- 2023-11-08 (for v2.45.2 released on 2023-11-08), https://github.com/RokuCommunity/vscode-brightscript-language/pull/522 -->
 
 - Always show the "ask less often" option for telnet.
@@ -72,13 +72,13 @@ Make undent a prod dependency to prevent the extension from crashing.
 
 
 
-## chore: fix watch-all for alternate cloned dir name ([d816cce](https://github.com/RokuCommunity/vscode-brightscript-language/commit/d816cce))
+## chore: fix watch-all for alternate cloned dir name
 <!-- 2023-11-08 (for v2.45.3 released on 2023-11-15), ([d816cce](https://github.com/RokuCommunity/vscode-brightscript-language/commit/d816cce)) -->
 
 
 
 
-## Shorten the timeout for device-info query https://github.com/RokuCommunity/vscode-brightscript-language/pull/525
+## Shorten the timeout for device-info query
 <!-- 2023-11-13 (for v2.45.3 released on 2023-11-15), https://github.com/RokuCommunity/vscode-brightscript-language/pull/525 -->
 
 - Sets a shorter timeout for the device-info query so the user isn't just stuck waiting forever wondering what's happening. 
@@ -88,13 +88,13 @@ Make undent a prod dependency to prevent the extension from crashing.
 
 
 
-## Move common user input into a dedicated manager https://github.com/RokuCommunity/vscode-brightscript-language/pull/523
+## Move common user input into a dedicated manager
 <!-- 2023-11-16 (for v2.45.5 released on 2023-11-16), https://github.com/RokuCommunity/vscode-brightscript-language/pull/523 -->
 
 Moves the `promptForHost` command into a `UserInputManager` class so we can start centralizing our user input flows and sharing them to unify the experience across the extension. 
 
 
-## Add app dropdown menu for ECP registry link https://github.com/RokuCommunity/vscode-brightscript-language/pull/514
+## Add app dropdown menu for ECP registry link
 <!-- 2023-11-16 (for v2.45.5 released on 2023-11-16), https://github.com/RokuCommunity/vscode-brightscript-language/pull/514 -->
 
 Issue: https://github.com/rokucommunity/vscode-brightscript-language/issues/510
@@ -108,7 +108,7 @@ Here's an example of this in action:
 
 
 
-## backtick support in surrounding & autoClosing pairs https://github.com/RokuCommunity/vscode-brightscript-language/pull/528
+## backtick support in surrounding & autoClosing pairs
 <!-- 2023-11-17 (for v2.45.6 released on 2023-11-20), https://github.com/RokuCommunity/vscode-brightscript-language/pull/528 -->
 
 Adds language/editor support for backticks (templatestrings) for autoClosingPairs and autoSurroundingPairs. So you can do things like this for template strings:
@@ -118,13 +118,13 @@ Adds language/editor support for backticks (templatestrings) for autoClosingPair
 Fixes #526 
 
 
-## Fix watch-all problem matcher and output https://github.com/RokuCommunity/vscode-brightscript-language/pull/529
+## Fix watch-all problem matcher and output
 <!-- 2023-11-17 (for v2.45.6 released on 2023-11-20), https://github.com/RokuCommunity/vscode-brightscript-language/pull/529 -->
 
 Fix the problem matcher in the `watch-all` task when running the workspace. This is fixed by emitting absolute paths instead of relative paths, which then work for both the workspace and individual folders
 
 
-## Hide the debug protocol popup, telnet by default https://github.com/RokuCommunity/vscode-brightscript-language/pull/530
+## Hide the debug protocol popup, telnet by default
 <!-- 2023-11-27 (for v2.45.7 released on 2023-11-27), https://github.com/RokuCommunity/vscode-brightscript-language/pull/530 -->
 
 Sets telnet as the default debug session type, and disables the debug protocol picker popup. There are several issues that need to be resolved in the debug protocol before we can enable it by default again, so we'll work on those and try another initiative in a month or two. 
@@ -133,37 +133,37 @@ Sets telnet as the default debug session type, and disables the debug protocol p
 
 # Debugging
 
-## Upgrade to new deviceInfo api from roku-deploy https://github.com/RokuCommunity/roku-debug/pull/167
+## Upgrade to new deviceInfo api from roku-deploy
 <!-- 2023-11-05 (for v0.20.9 released on 2023-11-05), https://github.com/RokuCommunity/roku-debug/pull/167 -->
 
 Upgrades to the new deviceInfo call from roku-deploy to eliminated code duplication in this project.
 
 
-## Fix sideload crash when failed to delete sideloaded channel https://github.com/RokuCommunity/roku-debug/pull/168
+## Fix sideload crash when failed to delete sideloaded channel
 <!-- 2023-11-07 (for v0.20.10 released on 2023-11-08), https://github.com/RokuCommunity/roku-debug/pull/168 -->
 
 Sometimes calling "delete channel" fails from roku-deploy. Not sure why, but we should just try/catch it and move on. 
 
 
-## Fix small typo in debug protocol message https://github.com/RokuCommunity/roku-debug/pull/169
+## Fix small typo in debug protocol message
 <!-- 2023-11-09 (for v0.20.11 released on 2023-11-11), https://github.com/RokuCommunity/roku-debug/pull/169 -->
 
 
 
 
-## Update DebugProtocolClient supported version range https://github.com/RokuCommunity/roku-debug/pull/170
+## Update DebugProtocolClient supported version range
 <!-- 2023-11-10 (for v0.20.11 released on 2023-11-11), https://github.com/RokuCommunity/roku-debug/pull/170 -->
 
 Updates the supported version range to consider 3.2.0 as supported. 
 
 
-## Add timeout for deviceinfo query so we don't wait too long https://github.com/RokuCommunity/roku-debug/pull/171
+## Add timeout for deviceinfo query so we don't wait too long
 <!-- 2023-11-13 (for v0.20.13 released on 2023-11-16), https://github.com/RokuCommunity/roku-debug/pull/171 -->
 
 Add a shorter timeout to the device-info query so we can more quickly cancel the debug session if something is going wrong.
 
 
-## Fix bug with compile error reporting https://github.com/RokuCommunity/roku-debug/pull/174
+## Fix bug with compile error reporting
 <!-- 2023-11-16 (for v0.20.13 released on 2023-11-16), https://github.com/RokuCommunity/roku-debug/pull/174 -->
 
 Fix an issue where compile errors would be encountered, but we don't have a connection to the debug protocol so they were never reported. This fixes it in two ways:
@@ -174,13 +174,13 @@ Fix an issue where compile errors would be encountered, but we don't have a conn
 
 # BrighterScript
 
-## ci: Don't run `test-related-projects` on release since it already ran on build ([157fc2ee](https://github.com/RokuCommunity/brighterscript/commit/157fc2ee))
+## ci: Don't run `test-related-projects` on release since it already ran on build
 <!-- 2023-10-16 (for v0.65.9 released on 2023-11-06), ([157fc2ee](https://github.com/RokuCommunity/brighterscript/commit/157fc2ee)) -->
 
 
 
 
-## Fixes operator order for `not` keyword https://github.com/RokuCommunity/brighterscript/pull/932
+## Fixes operator order for `not` keyword
 <!-- 2023-10-17 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/932 -->
 
 Before:
@@ -197,7 +197,7 @@ Fixes #898
 
 
 
-## Fix class fields using constructors not transpiling correctly https://github.com/RokuCommunity/brighterscript/pull/933
+## Fix class fields using constructors not transpiling correctly
 <!-- 2023-10-18 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/933 -->
 
 if there was a class field that used a constructor, the constructor was not namespaced correctly in the transpilation. This fixes that issue.
@@ -205,7 +205,7 @@ if there was a class field that used a constructor, the constructor was not name
 
 
 
-## Fix issue with unary expression parsing https://github.com/RokuCommunity/brighterscript/pull/938
+## Fix issue with unary expression parsing
 <!-- 2023-11-01 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/938 -->
 
 Fixes precedence in UnaryExpression parsing. 
@@ -213,7 +213,7 @@ Fixes precedence in UnaryExpression parsing.
 ported from brs fix: https://github.com/rokucommunity/brs/pull/24
 
 
-## Cache range and position https://github.com/RokuCommunity/brighterscript/pull/940
+## Cache range and position
 <!-- 2023-11-09 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/940 -->
 
 Cache the range and position objects since they're immutable. This helps reduce memory footprint and garbage collection church. Also after a range has been created at least once, it should theoretically cost less CPU cycles since we just look it up from the cache instead of building a new one. 
@@ -242,7 +242,7 @@ Positions: 418,227 cached  10,588 not cached
 ```
 
 
-## More performance fixes https://github.com/RokuCommunity/brighterscript/pull/936
+## More performance fixes
 <!-- 2023-11-15 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/936 -->
 
 A bunch of improvements and fixes:
@@ -271,13 +271,13 @@ validate@0.65.8 --------- 105.035 ops/sec
 
 
 
-## Add create-package label build script https://github.com/RokuCommunity/brighterscript/pull/945
+## Add create-package label build script
 <!-- 2023-11-16 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/945 -->
 
 Adds support for adding `create-package` labels to pull requests, at which point github actions will auto-build a temporary .tgz npm package. 
 
 
-## Validation Performance: File level `providedSymbols` and `requiredSymbols` https://github.com/RokuCommunity/brighterscript/pull/944
+## Validation Performance: File level `providedSymbols` and `requiredSymbols`
 <!-- 2023-11-20 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/944 -->
 
 ```
@@ -318,7 +318,7 @@ Known issues:
 
 
 
-## Better go to definition support https://github.com/RokuCommunity/brighterscript/pull/948
+## Better go to definition support
 <!-- 2023-11-21 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/948 -->
 
 Add fixes for the "go to definition" logic so that it finds classes and interfaces. 
@@ -328,7 +328,7 @@ Here's it working in action!
 
 
 
-## Fixes Transpilation bug - enums as class initial values https://github.com/RokuCommunity/brighterscript/pull/949
+## Fixes Transpilation bug - enums as class initial values
 <!-- 2023-11-21 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/949 -->
 
 Previously, there was a transpilation bug when using enums directly (eg. with no namespace prefix) inside a namespace... I was seeing it especially in classes.
@@ -362,32 +362,32 @@ was being transpiled to (notice the MyEnum.A):
 ```
 
 
-## Enums as class initial values https://github.com/RokuCommunity/brighterscript/pull/950
+## Enums as class initial values
 <!-- 2023-11-21 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/950 -->
 
 Same as https://github.com/rokucommunity/brighterscript/pull/949 , but for `master`
 
 
-## Interface optional properties https://github.com/RokuCommunity/brighterscript/pull/946
+## Interface optional properties
 <!-- 2023-11-21 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/946 -->
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/439853a7-e0da-44c4-a4c2-08967088bd6a)
 
 
 
-## Fix for the bad fix https://github.com/RokuCommunity/brighterscript/pull/952
+## Fix for the bad fix
 <!-- 2023-11-21 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/952 -->
 
 
 
 
-## Fix for the fix (master version) https://github.com/RokuCommunity/brighterscript/pull/953
+## Fix for the fix (master version)
 <!-- 2023-11-21 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/953 -->
 
 
 
 
-## Completion performance https://github.com/RokuCommunity/brighterscript/pull/958
+## Completion performance
 <!-- 2023-11-22 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/958 -->
 
 Previously:
@@ -412,25 +412,25 @@ remove duplicates of same completion across different projects
 
 
 
-## Fix param order for AST class constructors for interface/class members  https://github.com/RokuCommunity/brighterscript/pull/954
+## Fix param order for AST class constructors for interface/class members 
 <!-- 2023-11-22 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/954 -->
 
 In order to maintain a little bit of backwards compatibility, moves the `optional` token to the end for `InterfaceMethodStatement`, `InterfaceFieldStatement`, and `FieldStatement`. 
 
 
-## Reverse compatibility fixes https://github.com/RokuCommunity/brighterscript/pull/959
+## Reverse compatibility fixes
 <!-- 2023-11-23 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/959 -->
 
 
 
 
-## Added ifDraw2d to reRegion interface https://github.com/RokuCommunity/brighterscript/pull/960
+## Added ifDraw2d to reRegion interface
 <!-- 2023-11-24 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/960 -->
 
 
 
 
-## Remove v8-profiler from dependencies ([1287a5d7](https://github.com/RokuCommunity/brighterscript/commit/1287a5d7))
+## Remove v8-profiler from dependencies
 <!-- 2023-11-28 (for v0.66.0-alpha.9 released on 2023-11-28), ([1287a5d7](https://github.com/RokuCommunity/brighterscript/commit/1287a5d7)) -->
 
 
@@ -440,7 +440,7 @@ In order to maintain a little bit of backwards compatibility, moves the `optiona
 # Community Tools
 
 ## brs
-## add logic for optional chaining https://github.com/RokuCommunity/brs/pull/21
+## add logic for optional chaining
 <!-- 2023-10-25 (for v0.45.2 released on 2023-11-08), https://github.com/RokuCommunity/brs/pull/21 -->
 
 Added logic for optional Chaining
@@ -451,20 +451,20 @@ Added logic for optional Chaining
 Addressing #20 
 
 
-## fix(interp): Preventing multiple calls for dot-chained methods https://github.com/RokuCommunity/brs/pull/22
+## fix(interp): Preventing multiple calls for dot-chained methods
 <!-- 2023-10-31 (for v0.45.2 released on 2023-11-08), https://github.com/RokuCommunity/brs/pull/22 -->
 
 Addressing #9 and fixing unit tests for conditional chaining.
 
 
-## fix(parser): Wrong negative sign precedence was causing math errors (#6) https://github.com/RokuCommunity/brs/pull/24
+## fix(parser): Wrong negative sign precedence was causing math errors (#6)
 <!-- 2023-11-01 (for v0.45.2 released on 2023-11-08), https://github.com/RokuCommunity/brs/pull/24 -->
 
 There was a change done to fix another issue that caused this side effect (see bug for details)
 
 
 ## roku-deploy
-## Enhance getDeviceInfo() method https://github.com/RokuCommunity/roku-deploy/pull/120
+## Enhance getDeviceInfo() method
 <!-- 2023-11-03 (for v3.10.4 released on 2023-11-03), https://github.com/RokuCommunity/roku-deploy/pull/120 -->
 
 Enhances the `getDeviceInfo()` method:
@@ -472,25 +472,25 @@ Enhances the `getDeviceInfo()` method:
 - retains backwards compatibility by adding an overloaded signature that is not the default
 
 
-## Added some more message grabbing logic https://github.com/RokuCommunity/roku-deploy/pull/127
+## Added some more message grabbing logic
 <!-- 2023-11-13 (for v3.10.5 released on 2023-11-14), https://github.com/RokuCommunity/roku-deploy/pull/127 -->
 
 Found that it is possible to get errors in a json object within the response. This adds checks for that. 
 
 
-## Add better device-info jsdoc block https://github.com/RokuCommunity/roku-deploy/pull/128
+## Add better device-info jsdoc block
 <!-- 2023-11-13 (for v3.10.5 released on 2023-11-14), https://github.com/RokuCommunity/roku-deploy/pull/128 -->
 
 Adds better jsdoc descriptions for the `GetDeviceInfoOptions` interface properties.
 
 
-## Add public function to normalize device-info field values https://github.com/RokuCommunity/roku-deploy/pull/129
+## Add public function to normalize device-info field values
 <!-- 2023-11-20 (for v3.11.1 released on 2023-11-30), https://github.com/RokuCommunity/roku-deploy/pull/129 -->
 
 Exposes a new function that will normalize the device-info field values. This way external consumers can leverage the non-enhanced device-info result, but still normalize their values if desired. 
 
 
-## Wait for file stream to close before resolving promise https://github.com/RokuCommunity/roku-deploy/pull/133
+## Wait for file stream to close before resolving promise
 <!-- 2023-11-30 (for v3.11.1 released on 2023-11-30), https://github.com/RokuCommunity/roku-deploy/pull/133 -->
 
 Fixes a bug where we weren't waiting for the downloaded file stream to close before resolving the file path promise. 

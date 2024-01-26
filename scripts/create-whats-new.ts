@@ -232,7 +232,7 @@ class Runner {
                     : `([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
 
                 lines.push(
-                    `## ${commit.title} ${refLink}`,
+                    `## ${commit.title}`,
                     `<!-- ${date} (for ${commit.forRelease.version} released on ${this.dayMonthYear(commit.forRelease.date)}), ${refLink} -->`,
                     '',
                     commit.body ?? '',
