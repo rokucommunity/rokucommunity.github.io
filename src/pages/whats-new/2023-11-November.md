@@ -122,7 +122,7 @@ Sometimes calling "delete channel" fails from roku-deploy. Not sure why, but we 
 Updates the supported version range to consider 3.2.0 as supported. 
 
 ## Add timeout for deviceinfo query so we don't wait too long ([#171](https://github.com/RokuCommunity/roku-debug/pull/171))
-<!-- 2023-11-13 (for v0.0.0-packages released on 2023-11-14)-->
+<!-- 2023-11-13 (for v0.20.13 released on 2023-11-16)-->
 Add a shorter timeout to the device-info query so we can more quickly cancel the debug session if something is going wrong.
 
 ## Fix bug with compile error reporting ([#174](https://github.com/RokuCommunity/roku-debug/pull/174))
@@ -395,7 +395,7 @@ Found that it is possible to get errors in a json object within the response. Th
 Adds better jsdoc descriptions for the `GetDeviceInfoOptions` interface properties.
 
 ## Add public function to normalize device-info field values ([#129](https://github.com/RokuCommunity/roku-deploy/pull/129))
-<!-- 2023-11-20 (for v0.0.0-packages released on 2023-11-28)-->
+<!-- 2023-11-20 (for v3.11.1 released on 2023-11-30)-->
 Exposes a new function that will normalize the device-info field values. This way external consumers can leverage the non-enhanced device-info result, but still normalize their values if desired. 
 
 ## Wait for file stream to close before resolving promise ([#133](https://github.com/RokuCommunity/roku-deploy/pull/133))
