@@ -227,16 +227,16 @@ class Runner {
             }
             for (const commit of project?.commits ?? []) {
                 const date = `${commit.date.getFullYear()}-${(commit.date.getMonth() + 1).toString().padStart(2, '0')}-${commit.date.getDate().toString().padStart(2, '0')}`;
-                let refLink: string;
-                if (commit.pullRequestId) {
-                    refLink = `([#${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`;
-                } else {
-                    refLink = `([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
-                }
+                let refLink = commit.pullRequestId
+                    ? `${project.repositoryUrl}/pull/${commit.pullRequestId}`
+                    : `([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
+
                 lines.push(
                     `## ${commit.title} ${refLink}`,
-                    `<!-- ${date} (for ${commit.forRelease.version} released on ${this.dayMonthYear(commit.forRelease.date)})-->`,
+                    `<!-- ${date} (for ${commit.forRelease.version} released on ${this.dayMonthYear(commit.forRelease.date)}), ${refLink} -->`,
+                    '',
                     commit.body ?? '',
+                    '',
                     ''
                 );
             }
