@@ -28,15 +28,19 @@ const projects = [
     'vscode-brightscript-language',
     'brighterscript',
     'roku-deploy',
-    'logger',
-    'bslib',
     'roku-debug',
     'brighterscript-formatter',
     'bslint',
     'ropm',
     'roku-report-analyzer',
+    'brs',
+    //ropm packages
+    'promises',
+    'roku-image-fader',
+    'roku-smart-label',
     'roku-promise',
-    'brs'
+    'roku-animated-poster',
+    'roku-requests'
 ];
 
 class Runner {
@@ -206,8 +210,40 @@ class Runner {
         }
     }
 
+    private dayMonthYear(date: Date) {
+        return `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+    }
+
     private async write() {
-        let result = [
+
+        const projects = [...this.projects];
+        let result: string[] = [];
+
+        const writeCommits = (projectName: string, leadingLineIfNotEmpty?: string) => {
+            const lines = [];
+            const project = findAndSplice(projects, x => x.name === projectName);
+            if (project?.commits?.length > 0 && leadingLineIfNotEmpty) {
+                lines.push(leadingLineIfNotEmpty);
+            }
+            for (const commit of project?.commits ?? []) {
+                const date = `${commit.date.getFullYear()}-${(commit.date.getMonth() + 1).toString().padStart(2, '0')}-${commit.date.getDate().toString().padStart(2, '0')}`;
+                let refLink = commit.pullRequestId
+                    ? `${project.repositoryUrl}/pull/${commit.pullRequestId}`
+                    : `([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
+
+                lines.push(
+                    `## ${commit.title}`,
+                    `<!-- ${date} (for ${commit.forRelease.version} released on ${this.dayMonthYear(commit.forRelease.date)}), ${refLink} -->`,
+                    '',
+                    commit.body ?? '',
+                    '',
+                    ''
+                );
+            }
+            return lines;
+        };
+
+        result.push(
             `---`,
             `date: ${monthNames[this.startDate.getMonth()]} ${this.startDate.getFullYear()}`,
             `summary: Changes to ${this.projects.filter(x => x.commits.length > 0).map(x => x.name).join(', ')}`,
@@ -216,16 +252,39 @@ class Runner {
             `# Overview`,
             ``,
             `# Editor`,
+            ...writeCommits('vscode-brightscript-language'),
             ``,
             `# Debugging`,
             ``,
-            `# Formatting`,
-            ``,
-            `# Language Features`,
+            ...writeCommits('roku-debug'),
             ``,
             `# BrighterScript`,
             ``,
+            ...writeCommits('brighterscript'),
+            ``,
+            `# Community Tools`,
+            ``,
+            ...writeCommits('bslint', '## bslint'),
+            ...writeCommits('brs', '## brs'),
+            ...writeCommits('roku-deploy', '## roku-deploy'),
+            ...writeCommits('roku-report-analyzer', '# roku-report-analyzer'),
+            ...writeCommits('ropm', '## ropm'),
+            ``,
+            `# Community Libraries`,
+            ``,
+            ...writeCommits('roku-promise', '## roku-promise'),
+            ...writeCommits('promises', '## promises'),
+            ...writeCommits('roku-image-fader', '## roku-image-fader'),
+            ...writeCommits('roku-smart-label', '## roku-smart-label'),
+            ...writeCommits('roku-animated-poster', '## roku-animated-poster'),
+            ...writeCommits('roku-requests', '## roku-requests'),
+            ``,
+            `# Formatting`,
+            ``,
+            ...writeCommits('brighterscript-formatter'),
+            ``,
             `# Preview features`,
+            '<!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->',
             ``,
             `# Documentation`,
             ``,
@@ -233,25 +292,19 @@ class Runner {
             ``,
             `# For Contributors`,
             ``,
+            `***`,
+            ``,
             `# TODO`,
-            `***Move the items in this list to the appropriate section above, then delete this section***`,
-            ...this.projects.map(project => {
-                return project.commits.map(commit => {
-                    const date = `${commit.date.getFullYear()}-${(commit.date.getMonth() + 1).toString().padStart(2, '0')}-${commit.date.getDate().toString().padStart(2, '0')}`;
-                    if (commit.pullRequestId) {
-                        return `${project.name} (${date}): ${commit.message} ([#${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`;
-                    } else {
-                        return `${project.name} (${date}): ${commit.message} ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`;
-                    }
-                });
-            }).flat().flat().map(x => ` - ${x}`)
-        ] as string[];
-
-        result.push(
+            `***Move these items to an appropriate section above, then delete this section***`,
+            ...projects.flatMap(x => writeCommits(x.name)),
+            '',
+            '***',
             '',
             '# Thank you\n',
             `Last but certainly not least, a big **_Thank You_** to the following people who contributed this month:`
         );
+
+        //contributions list
         for (const project of this.projects) {
             //skip projects that had no releases this month
             if (project.commits.length === 0) {
@@ -265,8 +318,8 @@ class Runner {
                     result.push(
                         '    -   ' + (
                             commit.pullRequestId
-                                ? `${commit.message} ([PR #${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`
-                                : `${commit.message} ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`
+                                ? `${commit.title} ([PR #${commit.pullRequestId}](${project.repositoryUrl}/pull/${commit.pullRequestId}))`
+                                : `${commit.title} ([${commit.hash}](${project.repositoryUrl}/commit/${commit.hash}))`
                         )
                     );
                 }
@@ -279,7 +332,7 @@ class Runner {
         const commits = [...project.commits];
         //pre-create the results list sorted alphabetically by username
         const result = new Map<string, Commit[]>(
-            commits.map(x => x.author.username.toLowerCase()).sort().map(x => [x, []])
+            commits.map(x => x?.author.username?.toLowerCase() ?? '').sort().map(x => [x, []])
         );
         //group the commits by email address
         while (commits.length > 0) {
@@ -318,16 +371,20 @@ class Runner {
             version: x[2]
         })).sort((a, b) => a.date.getTime() - b.date.getTime());
 
-        const matchedReleases = releases.map((release, index) => {
-            return {
-                date: release.date,
-                version: release.version,
-                previousRef: this.getPreviousReleaseTagOrRef(project, release.version),
-                commits: [] as Commit[]
-            };
+        const matchedReleases = releases
+            .map((release, index) => {
+                return {
+                    date: release.date,
+                    version: release.version,
+                    previousRef: this.getPreviousReleaseTagOrRef(project, release.version),
+                    commits: [] as Commit[]
+                };
 
+            })
             //only keep releases that happened within the specified range
-        }).filter(x => x.date >= this.startDate && x.date < this.endDate);
+            .filter(x => x.date >= this.startDate && x.date < this.endDate)
+            //discard the v0.0.0-packages releases
+            .filter(x => x.version !== 'v0.0.0-packages');
 
         //if there's no previous release, use the first commit as the baseline for changes in this release
         if (matchedReleases[0] && !matchedReleases[0].previousRef) {
@@ -339,7 +396,7 @@ class Runner {
         const commitMap = new Map<string, Commit>();
         for (const release of matchedReleases) {
             this.log(project, `finding commits for ${release.version}`);
-            const commits = this.getCommitsForReleaseVersion(project, release.version, release.previousRef);
+            const commits = this.getCommitsForReleaseVersion(project, release, release.previousRef);
             for (const commit of commits) {
                 commitMap.set(commit.hash, commit);
             }
@@ -349,11 +406,11 @@ class Runner {
         commits = commits
             .sort((a, b) => a.date.getTime() - b.date.getTime())
             //exclude version-only commit messages
-            .filter(x => !semver.valid(x.message))
+            .filter(x => !semver.valid(x.title))
             //exclude those "update changelog for..." message
-            .filter(x => !x.message.toLowerCase().startsWith('update changelog for '))
+            .filter(x => !x.title.toLowerCase().startsWith('update changelog for '))
             //exclude "merge branch 'xyz' of ... messages
-            .filter(x => !/\s*merge branch '.*?'/i.test(x.message))
+            .filter(x => !/\s*merge branch '.*?'/i.test(x.title))
             //exclude dependabot commits
             .filter(x => !x.author?.name?.toLowerCase().includes('dependabot'))
             //exclude commits referenced by previous writeups
@@ -397,22 +454,28 @@ class Runner {
         const releases = execSync(
             `git log --no-merges --oneline --first-parent --decorate ${mergePointHash}..${releaseTag}`,
             { cwd: project.dir }
-        ).toString().split(/[\r\n]/g).map(x => {
-            return /.*\btag:[ \t]*(v.*?)[,)]/.exec(x.trim())?.[1];
-        }).filter(x => !!x && x !== releaseTag);
+        )
+            .toString()
+            .split(/[\r\n]/g)
+            .map(x => {
+                return /.*\btag:[ \t]*(v.*?)[,)]/.exec(x.trim())?.[1];
+            })
+            .filter(x => !!x && x !== releaseTag)
+            //exclude releases called `v0.0.0-packages`
+            .filter(x => x !== 'v0.0.0-packages');
         return releases[0] ?? mergePointHash;
     }
 
     /**
      * Given a release version tag, walk backwards in the commit history until we find the first commit message with a release version with a tag earlier than the start date
      */
-    private getCommitsForReleaseVersion(project: Project, releaseTag: string, previousRef: string) {
-        const command = `git log ${previousRef}..${releaseTag} --pretty=format:"%h%x09%ad%x09%an%x09%d%x09%s" --decorate=short`;
+    private getCommitsForReleaseVersion(project: Project, release: Release, previousRef: string) {
+        const command = `git log ${previousRef}..${release.version} --pretty=format:"%h%x09%ad%x09%an%x09%d%x09%s" --decorate=short`;
         const execResult = this.execSync(command, project);
         const commits = execResult.split(/\r?\n/g).map(x => {
-            let [hash, date, authorName, refs, message] = x.split('\t');
-            const pullRequestId = /\(#(\d+)\)/.exec(message)?.[1];
-            message = message.replace(/\(#(\d+)\)/, '').trim();
+            let [hash, date, authorName, refs, title] = x.split('\t');
+            const pullRequestId = /\(#(\d+)\)\s*$/.exec(title)?.[1];
+            title = title.replace(/\(#(\d+)\)/, '').trim();
             return {
                 hash: hash,
                 date: new Date(date),
@@ -420,8 +483,9 @@ class Runner {
                     name: authorName
                 } as Commit['author'],
                 tag: /.*\btag:[ \t]*(v.*?)[,)]/.exec(refs)?.[1],
-                message: message,
-                pullRequestId: pullRequestId
+                title: title,
+                pullRequestId: parseInt(pullRequestId),
+                forRelease: release
             } as Commit;
             //sort by date descending
         }).sort((a, b) => b.date.getTime() - a.date.getTime());
@@ -429,30 +493,51 @@ class Runner {
     }
 
     private async hydrateCommit(project: Project, commit: Commit) {
-        const keys = [project.repositoryUrl, 'commits', commit.hash];
-        let githubCommit: Awaited<ReturnType<Octokit['rest']['repos']['getCommit']>>['data'];
-        //load info about this commit
-        if (this.cache.has(keys)) {
-            this.log(project, `Hydrating #${commit.hash} (from cache)`);
-            githubCommit = this.cache.get(keys);
-        } else {
-            this.log(project, `Hydrating #${commit.hash} (from github.com)`);
-            githubCommit = await this.cache.getOrAdd([project.repositoryUrl, 'commits', commit.hash], async () => {
+        try {
+            //load info about this commit
+            let githubCommit = await this.cache.getOrAdd([project.repositoryUrl, 'commits', commit.hash], async () => {
+                this.log(project, `Hydrating ${commit.hash} commit info (from github.com)`);
+
                 return (await this.octokit.rest.repos.getCommit({
                     repo: project.repoName,
                     owner: project.repoOwner,
                     ref: commit.hash
                 })).data;
-            });
+
+            }, () => this.log(project, `Hydrating ${commit.hash} commit info (from cache)`));
+
+            commit.author = {
+                email: githubCommit.author?.email,
+                name: githubCommit.commit?.author?.name,
+                profileUrl: githubCommit.author?.html_url,
+                username: githubCommit.author?.login
+            };
+        } catch (e) {
+            console.error(e);
         }
-        //temporarily write the cache after every read so we don't annoy the github api
+
+        //fetch pull request info (if available)
+        if (commit.pullRequestId) {
+            try {
+                const prData = await this.cache.getOrAdd([project.repositoryUrl, 'pullRequests', commit.pullRequestId.toString()], async () => {
+                    this.log(project, `Hydrating PR #${commit.pullRequestId} info (from github.com)`);
+
+                    return (await this.octokit.rest.pulls.get({
+                        repo: project.repoName,
+                        owner: project.repoOwner,
+                        pull_number: commit.pullRequestId
+                    })).data;
+
+                }, () => this.log(project, `Hydrating PR #${commit.pullRequestId} info (from cache)`));
+                commit.body = prData.body;
+                commit.title = prData.title;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // write the cache after every read so we don't annoy the github api
         this.cache.write();
-        commit.author = {
-            email: githubCommit.author?.email,
-            name: githubCommit.commit.author?.name,
-            profileUrl: githubCommit.author?.html_url,
-            username: githubCommit.author?.login
-        };
     }
 
     /**
@@ -588,12 +673,19 @@ class Cache {
         return !!this.get(keys);
     }
 
-    public async getOrAdd<T>(keys: string[], factory: () => T | Promise<T>) {
+    public async getOrAdd<T>(keys: string[], factory: () => T | Promise<T>, cacheHitCallback?: () => void) {
         let value = this.get(keys);
         if (!value) {
             value = this.set(keys, Promise.resolve(factory()));
-            //once the promise has finished loading, write the raw value
-            this.set(keys, await value);
+            try {
+                //once the promise has finished loading, write the raw value
+                this.set(keys, await value);
+            } catch (e) {
+                this.delete(keys);
+                throw e;
+            }
+        } else {
+            cacheHitCallback?.();
         }
         return value as T;
     }
@@ -611,6 +703,20 @@ class Cache {
         data[keys[keys.length - 1]] = value;
         return value;
     }
+
+    private delete<T = any>(keys: string[]) {
+        let data: any = this.data;
+        //build the structure
+        for (let i = 0; i < keys.length - 1; i++) {
+            const key = keys[i];
+            if (!data[key]) {
+                data[key] = {};
+            }
+            data = data[key];
+        }
+        delete data[keys[keys.length - 1]];
+    }
+
 
     private data: Record<string, any>;
 
@@ -638,9 +744,21 @@ interface Project {
     commits: Commit[];
 }
 
+interface Release {
+    date: Date;
+    version: string;
+    previousRef: string;
+    commits: Commit[];
+}
+
 interface Commit {
     hash: string;
-    message: string;
+    title: string;
+    /**
+     * If available, the body of the PR this commit was associated with. This helps us prepopulate descriptions of the various
+     * commits instead of needing to manually copy/paste them from github
+     */
+    body?: string;
     date: Date;
     author: {
         name: string;
@@ -651,11 +769,15 @@ interface Commit {
     /**
      * The ID of the pull request on github
      */
-    pullRequestId: string;
+    pullRequestId: number;
     /**
      * The value of a tag on the commit (if it has one)
      */
     tag?: string;
+    /**
+     * What release was this commit attached to? (i.e. we asked for all commits that composed v1.2.3, so this would be the release object for v1.2.3)
+     */
+    forRelease?: Release;
 }
 
 interface RunnerOptions {
@@ -669,6 +791,19 @@ interface RunnerOptions {
     noclear?: boolean;
     today?: string;
     token?: string;
+}
+
+/**
+ * Find an item in an array, and return it and splice it out of the array if found.
+ * @param list
+ * @param cb
+ * @returns
+ */
+function findAndSplice<T>(list: T[], cb: (x: T) => boolean | undefined) {
+    const index = list.findIndex(cb);
+    if (index > -1) {
+        return list.splice(index, 1)?.[0];
+    }
 }
 
 const options = yargs(hideBin(process.argv))
