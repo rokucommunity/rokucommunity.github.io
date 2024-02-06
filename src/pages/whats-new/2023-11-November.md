@@ -53,97 +53,64 @@ We hope to fix these issues and run another test at some point in the new year, 
 
 ## Shorten the timeout for device-info query on launch
 <!-- 2023-11-13 (for v2.45.3 released on 2023-11-15), https://github.com/RokuCommunity/vscode-brightscript-language/pull/525 -->
-As part of
+As part of [the telemetry tracking update](#telemetry-tracking-for-roku-os-version), we now do a device-info request at the tart of every launch request, in order to discover certain features of your device (is dev mode enabled, what OS is the device running, etc). However, we forgot to set a reasonable timeout on that request. It was previously set to 2.5 minutes. We've now adjusted that to a much more sensible 5 seconds.
 
-- Sets a shorter timeout for the device-info query so the user isn't just stuck waiting forever wondering what's happening.
-- show a spinning statusbar item when device-info is being requested.
+We now show a statusbar loading animation while this query is running. In most cases, this request should only take 20-100ms. If it takes longer, that's typically indiciative of a much bigger issue like the device being offline or inaccessible on the network.
 
 ![loading-picker](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/ef64921e-fe2e-40f2-9858-980d46fb0e46)
 
 
-
-## Move common user input into a dedicated manager
-<!-- 2023-11-16 (for v2.45.5 released on 2023-11-16), https://github.com/RokuCommunity/vscode-brightscript-language/pull/523 -->
-
-Moves the `promptForHost` command into a `UserInputManager` class so we can start centralizing our user input flows and sharing them to unify the experience across the extension.
-
-
 ## Add app dropdown menu for ECP registry link
 <!-- 2023-11-16 (for v2.45.5 released on 2023-11-16), https://github.com/RokuCommunity/vscode-brightscript-language/pull/514 -->
-
-Issue: https://github.com/rokucommunity/vscode-brightscript-language/issues/510
-
-Added a quickpick dropdown menu that shows the apps list on a device (seen below) so a user can pick an app that they are possibly keyed for before opening the ECP registry
-
-![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/9dbf8044-add4-4920-8213-8284d7d250ea)
+In the devices view in vscode, you can now click on the new `View Registry` button under any device. After choosing your app from the list, it will then open the registry ECP response in your web browser. While we show all channels on the device in the list, you can only access the dev app and channels matching the keyed device.
 
 Here's an example of this in action:
+
 ![registry-link](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/5f48ff61-3860-4554-b732-1b21616afd53)
 
 
-
-## backtick support in surrounding & autoClosing pairs
+## Backtick support in surrounding & autoClosing pairs
 <!-- 2023-11-17 (for v2.45.6 released on 2023-11-20), https://github.com/RokuCommunity/vscode-brightscript-language/pull/528 -->
 
-Adds language/editor support for backticks (templatestrings) for autoClosingPairs and autoSurroundingPairs. So you can do things like this for template strings:
+For projects that leverage the [template string](https://github.com/rokucommunity/brighterscript/blob/master/docs/template-strings.md) feature of BrighterScript, we've added language/editor support for backticks (templatestrings) for autoClosingPairs and autoSurroundingPairs. So you can finally get editor help like this:
 
 ![surround-backtick](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/f5caa735-e455-445b-9651-5abf10eeb1a3)
-
-Fixes #526
-
-
-## Fix watch-all problem matcher and output
-<!-- 2023-11-17 (for v2.45.6 released on 2023-11-20), https://github.com/RokuCommunity/vscode-brightscript-language/pull/529 -->
-
-Fix the problem matcher in the `watch-all` task when running the workspace. This is fixed by emitting absolute paths instead of relative paths, which then work for both the workspace and individual folders
-
-
-## Hide the debug protocol popup, telnet by default
-<!-- 2023-11-27 (for v2.45.7 released on 2023-11-27), https://github.com/RokuCommunity/vscode-brightscript-language/pull/530 -->
-
-Sets telnet as the default debug session type, and disables the debug protocol picker popup. There are several issues that need to be resolved in the debug protocol before we can enable it by default again, so we'll work on those and try another initiative in a month or two.
-
 
 
 # Debugging
 
-## Upgrade to new deviceInfo api from roku-deploy
-<!-- 2023-11-05 (for v0.20.9 released on 2023-11-05), https://github.com/RokuCommunity/roku-debug/pull/167 -->
-
-Upgrades to the new deviceInfo call from roku-deploy to eliminated code duplication in this project.
-
 
 ## Fix sideload crash when failed to delete sideloaded channel
 <!-- 2023-11-07 (for v0.20.10 released on 2023-11-08), https://github.com/RokuCommunity/roku-debug/pull/168 -->
-
-Sometimes calling "delete channel" fails from roku-deploy. Not sure why, but we should just try/catch it and move on.
+When starting a debug session, we delete any dev channel right before sideloading your app to the Roku device. Sometimes that delete call failed which would then crash that debug session. We're not entirely sure why the delete fails, but in most cases this is recoverable, so now we try/catch the delete and continue with the rest of the launch flow. This should hopefully reduce the number of times the vscode extension stops a debug session for seemingly no reason.
 
 
 ## Fix small typo in debug protocol message
 <!-- 2023-11-09 (for v0.20.11 released on 2023-11-11), https://github.com/RokuCommunity/roku-debug/pull/169 -->
+We fixed a small typo in the "you're using the debug protocol" message. Before:
+```bash
+Protocol Version 3.0.0 has not been tested and my not work as intended.
+Please open any issues you have with this version to https://github.com/rokucommunity/roku-debug/issues
+```
 
+After
+```bash
+Protocol Version 3.0.0 has not been tested and may not work as intended.
+Please open any issues you have with this version to https://github.com/rokucommunity/roku-debug/issues
+```
 
-
-
-## Update DebugProtocolClient supported version range
-<!-- 2023-11-10 (for v0.20.11 released on 2023-11-11), https://github.com/RokuCommunity/roku-debug/pull/170 -->
-
-Updates the supported version range to consider 3.2.0 as supported.
-
-
-## Add timeout for deviceinfo query so we don't wait too long
-<!-- 2023-11-13 (for v0.20.13 released on 2023-11-16), https://github.com/RokuCommunity/roku-debug/pull/171 -->
-
-Add a shorter timeout to the device-info query so we can more quickly cancel the debug session if something is going wrong.
+Thanks [@jeanbenitezu (Jean Benitez)](https://github.com/jeanbenitezu)!
 
 
 ## Fix bug with compile error reporting
 <!-- 2023-11-16 (for v0.20.13 released on 2023-11-16), https://github.com/RokuCommunity/roku-debug/pull/174 -->
-
-Fix an issue where compile errors would be encountered, but we don't have a connection to the debug protocol so they were never reported. This fixes it in two ways:
+During a debug protocol debug session, often times the debug session just shuts down with no explanation. We found an issue related to compile errors where the debug protocol sometimes shuts down the control port _before_ we've had a chance to receive the compile error events. We've fixed this issue in two ways:
  - always scrape telnet output for compile errors (even when debug protocol is enabled)
- - when showing the compile error "exception" hack, don't wait for the adapter to resolve (because it might ever resolve)
+ - when showing the compile error "exception" hack, don't wait for the adapter to resolve (because it might never resolve)
 
+With this fix in place, you can once again see all your wonderful syntax errors in bright red highlights!
+
+![image](https://github.com/rokucommunity/roku-debug/assets/2544493/e8330e14-9c3d-41b4-944d-ee13f50844f6)
 
 
 # BrighterScript
@@ -495,7 +462,23 @@ We've enabled the `noUnusedLocals` flag in the tsconfig in vscode-brightscript-l
 
 ## Fix `watch-all` for alternate cloned dir name
 <!-- 2023-11-08 (for v2.45.3 released on 2023-11-15), ([d816cce](https://github.com/RokuCommunity/vscode-brightscript-language/commit/d816cce)) -->
-Contributors often follow [this guide](https://rokucommunity.github.io/vscode-brightscript-language/contributing.html#the-easy-way) for setting up their RokuCommunity development environment. We fixed a few bugs in [d816cce](https://github.com/RokuCommunity/vscode-brightscript-language/commit/d816cce) related to how the `watch-all` command works when you cloned `vscode-brightscript-language` to a folder _not_ named `vscode-brightscript-language`. So you probably won't notice, but it works better now. :)
+Contributors often follow [this guide](https://rokucommunity.github.io/vscode-brightscript-language/contributing.html#the-easy-way) for setting up their RokuCommunity development environment. We fixed a few bugs in [d816cce](https://github.com/RokuCommunity/vscode-brightscript-language/commit/d816cce) related to how the `watch-all` command works when you cloned `vscode-brightscript-language` to a folder _not_ named `vscode-brightscript-language`. So you probably won't notice, but it works better now.
+
+## Fix watch-all problem matcher and output
+<!-- 2023-11-17 (for v2.45.6 released on 2023-11-20), https://github.com/RokuCommunity/vscode-brightscript-language/pull/529 -->
+In the spirit of fixing problems with `watch-all`, we also fixed the problem matcher in the `watch-all` task when running the RokuCommunity workspace. This is fixed by emitting absolute paths instead of relative paths, which then work for both the workspace and individual folders. Just like the last item, this is just a small quality of life thing.
+
+## Move common user input into a dedicated manager
+<!-- 2023-11-16 (for v2.45.5 released on 2023-11-16), https://github.com/RokuCommunity/vscode-brightscript-language/pull/523 -->
+
+For contributors of the vscode-brightscript-language, we've created a set of helper functions that reduce duplication when prompting for common user input (such as host, password, etc). This first iteration introduces a `promptForHost` method into a `UserInputManager` class so we can start centralizing our user input flows and sharing them to unify the experience across the extension.
+
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/f8b40c6a-3b41-4efd-9b4d-4d53fc615891)
+
+
+## roku-debug upgrades to new deviceInfo api from roku-deploy
+<!-- 2023-11-05 (for v0.20.9 released on 2023-11-05), https://github.com/RokuCommunity/roku-debug/pull/167 -->
+We discovered that several different places across the RokuCommunity projects that all ran similar `device-info` requests. We have eliminated this duplication by leveraging the `getDeviceInfo()` call from roku-deploy. In the future, all device-info calls should be handled by using that singular interface.
 
 ***
 
