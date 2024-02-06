@@ -127,24 +127,32 @@ const headings = thisPost?.getHeadings().filter((h) => h.depth < 3) ?? [];
                 </svg>
             `;
 
-            [... document.querySelectorAll<HTMLElement>("h1, h2, h3, h4, h5, h6")].forEach((heading) => {
-                const anchor = document.createElement("a");
+            [
+                ...document.querySelectorAll<HTMLElement>(
+                    'h1, h2, h3, h4, h5, h6'
+                )
+            ].forEach((heading) => {
+                const anchor = document.createElement('a');
                 anchor.style.color = 'inherit';
-                anchor.className = "group relative cursor-pointer";
+                anchor.className = 'group relative cursor-pointer';
                 anchor.href = `#${heading.id}`;
                 heading.parentNode!.insertBefore(anchor, heading);
 
-                const linkIconWrapper = document.createElement("div");
-                console.log(heading.scrollHeight, heading.clientHeight, heading.offsetHeight)
+                const linkIconWrapper = document.createElement('div');
+                console.log(
+                    heading.scrollHeight,
+                    heading.clientHeight,
+                    heading.offsetHeight
+                );
                 Object.assign(linkIconWrapper.style, {
                     width: '15px',
                     height: '10px',
                     position: 'absolute',
                     left: '-24px',
-                    top: ((heading.clientHeight - 15 ) / 2)  + 'px'
+                    top: (heading.clientHeight - 15) / 2 + 'px'
                 });
-                heading.prepend (linkIconWrapper);
-                linkIconWrapper.className = "hidden group-hover:block";
+                heading.prepend(linkIconWrapper);
+                linkIconWrapper.className = 'hidden group-hover:block';
 
                 linkIconWrapper.innerHTML = linkSvg;
                 anchor.appendChild(heading);
