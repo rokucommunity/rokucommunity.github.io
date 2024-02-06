@@ -115,29 +115,6 @@ With this fix in place, you can once again see all your wonderful syntax errors 
 
 # BrighterScript
 
-## ci: Don't run `test-related-projects` on release since it already ran on build
-<!-- 2023-10-16 (for v0.65.9 released on 2023-11-06), ([157fc2ee](https://github.com/RokuCommunity/brighterscript/commit/157fc2ee)) -->
-
-
-
-
-## Fixes operator order for `not` keyword
-<!-- 2023-10-17 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/932 -->
-
-Before:
-
-`not myString = ""` -> `BinaryExpression<=>(UnaryExpression<not>(myString), "")`
-
-Now:
-
-`not myString = ""` -> `UnaryExpression<not>(BinaryExpression<=>(myString, ""))`
-
-
-Fixes #898
-
-
-
-
 ## Fix class fields using constructors not transpiling correctly
 <!-- 2023-10-18 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/933 -->
 
@@ -446,6 +423,36 @@ Fixes a bug where we weren't waiting for the downloaded file stream to close bef
 
 # Preview features
 <!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->
+## BrighterScript alphas
+
+## Fixes operator order for `not` keyword
+<!-- 2023-10-17 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/932 -->
+We fixed a bug in the brighterscript parser related to how the `not` keyword is interpreted.
+
+```vb
+function stringHasStuff(myStr as string) as boolean
+    return not myStr = ""
+end function
+```
+
+The parser treats this as `(not myStr) = ""` instead of how Roku treats it: `not (myStr = "")`
+
+As a result, here's the fix:
+Before:
+
+```vb
+not myString = ""` -> `BinaryExpression<=>(UnaryExpression<not>(myString), "")
+```
+
+Now:
+
+```vb
+not myString = ""` -> `UnaryExpression<not>(BinaryExpression<=>(myString, ""))
+```
+
+This might not mean much to you, but just know that your code is now being interpreted (and transpiled) more accurately now.
+
+
 
 # Documentation
 
@@ -481,6 +488,8 @@ For contributors of the vscode-brightscript-language, we've created a set of hel
 We discovered that several different places across the RokuCommunity projects that all ran similar `device-info` requests. We have eliminated this duplication by leveraging the `getDeviceInfo()` call from roku-deploy. In the future, all device-info calls should be handled by using that singular interface.
 
 ***
+
+
 
 # TODO
 ***Move these items to an appropriate section above, then delete this section***
