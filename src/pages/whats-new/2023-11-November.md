@@ -245,7 +245,6 @@ We fixed a bug in roku-deploy where we weren't waiting for the downloaded file s
 
 # Preview features
 
-## BrighterScript 0.66 alphas
 We made a lot of great progress again this month on the latest brighterscript v0.66 alpha releases. Here are some of the highlights:
 
 ## Added ifDraw2d to roRegion interface
@@ -459,11 +458,6 @@ not myString = ""` -> `UnaryExpression<not>(BinaryExpression<=>(myString, ""))
 
 This might not mean much to you, but just know that your code is now being interpreted (and transpiled) more accurately now.
 
-
-
-# Documentation
-
-# Misc
 
 # For Contributors
 
