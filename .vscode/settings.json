@@ -14,10 +14,19 @@
     "typescript", // Enable .ts
   ],
   "cSpell.words": [
-    "oneline",
     "bsconfig",
     "iface",
+    "interp",
+    "jeanbenitezu",
+    "Klass",
     "noproject",
-    "transpiling"
+    "oneline",
+    "sideload",
+    "sideloaded",
+    "sideloading",
+    "templatestrings",
+    "transpiling",
+    "userbase",
+    "validatable"
   ]
 }
