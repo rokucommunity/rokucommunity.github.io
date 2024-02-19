@@ -6,6 +6,34 @@ layout: ../../layouts/WhatsNewPost.astro
 # Overview
 This month we ran a trial of auto-enabling the debug protocol by default. We added several much-needed performance improvements in the brighterscript v0.66 alphas. We fixed a few bugs in the brs emulator, improved our telemetry tracking, added a few improvements to the dev experience for our RokuCommunity contributors, and a lot more! As always, many thanks to all who have worked so hard and contributed this month!
 
+## We need your help
+
+The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
+
+-   [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language/issues)
+-   [brighterscript](https://github.com/rokucommunity/brighterscript/issues)
+-   [brighterscript-formatter](https://github.com/rokucommunity/brighterscript-formatter/issues)
+-   [roku-deploy](https://github.com/rokucommunity/roku-deploy/issues)
+-   [roku-debug](https://github.com/rokucommunity/roku-debug/issues)
+-   [bslint](https://github.com/rokucommunity/bslint/issues)
+-   [ropm](https://github.com/rokucommunity/ropm/issues)
+-   [brs](https://github.com/rokucommunity/brs/issues)
+-   [@rokucommunity/promises](https://github.com/rokucommunity/promises/issues)
+
+## Issue of the month
+
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases.
+
+This month, we'd like to draw attention to [vscode-brightscript-language#409](https://github.com/rokucommunity/vscode-brightscript-language/issues/409). A rather strange issue that Roku developers encounter is when the Roku device stops allowing developers to sideload channels. Sometimes this is due to the Roku device requiring you to manually "check for updates". It's curious why the Roku won't just do this itself, but alas, it's not something in our power to fix. However, what we _can_ do is properly detect that this is the reason why the sideload failed. That's what [vscode-brightscript-language#409](https://github.com/rokucommunity/vscode-brightscript-language/issues/409) is asking to do.
+
+![image](https://user-images.githubusercontent.com/1753881/177804180-c7c7e452-c2da-4b34-bdff-5207afff170a.png)
+
+
+We'd like to detect when the sideload fails as a result of the "Failed to check for sofware update" issue, and then show a modal to the developer explaining _why_ the sideload failed.
+
+If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/vscode-brightscript-language/issues/409) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
+
+
 # Editor
 
 ## Telemetry tracking for Roku OS version
