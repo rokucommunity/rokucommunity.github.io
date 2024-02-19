@@ -4,6 +4,7 @@ summary: Changes to vscode-brightscript-language, brighterscript, roku-deploy, r
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
+This month we ran a trial of auto-enabling the debug protocol by default. We added several much-needed performance improvements in the brighterscript v0.66 alphas. We fixed a few bugs in the brs emulator, improved our telemetry tracking, added a few improvements to the dev experience for our RokuCommunity contributors, and a lot more! As always, many thanks to all who have worked so hard and contributed this month!
 
 # Editor
 
@@ -52,7 +53,7 @@ After a month of testing, we decided to turn this feature back off. The debug pr
 
 ## Shorten the timeout for device-info query on launch
 <!-- 2023-11-13 (for v2.45.3 released on 2023-11-15), https://github.com/RokuCommunity/vscode-brightscript-language/pull/525 -->
-As part of [the telemetry tracking update](#telemetry-tracking-for-roku-os-version), we now do a device-info request at the start of every launch request, in order to discover certain features of your device (is dev mode enabled, what OS is the device running, etc). However, we forgot to set a reasonable timeout on that request. It was previously set to 2.5 minutes. We've now adjusted that to a much more sensible 5 seconds.
+As part of [the telemetry tracking update](#telemetry-tracking-for-roku-os-version), we now do a `device-info` request at the start of every launch request, in order to discover certain features of your device (is dev mode enabled, what OS is the device running, etc). However, we forgot to set a reasonable timeout on that request. It was previously set to 2.5 minutes. We've now adjusted that to a much more sensible 5 seconds.
 
 We now show a statusbar loading animation while this query is running. In most cases, this request should only take 20-100ms. If it takes longer, that's typically indicative of a much bigger issue like the device being offline or inaccessible on the network.
 
@@ -175,7 +176,7 @@ end function
 # Community Tools
 
 ## brs
-## add logic for optional chaining
+## Add logic for optional chaining
 <!-- 2023-10-25 (for v0.45.2 released on 2023-11-08), https://github.com/RokuCommunity/brs/pull/21 -->
 
 We've added logic to the `brs` emulator for optional chaining. If you're leveraging this awesome project for off-device brs runtime, you can now safely use optional chaining in your brs code.
@@ -187,7 +188,7 @@ end sub
 ```
 
 
-## fix(interp): Preventing multiple calls for dot-chained methods
+## Prevent multiple calls for dot-chained methods
 <!-- 2023-10-31 (for v0.45.2 released on 2023-11-08), https://github.com/RokuCommunity/brs/pull/22 -->
 
 We fixed a bug with how chained method calls were interpreted. They were incorrectly re-evaluating each item in the chain multiple times, when they should have been evaluated exactly once.
@@ -201,10 +202,10 @@ Would result in `.TotalSeconds()` being evaluated/called 4 times.
 It's now been fixed to only evaluate once, which aligns us with Roku's brs runtime.
 
 
-## fix(parser): Wrong negative sign precedence was causing math errors (#6)
+## Fixed math errors caused by using the wrong negative sign precedence
 <!-- 2023-11-01 (for v0.45.2 released on 2023-11-08), https://github.com/RokuCommunity/brs/pull/24 -->
 
-Fixes the wrong negative sign precedence that was causing math errors.
+We fixed a parsing bug that would apply the wrong negative sign precedence, which would result in math errors.
 
 ```vb
 print -1000 +1000
@@ -216,9 +217,7 @@ This will now apply the `-` and `+` in the correct precedence and the result wil
 ## Enhance getDeviceInfo() method
 <!-- 2023-11-03 (for v3.10.4 released on 2023-11-03), https://github.com/RokuCommunity/roku-deploy/pull/120 -->
 
-Roku's `device-info` ECP endpoint is extremely useful for determining what functionality a given Roku device can support. We use it across many RokuCommunity projects, such as the VSCode extension, roku-debug, and roku-deploy. We recently discovered that each of those projects had their own implementation of fetching `device-info`. So to reduce code duplication and centralize our logic, we've enhanced the implementation in roku-deploy by:
-- adding an `enhance` option to get an object back in `camelCase` instead of the standard `kebab-case` and convert boolean strings to booleans and number strings to numbers
-- retains backwards compatibility by adding an overloaded signature that is not the default
+Roku's `device-info` ECP endpoint is extremely useful for determining what functionality a given Roku device can support. We use it across many RokuCommunity projects, such as the VSCode extension, roku-debug, and roku-deploy. We recently discovered that each of those projects had their own implementation of fetching `device-info`. So to reduce code duplication and centralize our logic, we've enhanced the implementation in roku-deploy by adding an `enhance` option that returns the properties in `camelCase` instead of `kebab-case` and converts boolean strings to booleans and number strings to numbers. This opt-in flag retains backwards compatibility by adding an overloaded signature that is off by default.
 
 Here's how you can leverage this functionality:
 
@@ -236,79 +235,28 @@ console.log(deviceInfo.eveloperEnabled); //prints `true` (as boolean, not string
 ## Added some more message grabbing logic
 <!-- 2023-11-13 (for v3.10.5 released on 2023-11-14), https://github.com/RokuCommunity/roku-deploy/pull/127 -->
 
-Found that it is possible to get errors in a json object within the response. This adds checks for that.
-
-
-## Add better device-info jsdoc block
-<!-- 2023-11-13 (for v3.10.5 released on 2023-11-14), https://github.com/RokuCommunity/roku-deploy/pull/128 -->
-
-Adds better jsdoc descriptions for the `GetDeviceInfoOptions` interface properties.
-
-
-## Add public function to normalize device-info field values
-<!-- 2023-11-20 (for v3.11.1 released on 2023-11-30), https://github.com/RokuCommunity/roku-deploy/pull/129 -->
-
-Exposes a new function that will normalize the device-info field values. This way external consumers can leverage the non-enhanced device-info result, but still normalize their values if desired.
+We found (and fixed) a few bug in the roku-deploy zip upload response parsing. There were several additional errors that could be scraped from the response which would provide much better information about why certain issues were occurring. We now properly parse those errors and include them as part of any emitted error. Check out [roku-deploy@127](https://github.com/RokuCommunity/roku-deploy/pull/127) for more information.
 
 
 ## Wait for file stream to close before resolving promise
 <!-- 2023-11-30 (for v3.11.1 released on 2023-11-30), https://github.com/RokuCommunity/roku-deploy/pull/133 -->
 
-Fixes a bug where we weren't waiting for the downloaded file stream to close before resolving the file path promise.
-
-
-
-# Community Libraries
-
-
-# Formatting
-
+We fixed a bug in roku-deploy where we weren't waiting for the downloaded file stream to close before resolving the file path promise. When used in CI environments, this could actually cause the CI job to fail because sometimes the file wasn't finished downloading, which could trigger "file not found" errors if the CI moved ahead too quickly.
 
 # Preview features
 
+## BrighterScript 0.66 alphas
+We made a lot of great progress again this month on the latest brighterscript v0.66 alpha releases. Here are some of the highlights:
 
-## Fixes Transpilation bug - enums as class initial values
-<!-- 2023-11-21 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/949 -->
-
-Previously, there was a transpilation bug when using enums directly (eg. with no namespace prefix) inside a namespace... I was seeing it especially in classes.
-
-```
-                namespace MyNS
-                    class HasEnumKlass
-                        enumValue = MyEnum.A
-                    end class
-
-                    enum MyEnum
-                        A = "A"
-                        B = "B"
-                    end enum
-                end namespace
-```
-was being transpiled to (notice the MyEnum.A):
-```
-            function __MyNS_HasEnumKlass_builder()
-                    instance = {}
-                    instance.new = sub()
-                        m.enumValue = MyEnum.A
-                    end sub
-                    return instance
-                end function
-                function MyNS_HasEnumKlass()
-                    instance = __MyNS_HasEnumKlass_builder()
-                    instance.new()
-                    return instance
-                end function
-```
-
-
-
-## Added ifDraw2d to reRegion interface
+## Added ifDraw2d to roRegion interface
 <!-- 2023-11-24 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/960 -->
-
+We added the `ifDraw2d` items to the `roRegion` interface, which should result in much better completions and validations when interacting with those items.
 
 
 ## Completion performance
 <!-- 2023-11-22 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/958 -->
+
+We fixed some performance problems when computing completions. Since completions are one of the most time-sensitive operations, this was a huge win! Here's how the flow was changed:
 
 Previously:
 ```
@@ -335,6 +283,8 @@ remove duplicates of same completion across different projects
 ## Interface optional properties
 <!-- 2023-11-21 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/946 -->
 
+We've finally added the ability to mark interface (and class) properties as `optional`. These properties can be omitted from interfaces without fear of validation errors when they're missing (i.e. the entire point of optional properties...).
+
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/439853a7-e0da-44c4-a4c2-08967088bd6a)
 
 
@@ -343,19 +293,41 @@ remove duplicates of same completion across different projects
 ## Better go to definition support
 <!-- 2023-11-21 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/948 -->
 
-Add fixes for the "go to definition" logic so that it finds classes and interfaces.
+We added fixes for the "go to definition" logic so that it finds classes and interfaces.
 
 Here's it working in action!
 ![goto-definition](https://github.com/rokucommunity/brighterscript/assets/2544493/bb7b10c7-85c6-4a09-af30-2bc212ae642c)
 
 
-
-## Validation Performance: File level `providedSymbols` and `requiredSymbols`
+## Performance fixes
+<!-- 2023-11-15 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/936 -->
 <!-- 2023-11-20 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/944 -->
 
-```
-benchmark: Running benchmarks:
+The v0.66 alphas are known to be slower than the mainline release. Much of this is attributed to the significant amount of additional validation being performed. This month we focused heavily on finding performance improvements to try and gain back some of that lost speed. We found several ways to carve out some more performance:
 
+- per-scope symbol caching that only invalidates a single scope when that scope changes~
+- Smarter validation, so that only statements in a file that require re-validation for each scope get re-validated
+- A few small ReferenceType bug fixes
+- Fixes `ifDraw2d,DrawScaledObject` overload
+- Rewrote `ScopeValidator.iterateFileExpressions` to do work on an AST Walk
+- Uses better caching of Namespace data when linking scopes
+
+`npm run benchmark -- --targets validate` :
+
+Current release-0.66:
+```
+validate@local  ----------- 8.252 ops/sec
+validate@0.65.8 --------- 104.338 ops/sec
+```
+Implementing algorithm above:
+```
+validate@local  ---------- 21.253 ops/sec
+validate@0.65.8 --------- 105.035 ops/sec
+```
+
+We also found some significant performance improvements during the program validation cycle. Let us know if you are still seeing performance issues while validation your projects. Check out the benchmark results (higher is better):
+
+```
     validate@local   --------- 271.514 ops/sec
     validate@0.65.10 --------- 101.219 ops/sec
 ```
@@ -386,19 +358,10 @@ How it works:
      - do appropriate clearing of diagnostics attached to the scope based on file and segment re-validations.
 
 
-Known issues:
-~The language server still weirdly re-validates for all open files, and there seems to be a race condition somewhere. I see it most notably on Brighterscript files, and when using classes/types defined in namespaces~** these are fixed!**
-
-
-
-<!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->
-## BrighterScript alphas
-
-
 ## Cache range and position
 <!-- 2023-11-09 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/940 -->
 
-Cache the range and position objects since they're immutable. This helps reduce memory footprint and garbage collection church. Also after a range has been created at least once, it should theoretically cost less CPU cycles since we just look it up from the cache instead of building a new one.
+We found another area for performance improvement by caching the range and position objects since they're immutable. This helps reduce memory footprint and garbage collection churn. Also after a range has been created at least once, it should theoretically cost less CPU cycles since we just look it up from the cache instead of building a new one.
 
 For a large private project:
 ```
@@ -424,41 +387,50 @@ Positions: 418,227 cached  10,588 not cached
 ```
 
 
-## More performance fixes
-<!-- 2023-11-15 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/936 -->
-
-A bunch of improvements and fixes:
-
-- ~Per-scope symbol caching that only invalidates a single scope when that scope changes~
-- Smarter validation, so that only statements in a file that require re-validation for each scope get re-validated
-- A few small ReferenceType bug fixes
-- Fixes `ifDraw2d,DrawScaledObject` overload
-- Rewrote `ScopeValidator.iterateFileExpressions` to do work on an AST Walk
-- Uses better caching of Namespace data when linking scopes
-
-
-`npm run benchmark -- --targets validate` :
-
-Current release-0.66:
-```
-validate@local  ----------- 8.252 ops/sec
-validate@0.65.8 --------- 104.338 ops/sec
-```
-Implementing algorithm above:
-```
-validate@local  ---------- 21.253 ops/sec
-validate@0.65.8 --------- 105.035 ops/sec
-```
-
-
 
 ## Fix class fields using constructors not transpiling correctly
 <!-- 2023-10-18 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/933 -->
 
-if there was a class field that used a constructor, the constructor was not namespaced correctly in the transpilation. This fixes that issue.
+If there was a class field that used a constructor, the constructor was not namespaced correctly in the transpilation. This fixes that issue.
 
 
+```vb
+namespace MyNS
+    class KlassOne
+        other = new KlassTwo()
+    end class
+    class KlassTwo
+    end class
+end namespace
+```
 
+Now properly transpiles to:
+
+```vb
+unction __MyNS_KlassOne_builder()
+    instance = {}
+    instance.new = sub()
+        m.other = MyNS_KlassTwo() 'This was the issue before, it used to transpile to `KlassTwo()`
+    end sub
+    return instance
+end function
+function MyNS_KlassOne()
+    instance = __MyNS_KlassOne_builder()
+    instance.new()
+    return instance
+end function
+function __MyNS_KlassTwo_builder()
+    instance = {}
+    instance.new = sub()
+    end sub
+    return instance
+end function
+function MyNS_KlassTwo()
+    instance = __MyNS_KlassTwo_builder()
+    instance.new()
+    return instance
+end function
+```
 
 ## Fixes operator order for `not` keyword
 <!-- 2023-10-17 (for v0.66.0-alpha.8 released on 2023-11-27), https://github.com/RokuCommunity/brighterscript/pull/932 -->
