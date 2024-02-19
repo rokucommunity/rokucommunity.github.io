@@ -6,173 +6,47 @@ layout: ../../layouts/WhatsNewPost.astro
 # Overview
 
 # Editor
+
+## Add check for onChange function
+<!-- 2023-12-18 (for v0.65.14 released on 2023-12-20), https://github.com/RokuCommunity/brighterscript/pull/941 -->
+We've added a new XML validation that warns about missing functions referenced by `onChange` XML handlers.
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/6dfd9d70-e6f6-4d4c-8c04-d24a56be6515)
+
+
+
+
 ## Fix spelling mistake in lsp message
 <!-- 2023-11-27 (for v2.45.9 released on 2023-12-07), https://github.com/RokuCommunity/vscode-brightscript-language/pull/531 -->
+We fixed a small spelling mistake in the "Can't find language server" error message.
 
-Fix a spelling mistake in the "Can't find language server" error message. 
-
-Thanks @triwav for finding this!
-
-
-## Use getDeviceInfo from roku-deploy
-<!-- 2023-11-28 (for v2.45.9 released on 2023-12-07), https://github.com/RokuCommunity/vscode-brightscript-language/pull/532 -->
-
-- remove the custom fetching of device-info in favor of the `rokuDeploy.getDeviceInfo()` function. 
-- fixes a few typescript and npm dependency issues
-
-
-
-## Support a configurable port for SceneGraphDebugCommandController
-<!-- 2023-12-07 (for v2.45.9 released on 2023-12-07), https://github.com/RokuCommunity/vscode-brightscript-language/pull/534 -->
-
-Adds support for overriding the scenegraph debug server port (normally 8080). This is mostly useful for port-forwarding or emulator/simulator situations, because Roku devices do not support overriding this port. 
-
-![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/8ea98b1c-60cc-4129-a615-b5d4e2893558)
-
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/3cf9624c-38d1-4e77-9444-e89e4a0c7c64)
 
 
 ## Add a few missing brightscript.debug settings
 <!-- 2023-12-07 (for v2.45.9 released on 2023-12-07), https://github.com/RokuCommunity/vscode-brightscript-language/pull/535 -->
-
-Adds a few missing `brightscript.debug` settings to user/workspace settings. 
-
-
-## Merge tag 'v2.45.8' of https://github.com/rokucommunity/vscode-brightscript-language
-<!-- 2023-12-07 (for v2.45.9 released on 2023-12-07), ([7a90e96](https://github.com/RokuCommunity/vscode-brightscript-language/commit/7a90e96)) -->
-
-
-
+We noticed a few `brightscript.debug` settings were missing from the schema, meaning you would get warnings when trying to use them in user/workspace settings. We've added the missing items so now you should have better intellisense when editing the settings, and no more warnings.
 
 
 # Debugging
 
-## Make the connection port for SceneGraphDebugCommandController configurable
-<!-- 2023-12-07 (for v0.20.14 released on 2023-12-07), https://github.com/RokuCommunity/roku-debug/pull/177 -->
+## Support a configurable port for SceneGraphDebugCommandController
+<!-- 2023-12-07 (for v2.45.9 released on 2023-12-07), https://github.com/RokuCommunity/vscode-brightscript-language/pull/534 -->
 
-…rable
+We have added the ability to override scenegraph debug server port (normally 8080). This is mostly useful for port-forwarding or emulator/simulator situations, because Roku devices do not support overriding this port.
 
-
-## Fixing issues before release 0.20.14
-<!-- 2023-12-07 (for v0.20.14 released on 2023-12-07), ([01fba07](https://github.com/RokuCommunity/roku-debug/commit/01fba07)) -->
-
-
-
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/8ea98b1c-60cc-4129-a615-b5d4e2893558)
 
 
 # BrighterScript
 
-## Fixes Class Constructor used as `function` transpilation and validation
-<!-- 2023-11-30 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/972 -->
-
-Fixes #965 
-
-
-## Classes do not include AA members
-<!-- 2023-11-30 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/970 -->
-
-Fixes #968
-
-
-## Add manifest loading from files
-<!-- 2023-12-04 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/942 -->
-
-The program is currently set to load a manifest from the project's root. This isn't very flexible, and it causes some issues for projects which generate their manifests in a pre-compile step, i.e., `bs_const` values not getting read and causing code blocks to be removed erroneously.
-
-This PR tweaks `ProgramBuilder.loadAllFilesAST`'s logic, to group/filter files and find a manifest in a first pass, then load the manifest into the program, and finally setting typedefs and code files. I've also adjusted the manifest loading to accept a file object, with some slight code refactoring in the mix.
-
-
-## Correct RANGE in template string when dealing with quotes in annotations
-<!-- 2023-12-04 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/975 -->
-
-Fixes a bug where `"` characters in template strings would mistakenly increment the line number of future tokens, causing incorrect token positions for the remainder of the file. This didn't cause problems with the transpiled code, but makes for a very poor debugging (sourcemap) and editing (diagnostic position) experience. 
-
-Before the fix:
-![template-string-position-fix](https://github.com/rokucommunity/brighterscript/assets/2544493/19f1490d-d002-47af-9f68-4c53f7a6787b)
-
-After the fix:
-![template-string-position-fix-fixed](https://github.com/rokucommunity/brighterscript/assets/2544493/00f2e933-8d03-45d2-82f0-29871deea06e)
-
-
-
-## fix the create-package script
-<!-- 2023-12-04 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/974 -->
-
-- Fix the create-package script so that it builds proper urls to packages by excluding @ and _ symbols.
-- specify the `--title` so the release doesn't accidentally use the current branch name.
-
-
-## Use regex for faster manifest/typedef detection
-<!-- 2023-12-04 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/976 -->
-
-Adds slightly faster performance to the logic updated in #942 when dealing with large file lists. This probably doesn't make much difference in practice, but hey, free cycles are free cycles!
-
-The javascript engine will compile and cache regex expressions, so we can use them inline. We also avoid calling `.toLowerCase() because it's fairly expensive. 
-
-![image](https://github.com/rokucommunity/brighterscript/assets/2544493/84645bda-1f73-48da-8fb9-d8ab3eb1d358)
-
-
-
-
-## Remove post-transpiled symbols from .bs code completion
-<!-- 2023-12-06 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/979 -->
-
-Solves #978
-
-
-## Add `optional` modifier for interface and class members
-<!-- 2023-12-07 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/955 -->
-
-Adds the ability to mark interface fields, interface methods, and class fields as `optional`. We don't really do anything with them right now, but this is in preparation for the upcoming type tracking features. 
-
-
-## Fix out-of-date transpile blocks in docs
-<!-- 2023-12-07 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/956 -->
-
-Fixes a few docs "view transpiled code" blocks that were out of date from their sample code.
-
-
-## General purpose name collision diagnostic
-<!-- 2023-12-07 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/982 -->
-
-![image](https://github.com/rokucommunity/brighterscript/assets/810290/1948e7bb-ac37-46ac-98a3-ca44857d45ae)
-
-![image](https://github.com/rokucommunity/brighterscript/assets/810290/14a4e790-d74b-46dd-bdeb-67c1442e38e4)
-
-
-![image](https://github.com/rokucommunity/brighterscript/assets/810290/373d401d-2d92-406f-9403-2f7825c1d6b5)
-
-
-
-## Fix crash in type system when an incoming type is `undefined`
-<!-- 2023-12-07 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/983 -->
-
-Fix a few crashes in the type system when an incoming type is `undefined`
-
-
-## Make `roSGNode` and `roSGNodeNode` the same
-<!-- 2023-12-08 (for v0.66.0-alpha.11 released on 2023-12-21), https://github.com/RokuCommunity/brighterscript/pull/984 -->
-
-- `roSGNode` is added to the global symbol table as a copy of `roSGNodeNode`
-- re-scraped Roku docs
-- Fixed completion type for ComponentType
-
-
-
 ## Fix transpile for non-namespaced enums in namespaced functions
 <!-- 2023-12-08 (for v0.65.13 released on 2023-12-08), https://github.com/RokuCommunity/brighterscript/pull/985 -->
 
-Fixes a critical transpile bug where non-namespaced enums used in namespaced function blocks would be left untranspiled!
+We fixed a critical transpile bug in brighterscript where non-namespaced enums used in namespaced function blocks would be left un-transpiled! This should be fixed now in brighterscript v0.65.13 or above
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/2544493/5d47b4ad-5285-4548-9212-a0c5be5926ef)
 
-
-
-## Add check for onChange function
-<!-- 2023-12-18 (for v0.65.14 released on 2023-12-20), https://github.com/RokuCommunity/brighterscript/pull/941 -->
-
-Issue: https://github.com/rokucommunity/brighterscript/issues/939
-
-Add check for onChange functions in xml files
 
 
 ## Namespace validation fix
@@ -184,7 +58,7 @@ Fixes false diagnostics pertaining to interface and class statements for names t
 ## Fix multi-namespace class inheritance transpile bug
 <!-- 2023-12-20 (for v0.65.14 released on 2023-12-20), https://github.com/RokuCommunity/brighterscript/pull/990 -->
 
-Fixes a bug with class inheritance where an ancestor 2+ levels higher would get the wrong super index, but only when that ancestor was a namespace-relative reference from a different namespace than the originating class. 
+Fixes a bug with class inheritance where an ancestor 2+ levels higher would get the wrong super index, but only when that ancestor was a namespace-relative reference from a different namespace than the originating class.
 
 Consider this code example
 ```brighterscript
@@ -207,8 +81,8 @@ namespace charlie
 end namespace
 ```
 
-The inheritance chain for `Four` is: `Four` -> `beta.Three` -> `Two` -> `alpha.One`. 
-The bug occurs when trying to find `Two` because it's a namespace-relative lookup. BrighterScript was trying to find `charlie.Two` instead of `beta.Two`. 
+The inheritance chain for `Four` is: `Four` -> `beta.Three` -> `Two` -> `alpha.One`.
+The bug occurs when trying to find `Two` because it's a namespace-relative lookup. BrighterScript was trying to find `charlie.Two` instead of `beta.Two`.
 
 This resulted in the wrong super index, causing a stackoverflow at runtime.
 
@@ -270,7 +144,7 @@ This PR implements:
 From sjbarag/brs#611
 
 > Implementing try/catch/throw takes a good bit of work in the interpreter, so I'm splitting that into two pull requests. This one includes parsing try/catch/end try (without throw), and always executes only the try block to maintain backwards compatibility. It's a weird partial state, but the alternative is a massive pull request that can't be reasonably reviewed or understood.
-> 
+>
 > see sjbarag/brs#554
 
 
@@ -389,12 +263,114 @@ Improves the "wrong password" error message.
 # Preview features
 <!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->
 
+
+## Fixes Class Constructor used as `function` transpilation and validation
+<!-- 2023-11-30 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/972 -->
+
+Fixes #965
+
+
+## Classes do not include AA members
+<!-- 2023-11-30 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/970 -->
+
+Fixes #968
+
+
+## Add manifest loading from files
+<!-- 2023-12-04 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/942 -->
+
+The program is currently set to load a manifest from the project's root. This isn't very flexible, and it causes some issues for projects which generate their manifests in a pre-compile step, i.e., `bs_const` values not getting read and causing code blocks to be removed erroneously.
+
+This PR tweaks `ProgramBuilder.loadAllFilesAST`'s logic, to group/filter files and find a manifest in a first pass, then load the manifest into the program, and finally setting typedefs and code files. I've also adjusted the manifest loading to accept a file object, with some slight code refactoring in the mix.
+
+
+## Correct RANGE in template string when dealing with quotes in annotations
+<!-- 2023-12-04 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/975 -->
+
+Fixes a bug where `"` characters in template strings would mistakenly increment the line number of future tokens, causing incorrect token positions for the remainder of the file. This didn't cause problems with the transpiled code, but makes for a very poor debugging (sourcemap) and editing (diagnostic position) experience.
+
+Before the fix:
+![template-string-position-fix](https://github.com/rokucommunity/brighterscript/assets/2544493/19f1490d-d002-47af-9f68-4c53f7a6787b)
+
+After the fix:
+![template-string-position-fix-fixed](https://github.com/rokucommunity/brighterscript/assets/2544493/00f2e933-8d03-45d2-82f0-29871deea06e)
+
+
+
+## fix the create-package script
+<!-- 2023-12-04 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/974 -->
+
+- Fix the create-package script so that it builds proper urls to packages by excluding @ and _ symbols.
+- specify the `--title` so the release doesn't accidentally use the current branch name.
+
+
+## Use regex for faster manifest/typedef detection
+<!-- 2023-12-04 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/976 -->
+
+Adds slightly faster performance to the logic updated in #942 when dealing with large file lists. This probably doesn't make much difference in practice, but hey, free cycles are free cycles!
+
+The javascript engine will compile and cache regex expressions, so we can use them inline. We also avoid calling `.toLowerCase() because it's fairly expensive.
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/84645bda-1f73-48da-8fb9-d8ab3eb1d358)
+
+
+
+
+## Remove post-transpiled symbols from .bs code completion
+<!-- 2023-12-06 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/979 -->
+
+Solves #978
+
+
+## Add `optional` modifier for interface and class members
+<!-- 2023-12-07 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/955 -->
+
+Adds the ability to mark interface fields, interface methods, and class fields as `optional`. We don't really do anything with them right now, but this is in preparation for the upcoming type tracking features.
+
+
+## Fix out-of-date transpile blocks in docs
+<!-- 2023-12-07 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/956 -->
+
+Fixes a few docs "view transpiled code" blocks that were out of date from their sample code.
+
+
+## General purpose name collision diagnostic
+<!-- 2023-12-07 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/982 -->
+
+![image](https://github.com/rokucommunity/brighterscript/assets/810290/1948e7bb-ac37-46ac-98a3-ca44857d45ae)
+
+![image](https://github.com/rokucommunity/brighterscript/assets/810290/14a4e790-d74b-46dd-bdeb-67c1442e38e4)
+
+
+![image](https://github.com/rokucommunity/brighterscript/assets/810290/373d401d-2d92-406f-9403-2f7825c1d6b5)
+
+
+
+## Fix crash in type system when an incoming type is `undefined`
+<!-- 2023-12-07 (for v0.66.0-alpha.10 released on 2023-12-07), https://github.com/RokuCommunity/brighterscript/pull/983 -->
+
+Fix a few crashes in the type system when an incoming type is `undefined`
+
+
+## Make `roSGNode` and `roSGNodeNode` the same
+<!-- 2023-12-08 (for v0.66.0-alpha.11 released on 2023-12-21), https://github.com/RokuCommunity/brighterscript/pull/984 -->
+
+- `roSGNode` is added to the global symbol table as a copy of `roSGNodeNode`
+- re-scraped Roku docs
+- Fixed completion type for ComponentType
+
+
+
 # Documentation
 
 # Misc
 
 # For Contributors
 
+## Use getDeviceInfo from roku-deploy
+<!-- 2023-11-28 (for v2.45.9 released on 2023-12-07), https://github.com/RokuCommunity/vscode-brightscript-language/pull/532 -->
+
+Last month we improved the `rokuDeploy.getDeviceInfo()` method to be more library friendly to our NodeJS projects. This month we removed our custom fetching of `device-info` in favor of the `rokuDeploy.getDeviceInfo()` function. This shouldn't have any visual impacts, but just know that under the hood we've unified our `device-info` access so that bug fixes are more easily shared across all the RokuCommunity projects.
 ***
 
 # TODO
