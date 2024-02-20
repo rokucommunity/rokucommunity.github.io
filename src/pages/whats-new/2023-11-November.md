@@ -536,15 +536,6 @@ For contributors of the vscode-brightscript-language, we've created a set of hel
 <!-- 2023-11-05 (for v0.20.9 released on 2023-11-05), https://github.com/RokuCommunity/roku-debug/pull/167 -->
 We discovered that several different places across the RokuCommunity projects that all ran similar `device-info` requests. We have eliminated this duplication by leveraging the `getDeviceInfo()` call from roku-deploy. In the future, all device-info calls should be handled by using that singular interface.
 
-***
-
-
-
-# TODO
-***Move these items to an appropriate section above, then delete this section***
-
-***
-
 # Thank you
 
 Last but certainly not least, a big **_Thank You_** to the following people who contributed this month:
