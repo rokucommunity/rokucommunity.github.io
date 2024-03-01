@@ -8,6 +8,7 @@ We had another solid month full of great improvements to the RokuCommunity tools
 
 There are many updates in this version that we hope you'll like, some of the key highlights include:
 
+- [Issue of the month](#issue-of-the-month)
 - [Add check for onChange function in XML files in the editor](#add-check-for-onchange-function)
 - [Add `optional` modifier for interface and class members in BrighterScript](#add-optional-modifier-for-interface-and-class-members)
 - [Correct RANGE in template string when dealing with quotes in annotations](#correct-range-in-template-string-when-dealing-with-quotes-in-annotations)
@@ -17,6 +18,31 @@ There are many updates in this version that we hope you'll like, some of the key
 - [Combine `roSGNode` and `roSGNodeNode` interfaces](#make-rosgnode-and-rosgnodenode-the-same)
 - [Several fixes in the brs emulator](#brs)
 - [Fix the `create-package` script to help contributors](#fix-the-create-package-script)
+
+## We need your help
+
+The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
+
+-   [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language/issues)
+-   [brighterscript](https://github.com/rokucommunity/brighterscript/issues)
+-   [brighterscript-formatter](https://github.com/rokucommunity/brighterscript-formatter/issues)
+-   [roku-deploy](https://github.com/rokucommunity/roku-deploy/issues)
+-   [roku-debug](https://github.com/rokucommunity/roku-debug/issues)
+-   [bslint](https://github.com/rokucommunity/bslint/issues)
+-   [ropm](https://github.com/rokucommunity/ropm/issues)
+-   [brs](https://github.com/rokucommunity/brs/issues)
+-   [@rokucommunity/promises](https://github.com/rokucommunity/promises/issues)
+
+## Issue of the month
+
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the RokuCommunity codebases.
+
+This month, we'd like to draw attention to [vscode-brightscript-language#238](https://github.com/rokucommunity/vscode-brightscript-language/issues/238). Rendezvous tracking is a very useful feature in the VSCode extension. However, we have very little documentation explaining how to use it, how to enable it, etc. We're asking for the community's help to create a documentation page for this so that more developers can utilize the feature. The docs are written in markdown on the [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language) repo, and published to https://rokucommunity.github.io/vscode-brightscript-language/
+
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/893cdc7c-fb9f-4643-9cad-a7453c6836e3)
+
+
+If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/vscode-brightscript-language/issues/238) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
 
 
 # Editor
