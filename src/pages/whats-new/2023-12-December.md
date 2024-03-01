@@ -4,6 +4,27 @@ summary: Changes to vscode-brightscript-language, brighterscript, roku-deploy, r
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
+We had another solid month full of great improvements to the RokuCommunity tools, even though many of us were off for part of the month to celebrate the holidays. I think that goes to show just how dedicated some of our community contributors are, and we are so grateful for their help and support!
+
+There are many updates in this version that we hope you'll like, some of the key highlights include:
+
+- [Editor](#editor)
+    - [Add check for onChange function](#add-check-for-onchange-function)
+- [BrighterScript](#brighterscript)
+    - [Add `optional` modifier for interface and class members](#add-optional-modifier-for-interface-and-class-members)
+    - [Correct RANGE in template string when dealing with quotes in annotations](#correct-range-in-template-string-when-dealing-with-quotes-in-annotations)
+    - Transpile fixes [here](#fix-transpile-for-non-namespaced-enums-in-namespaced-functions) and [here](#fix-multi-namespace-class-inheritance-transpile-bug)
+    - [Load `manifest` from files array instead of root of project](#load-manifest-from-files-array-instead-of-root-of-project)
+- [brs](#brs)
+    - [Fix optional chaining implementation side effect](#fix-optional-chaining-implementation-side-effect)
+    - [Implemented missing `ifEnum` methods in `roArray` and `roAssociativeArray`](#implemented-missing-ifenum-methods-in-roarray-and-roassociativearray)
+    - [Add stub try/catch implementation](#add-stub-trycatch-implementation)
+- [BrighterScript Preview features](#preview-features)
+    - [Classes do not include AA members](#classes-do-not-include-aa-members)
+    - [General purpose name collision diagnostic](#general-purpose-name-collision-diagnostic)
+    - [Make `roSGNode` and `roSGNodeNode` the same](#make-rosgnode-and-rosgnodenode-the-same)
+- [For Contributors](#for-contributors)
+    - [fix the create-package script](#fix-the-create-package-script)
 
 
 # Editor
@@ -13,7 +34,6 @@ layout: ../../layouts/WhatsNewPost.astro
 We've added a new XML validation that warns about missing functions referenced by `onChange` XML handlers.
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/2544493/6dfd9d70-e6f6-4d4c-8c04-d24a56be6515)
-
 
 
 
@@ -34,7 +54,7 @@ We noticed a few `brightscript.debug` settings were missing from the schema, mea
 ## Support a configurable port for SceneGraphDebugCommandController
 <!-- 2023-12-07 (for v2.45.9 released on 2023-12-07), https://github.com/RokuCommunity/vscode-brightscript-language/pull/534 -->
 
-We have added the ability to override scenegraph debug server port (normally 8080). This is mostly useful for port-forwarding or emulator/simulator situations, because Roku devices do not support overriding this port.
+We have added the ability to override SceneGraph debug server port (normally 8080). This is mostly useful for port-forwarding or emulator/simulator situations, because Roku devices do not support overriding this port.
 
 ![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/8ea98b1c-60cc-4129-a615-b5d4e2893558)
 
@@ -109,7 +129,7 @@ end namespace
 The inheritance chain for `Four` is: `Four` -> `beta.Three` -> `Two` -> `alpha.One`.
 The bug occurs when trying to find `Two` because it's a namespace-relative lookup. BrighterScript was trying to find `charlie.Two` instead of `beta.Two`.
 
-This resulted in the wrong super index, causing a stackoverflow at runtime. We fixed it, so now this code should transpile correctly.
+This resulted in the wrong super index, causing a stack overflow at runtime. We fixed it, so now this code should transpile correctly.
 
 
 ## Prevent errors when using enums in a file that's not included in any scopes
@@ -120,7 +140,7 @@ We've fixed a bug in the brighterscript transpiler that occurred when a file whi
 Here's the error:
 ```
 Error when calling plugin BscPlugin.beforeFileTranspile: TypeError: Cannot read properties of undefined (reading 'getEnumMemberFileLink')
-    at BrsFilePreTranspileProcessor.getEnumInfo (/Users/<REDACTED>/code/my-application/common/temp/node_modules/.pnpm/brighterscript@0.65.14/node_modules/brighterscript/dist/bscPlugin/transpile/BrsFilePreTranspileProcessor.js:38:32)
+    at BrsFilePreTranspileProcessor.getEnumInfo (../node_modules/brighterscript/dist/bscPlugin/transpile/BrsFilePreTranspileProcessor.js:38:32)
     <long stack trace here>
 ```
 
@@ -136,12 +156,12 @@ We've modified BrighterScript to find and load the `manifest` file _first_ (rath
 # Community Tools
 
 ## brs
-## fix(components): Replacing package luxon by day.js on `roDateTime` and `roTimespan` #28
+## Replace npm package `luxon` with `day.js` for `roDateTime` and `roTimespan`
 <!-- 2023-11-21 (for v0.45.3 released on 2023-12-01), https://github.com/RokuCommunity/brs/pull/29 -->
 In the BRS emulator project we updated the internal NodeJS date library from `luxon` to `day.js`. This gives us more control of the specific formats Roku supports when parsing ISO dates, also this package is smaller than `luxon`. This allowed us to fix a few bugs related to printing dates so they more accurately align with actual Roku devices.
 
 
-## fix(parser,lexer) Optional chaining implementation side effect #30
+## Fix optional chaining implementation side effect
 <!-- 2023-12-01 (for v0.45.3 released on 2023-12-01), https://github.com/RokuCommunity/brs/pull/31 -->
 We fixed the optional chaining implementation in the BRS emulator. There was a bug that affected the parsing of inline `if` with the `?` (print) statement.
 
@@ -158,7 +178,7 @@ end function
 ```
 
 
-## feat(components): Implemented missing `ifEnum` methods in `roArray` and `roAssociativeArray`
+## Implemented missing `ifEnum` methods in `roArray` and `roAssociativeArray`
 <!-- 2023-12-01 (for v0.45.3 released on 2023-12-01), https://github.com/RokuCommunity/brs/pull/33 -->
 We added several missing interface methods to the BRS emulator:
 - Methods from `ifEnum`: `isNext()`, `next()`, `reset()` (array and AA)
@@ -167,7 +187,7 @@ We added several missing interface methods to the BRS emulator:
 We also now properly sort AA items when printing the object (same behavior as Roku)
 
 
-## feat(lex,parse): Add stub try/catch implementation
+## Add stub try/catch implementation
 <!-- 2023-12-01 (for v0.45.3 released on 2023-12-01), https://github.com/RokuCommunity/brs/pull/34 -->
 We've added partial support for `try/catch`. Implementing try/catch/throw takes a good bit of work in the interpreter, so it has been split into two parts. This initial implementation includes parsing try/catch/end try (without throw), and always executes only the try block to maintain backwards compatibility.
 
@@ -178,7 +198,7 @@ Here's the feature working in action:
 ![brs-try](https://github.com/rokucommunity/brs/assets/2544493/df644194-f8b0-4924-8369-229fc169fb99)
 
 
-## fix(lib): Component XML path parsing was failing on edge case
+## Component XML path parsing was failing on edge case
 <!-- 2023-12-01 (for v0.45.3 released on 2023-12-01), https://github.com/RokuCommunity/brs/pull/37 -->
 We fixed a bug in the brs interpreter where, when parsing an empty list of additional directories, the code was finding invalid XML files under `node_modules` when the package was installed in posix OS (Mac, Linux).
 
@@ -319,10 +339,6 @@ We've added some great new diagnostics focused on detecting name collisions. Her
 
 When we first introduced the native types (like `Node`, `roSGNode`, `roSGNodeLabel`, etc...), we thought it made sense for `Node` and `roSGNode` to be different, so we made interfaces called `roSGNode` and `roSGNodeNode` respectively. However, in practice we found that it was just more confusing than helpful. So starting in `v0.66.0-alpha.11` `roSGNode` and `roSGNodeNode` have been merged into a single interface called `roSGNode`. In almost every situation, you can just use `roSGNode`. Let us know if you have some practical use case for needing to mark something as `Node` instead.
 
-
-# Documentation
-
-# Misc
 
 # For Contributors
 
