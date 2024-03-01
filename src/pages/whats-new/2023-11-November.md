@@ -12,7 +12,7 @@ There are many updates in this version that we hope you'll like, some of the key
 - [Issue of the month](#issue-of-the-month)
 - [Notification when developer mode is disabled in the editor](#notification-when-developer-mode-is-disabled)
 - [Testing auto-enabled debug protocol on 12.5 devices](#testing-auto-enabled-debug-protocol-on-125-devices)
-- [Backtick support in surrounding & autoClosing pairs](#backtick-support-in-surrounding-autoclosing-pairs)
+- [Backtick support in surrounding & autoClosing pairs](#backtick-support-in-surrounding--autoclosing-pairs)
 - [Fix sideload crash when failed to delete sideloaded channel when debugging](#fix-sideload-crash-when-failed-to-delete-sideloaded-channel)
 - [Add app dropdown menu for ECP registry link](#add-app-dropdown-menu-for-ecp-registry-link)
 - [Enums as class initial values in BrighterScript](#enums-as-class-initial-values)
