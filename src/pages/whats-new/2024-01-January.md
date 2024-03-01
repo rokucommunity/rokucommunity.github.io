@@ -23,7 +23,7 @@ Here's a screen shot of the modal.
 
 
 ## Fix create-vsix
-<!-- 2024-01-20 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/540 -->
+<!-- 2024-01-19 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/540 -->
 
 Overhauls the `create-vsix` github action, it should be much better at building vsix that depend on changes that span multiple projects all having the same branch name.
 
@@ -88,76 +88,8 @@ Convert all internal usage of `stagingFolderPath` to `stagingDir`. Still support
 
 # BrighterScript
 
-## Fix transpile for non-namespaced enums in namespaced functions
-<!-- 2023-12-08 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/985 -->
-
-Fixes a critical transpile bug where non-namespaced enums used in namespaced function blocks would be left untranspiled!
-
-![image](https://github.com/rokucommunity/brighterscript/assets/2544493/5d47b4ad-5285-4548-9212-a0c5be5926ef)
-
-
-
-## Add check for onChange function
-<!-- 2023-12-18 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/941 -->
-
-Issue: https://github.com/rokucommunity/brighterscript/issues/939
-
-Add check for onChange functions in xml files
-
-
-## Fix multi-namespace class inheritance transpile bug
-<!-- 2023-12-20 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/990 -->
-
-Fixes a bug with class inheritance where an ancestor 2+ levels higher would get the wrong super index, but only when that ancestor was a namespace-relative reference from a different namespace than the originating class. 
-
-Consider this code example
-```brighterscript
-namespace alpha
-    class One
-    end class
-end namespace
-
-namespace beta
-    class Two extends alpha.One
-    end class
-
-    class Three extends Two
-    end class
-end namespace
-
-namespace charlie
-    class Four extends beta.Three
-    end class
-end namespace
-```
-
-The inheritance chain for `Four` is: `Four` -> `beta.Three` -> `Two` -> `alpha.One`. 
-The bug occurs when trying to find `Two` because it's a namespace-relative lookup. BrighterScript was trying to find `charlie.Two` instead of `beta.Two`. 
-
-This resulted in the wrong super index, causing a stackoverflow at runtime.
-
-
-
-## Prevent errors when using enums in a file that's not included in any scopes
-<!-- 2023-12-24 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/995 -->
-
-When running compilation on one of our projects I encountered this error:
-
-```
-Error when calling plugin BscPlugin.beforeFileTranspile: TypeError: Cannot read properties of undefined (reading 'getEnumMemberFileLink')
-    at BrsFilePreTranspileProcessor.getEnumInfo (/Users/jjunker/code/my-application/common/temp/node_modules/.pnpm/brighterscript@0.65.14/node_modules/brighterscript/dist/bscPlugin/transpile/BrsFilePreTranspileProcessor.js:38:32)
-    <long stack trace here>
-```
-
-This occurs when a file which uses enums is not found in any scope. The relevant unit test wasn't testing enums and was suppressing errors, so I expanded the functionality of the unit test. The actual fix is the added null coalescing operator on line 44 of `src/bscPlugin/transpile/BrsFilePreTranspileProcessor.ts`.
-
-There are some changes here that are not directly tied to the bug fix at hand. This is because I traced through other usages of `Program.getFirstScopeForFile` to check whether any other locations might have the same error. Doing so lead me to `src/bscPlugin/CallExpressionInfo.ts`. This file correctly checks for nullishness and so contains no errors, but the type signatures weren't fully specific and I changed them while debugging. I can back out these changes if so desired.
-
-I also added `| undefined` to a few signatures for cases where a value may be undefined. I find this to be helpful even with strict null checks turned off, but I also can tell that it's unidiomatic for this codebase so I can remove these additional annotations if you'd prefer the change without them.
-
-
 ## Improve null safety
-<!-- 2024-01-04 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/996 -->
+<!-- 2024-01-03 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/996 -->
 
 This adds a second tsconfig which can be used to view null safety errors, and fixes a handful of them. Nothing here should change runtime behavior and I've aimed to make the changes as noninvasive as possible.
 
@@ -405,7 +337,7 @@ In transpiled code:
 
 
 ## Add plugin hooks for getDefinition
-<!-- 2024-01-31 (for v0.65.20 released on 2024-01-31), https://github.com/RokuCommunity/brighterscript/pull/1045 -->
+<!-- 2024-01-30 (for v0.65.20 released on 2024-01-30), https://github.com/RokuCommunity/brighterscript/pull/1045 -->
 
 Allow plugins to contribute to `go to definition` results in the language server
 
@@ -515,13 +447,10 @@ Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscrip
 -   [@georgejecook (George Cook)](https://github.com/georgejecook)
     -   adds support for libpkg prefix ([PR #1017](https://github.com/RokuCommunity/brighterscript/pull/1017))
 -   [@josephjunker (Joseph Junker)](https://github.com/josephjunker)
-    -   Prevent errors when using enums in a file that's not included in any scopes ([PR #995](https://github.com/RokuCommunity/brighterscript/pull/995))
     -   Improve null safety ([PR #996](https://github.com/RokuCommunity/brighterscript/pull/996))
     -   add documentation on pruneEmptyCodeFiles to the README ([PR #1012](https://github.com/RokuCommunity/brighterscript/pull/1012))
     -   Improving null safety: Add FinalizedBsConfig and tweak plugin events ([PR #1000](https://github.com/RokuCommunity/brighterscript/pull/1000))
     -   Refactor bsconfig documentation ([PR #1024](https://github.com/RokuCommunity/brighterscript/pull/1024))
--   [@luis-soares-sky (Luis Soares)](https://github.com/luis-soares-sky)
-    -   Fix multi-namespace class inheritance transpile bug ([PR #990](https://github.com/RokuCommunity/brighterscript/pull/990))
 -   [@markwpearce (Mark Pearce)](https://github.com/markwpearce)
     -   Fixes transpiles of Typecasts wrapped in parens ([PR #998](https://github.com/RokuCommunity/brighterscript/pull/998))
     -   Adds Diagnostics for Member Accessibility  ([PR #1004](https://github.com/RokuCommunity/brighterscript/pull/1004))
@@ -534,10 +463,7 @@ Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscrip
     -   Backport v1 syntax changes ([PR #1034](https://github.com/RokuCommunity/brighterscript/pull/1034))
 -   [@MikeAlMartinez (Michael Martinez)](https://github.com/MikeAlMartinez)
     -   Prevent publishing of empty files ([PR #997](https://github.com/RokuCommunity/brighterscript/pull/997))
--   [@MilapNaik (Milap Naik)](https://github.com/MilapNaik)
-    -   Add check for onChange function ([PR #941](https://github.com/RokuCommunity/brighterscript/pull/941))
 -   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
-    -   Fix transpile for non-namespaced enums in namespaced functions ([PR #985](https://github.com/RokuCommunity/brighterscript/pull/985))
     -   Adds a `findChildren` function on AstNode ([PR #1010](https://github.com/RokuCommunity/brighterscript/pull/1010))
     -   Assign `.program` to the builder BEFORE emitting `afterProgramCreate` event ([PR #1011](https://github.com/RokuCommunity/brighterscript/pull/1011))
     -   Fix cross namespace collision detection ([PR #1008](https://github.com/RokuCommunity/brighterscript/pull/1008))
