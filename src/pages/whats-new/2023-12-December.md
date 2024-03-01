@@ -1,6 +1,6 @@
 ---
 date: December 2023
-summary: Changes to vscode-brightscript-language, brighterscript, roku-deploy, roku-debug, brs, promises
+summary: Find missing function refs in XML, brighterscript gets optional keyword, brs optional chaining fixes and added try/catch, brighterscript alphas get better name collision detection
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
@@ -8,23 +8,15 @@ We had another solid month full of great improvements to the RokuCommunity tools
 
 There are many updates in this version that we hope you'll like, some of the key highlights include:
 
-- [Editor](#editor)
-    - [Add check for onChange function](#add-check-for-onchange-function)
-- [BrighterScript](#brighterscript)
-    - [Add `optional` modifier for interface and class members](#add-optional-modifier-for-interface-and-class-members)
-    - [Correct RANGE in template string when dealing with quotes in annotations](#correct-range-in-template-string-when-dealing-with-quotes-in-annotations)
-    - Transpile fixes [here](#fix-transpile-for-non-namespaced-enums-in-namespaced-functions) and [here](#fix-multi-namespace-class-inheritance-transpile-bug)
-    - [Load `manifest` from files array instead of root of project](#load-manifest-from-files-array-instead-of-root-of-project)
-- [brs](#brs)
-    - [Fix optional chaining implementation side effect](#fix-optional-chaining-implementation-side-effect)
-    - [Implemented missing `ifEnum` methods in `roArray` and `roAssociativeArray`](#implemented-missing-ifenum-methods-in-roarray-and-roassociativearray)
-    - [Add stub try/catch implementation](#add-stub-trycatch-implementation)
-- [BrighterScript Preview features](#preview-features)
-    - [Classes do not include AA members](#classes-do-not-include-aa-members)
-    - [General purpose name collision diagnostic](#general-purpose-name-collision-diagnostic)
-    - [Make `roSGNode` and `roSGNodeNode` the same](#make-rosgnode-and-rosgnodenode-the-same)
-- [For Contributors](#for-contributors)
-    - [fix the create-package script](#fix-the-create-package-script)
+- [Add check for onChange function in XML files in the editor](#add-check-for-onchange-function)
+- [Add `optional` modifier for interface and class members in BrighterScript](#add-optional-modifier-for-interface-and-class-members)
+- [Correct RANGE in template string when dealing with quotes in annotations](#correct-range-in-template-string-when-dealing-with-quotes-in-annotations)
+- [Load `manifest` from files array instead of root of project](#load-manifest-from-files-array-instead-of-root-of-project)
+- [Classes do not include AA members in the BrighterScript alpha releases](#classes-do-not-include-aa-members)
+- [General purpose name collision diagnostic](#general-purpose-name-collision-diagnostic)
+- [Combine `roSGNode` and `roSGNodeNode` interfaces](#make-rosgnode-and-rosgnodenode-the-same)
+- [Several fixes in the brs emulator](#brs)
+- [Fix the `create-package` script to help contributors](#fix-the-create-package-script)
 
 
 # Editor

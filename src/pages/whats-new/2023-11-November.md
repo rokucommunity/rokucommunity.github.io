@@ -1,10 +1,27 @@
 ---
 date: November 2023
-summary: Changes to vscode-brightscript-language, brighterscript, roku-deploy, roku-debug, brs
+summary: Warn when developer mode is disabled, auto-enable debug protocol testing and results, brs emulator optional chaining and bugfixes, better bsc alpha performance
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
 This month we ran a trial of auto-enabling the debug protocol by default. We added several much-needed performance improvements in the brighterscript v0.66 alphas. We fixed a few bugs in the brs emulator, improved our telemetry tracking, added a few improvements to the dev experience for our RokuCommunity contributors, and a lot more! As always, many thanks to all who have worked so hard and contributed this month!
+
+
+There are many updates in this version that we hope you'll like, some of the key highlights include:
+
+- [Issue of the month](#issue-of-the-month)
+- [Notification when developer mode is disabled in the editor](#notification-when-developer-mode-is-disabled)
+- [Testing auto-enabled debug protocol on 12.5 devices](#testing-auto-enabled-debug-protocol-on-125-devices)
+- [Backtick support in surrounding & autoClosing pairs](#backtick-support-in-surrounding-autoclosing-pairs)
+- [Fix sideload crash when failed to delete sideloaded channel when debugging](#fix-sideload-crash-when-failed-to-delete-sideloaded-channel)
+- [Add app dropdown menu for ECP registry link](#add-app-dropdown-menu-for-ecp-registry-link)
+- [Enums as class initial values in BrighterScript](#enums-as-class-initial-values)
+- [Added optional interface properties in the BrighterScript alphas](#interface-optional-properties)
+- [Significantly improved completions performance](#completion-performance)
+- [Fixed roku-deploy bug that wouldn't wait for package to finish downloading before exiting](#wait-for-file-stream-to-close-before-resolving-promise)
+- [Several fixes in the brs emulator](#brs)
+- [Add `create-package` label build script to help contributors test pull requests](#add-create-package-label-build-script)
+
 
 ## We need your help
 
