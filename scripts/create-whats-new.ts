@@ -807,7 +807,7 @@ function findAndSplice<T>(list: T[], cb: (x: T) => boolean | undefined) {
 }
 
 const options = yargs(hideBin(process.argv))
-    .usage('$0', 'BrighterScript, a superset of Roku\'s BrightScript language')
+    .usage('$0', 'Generate a series of whats-new pages based on the community tools commit history')
     .help('help', 'View help information about this tool.')
     .option('projects', { type: 'array', description: 'A list of the projects that will be used for this whats-new page?', default: projects })
     .option('force', { type: 'boolean', description: 'Should the whats-new post be created even if it will overwrite a previous one?', default: false })
