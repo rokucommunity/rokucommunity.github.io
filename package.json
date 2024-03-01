@@ -5,8 +5,8 @@
   "private": true,
   "scripts": {
     "preversion": "npm run lint && npm run check-format && npm run build",
-    "dev": "astro dev",
-    "start": "astro dev",
+    "dev": "npm run start",
+    "start": "astro dev --host",
     "build": "astro build",
     "prepreview": "npm run build",
     "preview": "astro preview",
