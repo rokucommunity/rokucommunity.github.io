@@ -4,12 +4,38 @@ summary: Changes to vscode-brightscript-language, brighterscript, roku-debug, br
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
+## We need your help
+The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
 
+-   [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language/issues)
+-   [brighterscript](https://github.com/rokucommunity/brighterscript/issues)
+-   [brighterscript-formatter](https://github.com/rokucommunity/brighterscript-formatter/issues)
+-   [roku-deploy](https://github.com/rokucommunity/roku-deploy/issues)
+-   [roku-debug](https://github.com/rokucommunity/roku-debug/issues)
+-   [bslint](https://github.com/rokucommunity/bslint/issues)
+-   [ropm](https://github.com/rokucommunity/ropm/issues)
+-   [brs](https://github.com/rokucommunity/brs/issues)
+-   [roku-report-analyzer](https://github.com/rokucommunity/roku-report-analyzer/issues)
+-   [@rokucommunity/promises](https://github.com/rokucommunity/promises/issues)
+-   [roku-http](https://github.com/rokucommunity/roku-http)
+
+## Issue of the month
+
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the various RokuCommunity codebases.
+
+This month, we'd like to draw attention to [bslint#41](https://github.com/rokucommunity/bslint/issues/41). Many linters support enforcing that all files have a trailing newline which encourages consistency across your project. @rokucommunity/bslint does not currently have a rule for this, which is something we'd love to see added. Here's how the error looks in a typescript project using eslint:
+
+![image](https://github.com/rokucommunity/bslint/assets/2544493/e5458612-4667-4a03-a1af-21f7c6536a3e)
+
+If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/bslint/issues/41) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
 # Editor
 ## Always request screenshot on initial load, add ability to copy screenshot
 <!-- 2023-12-20 (for v2.45.10 released on 2024-01-10), https://github.com/RokuCommunity/vscode-brightscript-language/pull/536 -->
 
-Some small improvements to screenshot capability to make it easier to share screenshots from device. Changed it to request an initial screenshot where as before if you didn't have continuous screenshot capture on it would not request any on its own unless you clicked refresh
+We fixed a few bugs in the "Device View" panel related to downloading a screenshot. Previously, if you didn't have the continuous screenshot capture enabled, it would not request any on its own unless you clicked refresh. Now it requests an initial screenshot which mitigates the issue.
+
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/2d45bf7c-ce14-4f4f-a5cc-e15b69687f97)
+
 
 
 ## Pass the modal property from the PopupMessageEvent
@@ -31,7 +57,7 @@ Overhauls the `create-vsix` github action, it should be much better at building 
 ## Fix the install-local and watch-all scripts
 <!-- 2024-01-24 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/541 -->
 
-The install-local script currently only links the sibling projects into vscode-brightscript-language. However, some of the other projects depend on each other as well, so they should all be inter-linked. 
+The install-local script currently only links the sibling projects into vscode-brightscript-language. However, some of the other projects depend on each other as well, so they should all be inter-linked.
 
 Updates the watch-all script to run the projects in order as well so we ensure the dependent projects are built before spinning up the next watcher.
 
@@ -54,7 +80,7 @@ Fixes a bug related to stagingDir and stagingFolderPath when `stagingDir` is als
 ## Expose debug protocol port
 <!-- 2024-01-10 (for v0.21.0 released on 2024-01-10), https://github.com/RokuCommunity/roku-debug/pull/182 -->
 
-Adds `controlPort` launch setting to allow overriding the port used for the debug protocol control port. 
+Adds `controlPort` launch setting to allow overriding the port used for the debug protocol control port.
 
 Also adds a little bit of normalization to the config related to these ports.
 
@@ -80,7 +106,7 @@ Adds support for running roku-debug in "debug adapter protocol" (i.e. "DAP") mod
 ## Use `stagingDir` instead of stagingFolderPath
 <!-- 2024-01-19 (for v0.21.2 released on 2024-01-25), https://github.com/RokuCommunity/roku-debug/pull/185 -->
 
-Convert all internal usage of `stagingFolderPath` to `stagingDir`. Still support `stagingFolderPath` as a launch option, but we immediately set stagingDir to stagingFolderPath. 
+Convert all internal usage of `stagingFolderPath` to `stagingDir`. Still support `stagingFolderPath` as a launch option, but we immediately set stagingDir to stagingFolderPath.
 
 `stagingDir` wins, and if not set, check for `stagingFolderPath`.
 
@@ -155,7 +181,7 @@ This PR changes `GroupedExpression` so that if the expression that is grouped is
 
 
 
-## Adds Diagnostics for Member Accessibility 
+## Adds Diagnostics for Member Accessibility
 <!-- 2024-01-09 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1004 -->
 
 - Adds diagnostics for setting unknown fields of classes
@@ -172,16 +198,16 @@ Protected members are available in the class that defined them, and all sub clas
 
 https://github.com/rokucommunity/brighterscript/assets/810290/bcb37181-ea2f-4f7f-8892-47e4105ca37a
 
-Solves #966 
-Solves #967 
-Solves #918 
+Solves #966
+Solves #967
+Solves #918
 
 
 
 ## Adds a `findChildren` function on AstNode
 <!-- 2024-01-11 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1010 -->
 
-Adds a `.findChildren()` method on `AstNode` to help look for all nodes of a specific type (like namespaces, classes, consts, etc). The matcher is just a function, so the evaluation can work for anything. 
+Adds a `.findChildren()` method on `AstNode` to help look for all nodes of a specific type (like namespaces, classes, consts, etc). The matcher is just a function, so the evaluation can work for anything.
 
 
 ## Assign `.program` to the builder BEFORE emitting `afterProgramCreate` event
@@ -248,7 +274,7 @@ Fixes a bug where a const and a function are not allowed to have the same name a
 ## Renamed `File` interface to `BscFile`
 <!-- 2024-01-19 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1013 -->
 
-Resolves #1005 
+Resolves #1005
 
 Renames `File` interface to `BscFile` and removes the `BscFile` type. This is so this project does not clash with the Javascript `File` type.
 
@@ -261,7 +287,7 @@ Renames `File` interface to `BscFile` and removes the `BscFile` type. This is so
 
 This PR just makes the assumption that if something is the same name (and it's deeply nested) that it's probably the same type.
 
-I think that's a fair assumption. 
+I think that's a fair assumption.
 
 We can't make that assumption at the top level, because we have to do checks at the top level for differences in the same file... in that case, types with the same name *might* be different.
 
@@ -347,9 +373,9 @@ Allow plugins to contribute to `go to definition` results in the language server
 
 Fixes parsing and transpile issues with mutli-index `IndexedGetExpression` and `IndexedSetStatement`.
 
-The solution is a little "icky", because we can't break backwards compatability, so I had to add `additionalIndexes` to the two AST node types. In v1, we should merge those into a single `.indexes` prop on the nodes instead. 
+The solution is a little "icky", because we can't break backwards compatability, so I had to add `additionalIndexes` to the two AST node types. In v1, we should merge those into a single `.indexes` prop on the nodes instead.
 
-Fixes #1048 
+Fixes #1048
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/2544493/b3051453-1374-4599-8232-ffb07345e8a7)
 
@@ -372,14 +398,14 @@ Fixes #1048
 Updated 3 things:
 
 - Fixed the printing of positive number to show a leading space before positive numbers, just like Roku.
-- Fixed the comparison involving Long numbers 
+- Fixed the comparison involving Long numbers
 - Updated all affected test cases.
 
 
 ## Fixed #38 - Improved context handling for Callables
 <!-- 2023-12-11 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/40 -->
 
-The original solution to identify the context (m object) for Callables was relying on re-evaluating the source on a dot chained call, that had performance issues, and caused the side effect of issue #9, the solution I implemented for it was partial, and did not solved the performance issue fully. 
+The original solution to identify the context (m object) for Callables was relying on re-evaluating the source on a dot chained call, that had performance issues, and caused the side effect of issue #9, the solution I implemented for it was partial, and did not solved the performance issue fully.
 
 Now I saved a reference for the context for each callable, eliminating the need of re-evaluation, and fixed all side effects.
 
