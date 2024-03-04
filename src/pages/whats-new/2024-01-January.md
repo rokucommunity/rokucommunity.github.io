@@ -89,7 +89,7 @@ We added support for running roku-debug in Debug Adapter Protocol (DAP) mode for
 
 You can activate this mode like this:
 
-```
+```bash
 npx roku-debug --dap
 ```
 
@@ -255,14 +255,14 @@ Fixes #986
 
 The BrightScript runtime doesn't like when parentheses are used exclusively to wrap a variable. For example, this will cause a run-time error:
 
-```brs
+```brightscript
 sub addSomeProperty(obj)
       (obj).append({key: "value"})
 end sub
 ```
 
 This was causing issues when transpiling a typecast expression like this::
-```brs
+```brightscript
 sub addSomeProperty(obj)
       (obj as roAssociativeArray).append({key: "value"})
 end sub

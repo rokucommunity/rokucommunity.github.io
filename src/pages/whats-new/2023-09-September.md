@@ -172,7 +172,7 @@ There's a new option in brighterscript called `bslibDestinationDir` which you ca
 
 **bsconfig.json**
 
-```jsonc
+```json
 {
     "rootDir": "./src",
     "bslibDestinationDir": "./dist/roku_modules/bslib"

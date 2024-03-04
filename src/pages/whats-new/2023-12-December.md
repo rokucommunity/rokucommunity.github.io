@@ -187,7 +187,7 @@ We fixed the optional chaining implementation in the BRS emulator. There was a b
 
 Code like this should now run correctly in the emulator:
 
-```brighterscript
+```vb
 function test_issue_30()
     testA = ["apple", 2, "banana", "orange", 5, "grape", "pear"]
     for fruit = 0 to testA.count()-1
