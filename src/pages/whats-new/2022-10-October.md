@@ -6,7 +6,7 @@ layout: ../../layouts/WhatsNewPost.astro
 ---
 
 # Overview
-Welcome to the October 2022 edition of "What's New in RokuCommunity". Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
+Welcome to the October 2022 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 ## Brand new website!
 We are pleased to present our brand new website, [rokucommunity.github.io](https://rokucommunity.github.io). This is a great resource for showcasing all of the different projects and tools that are managed by RokuCommunity.

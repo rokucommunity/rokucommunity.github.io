@@ -4,7 +4,7 @@ summary: SceneGraph Inspector enhancements, BrighterScript bug fixes, new bslint
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
-Welcome to the December 2022 edition of "What's New in RokuCommunity". Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
+Welcome to the December 2022 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 Here are some of the key highlights:
 - [SceneGraph Inspector properly orders ArrayGrid children](#scenegraph-inspector-properly-orders-arraygrid-children)

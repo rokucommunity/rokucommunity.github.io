@@ -4,7 +4,7 @@ summary: Find missing function refs in XML, brighterscript gets optional keyword
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
-Welcome to the December 2023 edition of "What's New in RokuCommunity". Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
+Welcome to the December 2023 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 We had another solid month full of great improvements to the RokuCommunity tools, even though many of us were off for part of the month to celebrate the holidays. I think that goes to show just how dedicated some of our community contributors are, and we are so grateful for their help and support!
 

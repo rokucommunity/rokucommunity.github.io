@@ -251,11 +251,11 @@ class Runner {
             `layout: ../../layouts/WhatsNewPost.astro`,
             `---`,
             `# Overview`,
-            `Welcome to the ${monthNames[this.startDate.getMonth()]} ${this.startDate.getFullYear()} edition of "What's New in RokuCommunity". Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.`,
+            `Welcome to the ${monthNames[this.startDate.getMonth()]} ${this.startDate.getFullYear()} edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.`,
             '',
             undent`
                 ## We need your help
-                The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
+                The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
 
                 -   [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language/issues)
                 -   [brighterscript](https://github.com/rokucommunity/brighterscript/issues)
@@ -273,7 +273,7 @@ class Runner {
 
                 In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the various RokuCommunity codebases.
 
-                This month, we'd like to draw attention to [SOME_GH_ISSUE](SOME_URL). SOME_DESCRIPTION
+                This month, we'd like to highlight [SOME_GH_ISSUE](SOME_URL). SOME_DESCRIPTION
 
 
                 If you're interested in working on this feature, please comment on the [github issue](SOME_LINK) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)

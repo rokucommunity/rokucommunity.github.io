@@ -4,7 +4,7 @@ summary: Changes to vscode-brightscript-language, brighterscript, roku-debug
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
-Welcome to the November 2022 edition of "What's New in RokuCommunity". Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
+Welcome to the November 2022 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 ## Roku Dev Summit Presentation
 [Bronley Plumb](https://github.com/TwitchBronBron) and [Christopher Dwyer-Perkins](https://github.com/chrisdp) had the priviledge to present at the Roku 2022 Developer Summit on November 2. It was a great opportunity to share an overview of the Language features and debugging experience in the VSCode extension, as well as an overview of the popular BrighterScript Language. You can watch the presentation in the link below:
