@@ -71,7 +71,7 @@ Here's a quick example of some of the awesome things you can do with promises. A
 
 Here's an example of how you can do that using promises:
 
-```vb
+```brightscript
 function logIn()
     context = {
         username: invalid,
@@ -201,7 +201,7 @@ We hope to eventually have these values be included in the generated ouptput man
 
 **bsconfig.json**
 
-```jsonc
+```json
 {
     "rootDir": "./src",
     "bs_const": {
