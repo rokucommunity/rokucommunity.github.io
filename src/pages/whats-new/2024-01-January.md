@@ -230,8 +230,22 @@ We've improved how the brightscript and brighterscript formatter handles spaces 
 
 
 
-# Preview features
+# BrighterScript Preview features
 <!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->
+
+## Renaming brighterscript v0.66 alphas to v1
+We've decided to transition BrighterScript towards a v1.0.0 release!
+
+As we've been working on the BrighterScript v0.66 alphas, we noticed that there were more and more breaking changes that we wanted to implement. It became clear that we were actually implementing a full major version change.
+
+BrighterScript was introduced as an experiment, that slowly grew into a product that is relied on by many production applications on a daily basis. At this point, we owe it to the community to signal that we have confidence in the project. We can think of no better way to do that than to move to a v1 release.
+
+We're _hopeful_ that the v1 release will be ready by this summer, but we can't guarantee a release date at this time (we're very busy here at RokuCommunity). You can track our progress in the [v1.0.0 milestone](https://github.com/rokucommunity/brighterscript/milestone/1).
+
+At the time of this publication, the latest brighterscript v1 alpha is `v1.0.0-alpha.27`. You can try out the latest version of brighterscript v1 alphas by running:
+```bash
+npm install brighterscript@next
+```
 
 
 ## Fixes transpiles of Typecasts wrapped in parens
@@ -239,7 +253,7 @@ We've improved how the brightscript and brighterscript formatter handles spaces 
 
 Fixes #986
 
-Roku doesn't like when parens are used just to wrap a variable, for example, this will cause a run-time error:
+The BrightScript runtime doesn't like when parentheses are used exclusively to wrap a variable. For example, this will cause a run-time error:
 
 ```brs
 sub addSomeProperty(obj)
@@ -247,92 +261,77 @@ sub addSomeProperty(obj)
 end sub
 ```
 
-this causes a problem when we want to typecast a single variable in order to code completion, for example:
+This was causing issues when transpiling a typecast expression like this::
 ```brs
 sub addSomeProperty(obj)
       (obj as roAssociativeArray).append({key: "value"})
 end sub
 ```
 
-
-This PR changes `GroupedExpression` so that if the expression that is grouped is a typecast, it does not include the parens.
+So to mitigate that, we've fixed the transpiler to so that if an expression that is grouped is a typecast, it does not include the parentheses.
 
 
 ## Adds Diagnostics for Member Accessibility
 <!-- 2024-01-09 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1004 -->
 
-- Adds diagnostics for setting unknown fields of classes
+We've added diagnostics for setting unknown fields of classes
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/957f8878-8f81-46e8-8343-f80bea0b1bf8)
+
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/79191afa-93e3-423e-b290-15a8b7d2fa11)
 
 
-- Adds diagnostics for accessing `private` or `protected` class members when you shouldn't have access to them.
 
-Private members are available in the class that defined them
+## Diagnostics for accessing `private` or `protected` class members externally
+<!-- 2024-01-09 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1004 -->
+
+We've added diagnostics for accessing `private` or `protected` class members when you shouldn't have access to them.
+
+Private members are available in the class that defined them.
 Protected members are available in the class that defined them, and all sub classes.
 
 
 https://github.com/rokucommunity/brighterscript/assets/810290/bcb37181-ea2f-4f7f-8892-47e4105ca37a
 
-Solves #966
-Solves #967
-Solves #918
-
-
 
 ## Adds missing Completion Items
 <!-- 2024-01-11 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1009 -->
 
-- Adds `true` `false` and `invalid` when appropriate
-- Ensures function parameters are included in completion results, even if you're at the end of the function block
-- `private` and `protected` class members only are included in completion results when they are accessible
+We've added Adds `true` `false` and `invalid` to completion items when appropriate. We also ensure that function parameters are included in completion results, even if you're at the end of the function block. `private` and `protected` class members only are included in completion results when they are accessible
 
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/352c9685-43e6-4b99-94db-9cd28395c9cd)
 
 
-solves #988
-
-
 ## Remove `Parser.references`
 <!-- 2024-01-22 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1021 -->
 
-Basically, removes all the hard-coded/static lists in `Parser.references` and instead uses cached AST walks, that are invalidated during BRS File Validation time... At that point in time, all changes from plugins should be done, and we can trust the walk for finding quick lookups for various types of expressions/statements.
+We've completely removed the `Parser.references` collection from BrighterScript. Historically, this was used to improve performance for plugins. However, the AST walking logic is significantly faster now, and we have much better patterns and AST detection mechanisms, so we have decided to eliminate `Parser.references`.
 
+We've removed it because it causes confusion for plugins when trying to figure out how to properly make AST edits. Often an AST edit wouldn't update the `Parser.references` collection and thus making future plugin modifications complicated or out of sync.
 
-
-
-## Fixes Compatibility checks for types defined recursively.
-<!-- 2024-01-19 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1015 -->
-
-This PR just makes the assumption that if something is the same name (and it's deeply nested) that it's probably the same type.
-
-I think that's a fair assumption.
-
-We can't make that assumption at the top level, because we have to do checks at the top level for differences in the same file... in that case, types with the same name *might* be different.
-
+If you're using this in your plugin, please consider switching to an AST walk function.
 
 
 
 ## Renamed `File` interface to `BscFile`
 <!-- 2024-01-19 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1013 -->
 
-Resolves #1005
-
-Renames `File` interface to `BscFile` and removes the `BscFile` type. This is so this project does not clash with the Javascript `File` type.
-
-
+When the file API first landed, we had been using the interface name `File`. However, there's already a global interface with that name in TypeScript, which caused lots of confusion when writing plugins. To mitigate this, we have renamed our interface `BscFile`. TypeScript will correctly prompt for imports when using this interface, and it no longer collides with the global interface.
 
 
 ## Fix cross namespace collision detection
 <!-- 2024-01-19 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1008 -->
 
-Fixes a bug where a const and a function are not allowed to have the same name across different namespaces.
+We fixed a bug where a `const` and a function are not allowed to have the same name across different namespaces. This is now supported (as expected).
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/4798873b-14d8-48ed-85f8-73c7d57b5b1e)
 
 
 ## XML fields of type color can accept strings or integers
 <!-- 2024-01-18 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1016 -->
+
+XML fields with `type="color"` can now accept strings _or_ integers.
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/43f5bbc0-9d6c-4089-82cc-a5c806d37883)
 
@@ -341,28 +340,23 @@ Fixes a bug where a const and a function are not allowed to have the same name a
 ## Updates the Member types for Component Fields
 <!-- 2024-01-13 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1014 -->
 
-Includes all the fields types as defined here: https://developer.roku.com/en-ca/docs/references/scenegraph/xml-elements/interface.md#attributes
+We updated BrighterScript's internal understanding of `<interface>` function and field entries as defined here: https://developer.roku.com/docs/references/scenegraph/xml-elements/interface.md#attributes
 
-Fixes (in particular) the `type="array"` isse @georgejecook has.
-
+We also fixed a bug with the way `type="array"` was handled, so that should no longer be causing diagnostics when used correctly.
 
 
 ## Adds a `findChildren` function on AstNode
 <!-- 2024-01-11 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1010 -->
 
-Adds a `.findChildren()` method on `AstNode` to help look for all nodes of a specific type (like namespaces, classes, consts, etc). The matcher is just a function, so the evaluation can work for anything.
-
-
+We've added a new method on `AstNode` called `.findChildren()` to support finding all nodes of a specific type (like namespaces, classes, consts, etc). The matcher is just a function, so the evaluation can work for anything.
 
 
 # Documentation
 
-
-
 ## Refactor bsconfig documentation
 <!-- 2024-01-24 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1024 -->
 
-The current README feels a little intimidating to me because of how long it is, so this PR pulls some of the details from it out into their own pages.
+We've made some large changes to the structure of the BrighterScript readme:
 
 List of changes:
 
@@ -375,65 +369,41 @@ List of changes:
 - Add cross-links to bsconfig documentation, connecting sections together
 - A few tweaks to markdown formatting which do not affect the rendered page, such as adding or removing some extra newlines for consistency
 - Remove reference to `ignoreErrorCodes` flag in "bs ignore" documentation
-- Remove self-effacing statement about project being likely to contain bugs in "bs ignore" documentation :)
-
-Other than these changes, the text is solely rearranged from the current version with no modifications. If desired I can undo some of these changes, such as not alphabetizing the documentation.
-
-I've manually tested all of the links within the bsconfig documentation page but the use of absolute hyperlinks prevents me from manually testing the links from the error suppression documentation page to the bsconfig documentation page.
+- Remove self-effacing statement about project being likely to contain bugs in "bs ignore" documentation
 
 
-
-# Misc
 
 # For Contributors
 
-## Improve null safety
+## BrighterScript null safety improvements
 <!-- 2024-01-08 (for v0.65.16 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/996 -->
 
-This adds a second tsconfig which can be used to view null safety errors, and fixes a handful of them. Nothing here should change runtime behavior and I've aimed to make the changes as noninvasive as possible.
-
-- I've been loose with test files, preferring unsafe assertions to code changes in them
-- When possible, I've added annotations rather than modify runtime code
-
-I've added explicit type annotations and intermediate interfaces for the return types of some functions and methods which were previously implicit. In some cases this helps inference go through without changes and in other cases it just made it easier for me to determine what exactly was undefined in a nested object.
-
-I've skipped a couple of the harder errors. Most notably, there seems to be an implicit distinction between an "input BsConfig" and an "initialized BsConfig", in that many fields in the BsConfig class are optional but assumed to be present during actual processing. The potentially pedantic way to address this would be to make a second `InitializedBsConfig` type which is used internally and is produced by parsing a BsConfig, but this would be significantly more invasive than what I am aiming for here.
-
-Please let me know if you would prefer any modifications to my approach.
-
-
-## Improving null safety: Add FinalizedBsConfig and tweak plugin events
-<!-- 2024-01-22 (for v0.65.18 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1000 -->
-
-This only reduces the total number of null check errors by 30, but it pushes the errors a little farther towards the edges. I've resolved most of the errors in `Program` and `ProgramBuilder`. I believe this may be a breaking change, if plugins are allowed to call `new Program()`, because the interface to `Program`'s constructor is now more strict.
-
-I'm a little unsure of what to do about `FinalizedBsConfig.rootDir` and `FinalizedBsConfig.stagingDir`. I'd like to make them required, because a number of places assume that they exist. AFAICT their default values come from roku-deploy though, rather than anywhere in `bsc`, and if I add the default values from roku-deploy to `normalizeConfig`, tons of tests break. I'm figuring that it's better to make incremental progress by making the other fields required than it is to risk breakage by making a more significant change to runtime behavior.
-
-I've added a unit test that asserts that the return value of `normalizeConfig` deeply matches an exact object. I added this test and confirmed that it was passing before making any changes to `normalizeConfig`. This is to give some level of confidence that behavior is unchanged, even though I've had to update the configs in a lot of other tests to satisfy the more strict types.
-
-The changes to the plugin interface are as I mentioned in Slack, and shouldn't be more restrictive than what already exists. I made the name a little prettier than what I originally used in the Slack thread.
+We've started the process of converting the entire BrighterScript codebase to be null safe (by enabling the `strictNullChecks` tsconfig.json setting). This month we've made some great progress. There's not much user-facing to discuss, but feel free to look through [#996](https://github.com/RokuCommunity/brighterscript/pull/996) and [#1000](https://github.com/RokuCommunity/brighterscript/pull/1000).
 
 
 ## Fix create-vsix
 <!-- 2024-01-19 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/540 -->
 
-Overhauls the `create-vsix` github action, it should be much better at building vsix that depend on changes that span multiple projects all having the same branch name.
+We've overhauled the `create-vsix` github action to improve inter-project linking when building custom vsix. It should be much better at building vsix that depend on changes that span multiple projects all having the same branch name.
+
+For contributors, all you really need to know is:
+ - add the `create-vsix` tag to a PR
+ - make sure inter-dependent projects all have the same branch name(like vscode-brightscript-language, roku-deploy, brighterscript, etc...)
+
+GitHub Actions will auto-generate a new vsix every time you push code to the PR, and a bot will comment with instructions on how to install that vsix.
+
+You can see an example on [this PR](https://github.com/rokucommunity/vscode-brightscript-language/pull/538#issuecomment-1973953167), but here's a screenshot:
+
+![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/d51ce6b3-030f-4d45-835a-5d005b27d64e)
 
 
 ## Fix the install-local and watch-all scripts
 <!-- 2024-01-24 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/541 -->
 
-The install-local script currently only links the sibling projects into vscode-brightscript-language. However, some of the other projects depend on each other as well, so they should all be inter-linked.
+The install-local script was only creating links between sibling projects into vscode-brightscript-language. However, some of the other projects depend on each other as well, so they should all be inter-linked.
 
-Updates the watch-all script to run the projects in order as well so we ensure the dependent projects are built before spinning up the next watcher.
+So we updated the watch-all script to run the projects in order as well so we ensure the dependent projects are built before spinning up the next watcher. This _does_ have the downside of showing all package.json and package-lock.json files as modified, but you can just undo the changes and run `npm install local` again when you need to get changes.
 
-
-***
-
-# TODO
-***Move these items to an appropriate section above, then delete this section***
-
-***
 
 # Thank you
 
