@@ -53,26 +53,13 @@ Here's a screenshot of the new popup:
 <img width="1100" alt="Screenshot 2024-01-08 091210" src="https://github.com/rokucommunity/vscode-brightscript-language/assets/118202694/c6d95683-7c9d-4fff-afa8-c89b93bf09f8">
 
 
-
-## Fix create-vsix
-<!-- 2024-01-19 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/540 -->
-
-Overhauls the `create-vsix` github action, it should be much better at building vsix that depend on changes that span multiple projects all having the same branch name.
-
-
-## Fix the install-local and watch-all scripts
-<!-- 2024-01-24 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/541 -->
-
-The install-local script currently only links the sibling projects into vscode-brightscript-language. However, some of the other projects depend on each other as well, so they should all be inter-linked.
-
-Updates the watch-all script to run the projects in order as well so we ensure the dependent projects are built before spinning up the next watcher.
-
-
 ## Sets `stagingDir` properly in DebugConfigurationProvider
 <!-- 2024-01-28 (for v2.45.13 released on 2024-01-28), https://github.com/RokuCommunity/vscode-brightscript-language/pull/543 -->
+<!-- 2024-01-19 (for v0.21.2 released on 2024-01-25), https://github.com/RokuCommunity/roku-debug/pull/185 -->
 
-Fixes a bug related to stagingDir and stagingFolderPath when `stagingDir` is also present in a root-level `bsconfig.json`
+We've deprecated the `stagingFolderPath` launch.json option in favor of the more standard `stagingDir` property. Both will still work for a while, but we recommend you move to `stagingDir` so you don't see those pesky "deprecated" messages in your launch.json. `stagingDir` wins, and if not set, check for `stagingFolderPath`.
 
+Along with that, we also fixed a bug with debug sessions and `launch.json` files related to `stagingDir` and `stagingFolderPath` when `stagingDir` is also present in a root-level `bsconfig.json`. Now it should properly load the `stagingDir` and (deprecated) `stagingFolderPath` properly when specified by launch.json.
 
 
 # Debugging
@@ -80,86 +67,171 @@ Fixes a bug related to stagingDir and stagingFolderPath when `stagingDir` is als
 ## Display a modal message when the we fail to upload a package to the device
 <!-- 2024-01-02 (for v0.20.15 released on 2024-01-08), https://github.com/RokuCommunity/roku-debug/pull/178 -->
 
+We've added better error detection around certain debug session failures, specifically when uploading the zip fails. You should now see a nice popup with a better error message.
 
-
+![image](https://github.com/rokucommunity/roku-debug/assets/2544493/0f12267d-9053-4593-a95c-2324842de769)
 
 ## Expose debug protocol port
 <!-- 2024-01-10 (for v0.21.0 released on 2024-01-10), https://github.com/RokuCommunity/roku-debug/pull/182 -->
 
-Adds `controlPort` launch setting to allow overriding the port used for the debug protocol control port.
+There's a new `launch.json` setting called `controlPort` which is used to interact with the [debug protocol](https://developer.roku.com/en-ca/docs/developer-program/debugging/socket-based-debugger.md).
 
-Also adds a little bit of normalization to the config related to these ports.
+Most developers won't need to change this, but if you're debugging through port forwarding, using an emulator, or some other nonstandard means, this should enable you to properly configure your launch settings.
 
+![image](https://github.com/rokucommunity/roku-debug/assets/2544493/db3100cc-162a-400f-b3c9-c83d06b2a076)
 
 ## Add cli flag to run dap as standalone process
 <!-- 2024-01-10 (for v0.21.0 released on 2024-01-10), https://github.com/RokuCommunity/roku-debug/pull/173 -->
 
-Adds support for running roku-debug in "debug adapter protocol" (i.e. "DAP") mode for use in IDEs.
+We added support for running roku-debug in "debug adapter protocol" (i.e. "DAP") mode for use in IDEs.
 
+`roku-debug` is the library that powers the debug session within vscode. However, with this setting, you can now use `roku-debug` to power debug sessions in other IDEs (like eclipse, vim/neovim, emacs, etc.). This should work with any editor that supports the [debug adapter protocol](https://microsoft.github.io/debug-adapter-protocol/implementors/adapters/).
 
-## Add some DAP info to the readme
-<!-- 2024-01-10 (for v0.21.0 released on 2024-01-10), ([2d06b10](https://github.com/RokuCommunity/roku-debug/commit/2d06b10)) -->
+You can activate this mode like this:
 
+```
+npx roku-debug --dap
+```
 
-
-
-## Fixing issues before release 0.21.0
-<!-- 2024-01-10 (for v0.21.0 released on 2024-01-10), ([5f459fc](https://github.com/RokuCommunity/roku-debug/commit/5f459fc)) -->
-
-
-
-
-## Use `stagingDir` instead of stagingFolderPath
-<!-- 2024-01-19 (for v0.21.2 released on 2024-01-25), https://github.com/RokuCommunity/roku-debug/pull/185 -->
-
-Convert all internal usage of `stagingFolderPath` to `stagingDir`. Still support `stagingFolderPath` as a launch option, but we immediately set stagingDir to stagingFolderPath.
-
-`stagingDir` wins, and if not set, check for `stagingFolderPath`.
-
+You'll typically need to configure your IDE to call the above command. If you've integrated this functionality into an IDE, please let us know so we can update our documentation to show how to configure it! [Here's](https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#brightscript) an example of how to configure DAP mode in neovim.
 
 
 # BrighterScript
 
-## Improve null safety
-<!-- 2024-01-03 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/996 -->
-
-This adds a second tsconfig which can be used to view null safety errors, and fixes a handful of them. Nothing here should change runtime behavior and I've aimed to make the changes as noninvasive as possible.
-
-- I've been loose with test files, preferring unsafe assertions to code changes in them
-- When possible, I've added annotations rather than modify runtime code
-
-I've added explicit type annotations and intermediate interfaces for the return types of some functions and methods which were previously implicit. In some cases this helps inference go through without changes and in other cases it just made it easier for me to determine what exactly was undefined in a nested object.
-
-I've skipped a couple of the harder errors. Most notably, there seems to be an implicit distinction between an "input BsConfig" and an "initialized BsConfig", in that many fields in the BsConfig class are optional but assumed to be present during actual processing. The potentially pedantic way to address this would be to make a second `InitializedBsConfig` type which is used internally and is produced by parsing a BsConfig, but this would be significantly more invasive than what I am aiming for here.
-
-Please let me know if you would prefer any modifications to my approach.
-
-
 ## Prevent publishing of empty files
-<!-- 2024-01-08 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/997 -->
+<!-- 2024-01-08 (for v0.65.16 released on 2024-01-08), https://github.com/RokuCommunity/brighterscript/pull/997 -->
 
-This PR seeks to fix Issue #981.
-
-The PR adds a config variable `pruneEmptyCodeFiles` which defaults to `false`. When set to `true`, brightscript files that are considered empty won't be published during transpilation. It also adds a `canBePruned` property to the Brs and XML files.
+We've added a new BrighterScript config property called `pruneEmptyCodeFiles` which defaults to `false`. When set to `true`, brightscript files that are considered empty won't be published during transpilation. It also adds a `canBePruned` property to the Brs and XML files.
 
 Currently Brs files are considered empty if they don't contain a `FunctionStatement`, `MethodStatement`, or a `ClassStatement`. I might have missed something here.
 
-I can't really think of any reason why an xml file would be considered empty so I've defaulted the value to true for now. One thing I have implemented here for XML files is, imports of empty scripts are removed. If a brightscript file that an xml files references has their `canBePruned` field return false, the associated import will be removed too.
+This also will remove imports of empty scripts. If a brightscript file that an xml files references has their `canBePruned` field return false, the associated import will be removed too.
 
 On a large internal project, this resulted in significant compile-time speedups.
 
-- **ultra 4800x (12.5):**
+- **ultra 4800x (OS 12.5):**
     - pruning off: 7250ms
     - pruning on:  4965ms
 
-- **stick4k 3800x (12.5):**
+- **stick4k 3800x (OS 12.5):**
     - pruning off: 5789ms
     - pruning on:  4342ms
 
-- **express 3960x (11.5):**
+- **express 3960x (OS 11.5):**
     - pruning off: 8232ms
     - pruning on:  6111ms
 
+## Assign `.program` to the builder BEFORE emitting `afterProgramCreate` event
+<!-- 2024-01-11 (for v0.65.17 released on 2024-01-16), https://github.com/RokuCommunity/brighterscript/pull/1011 -->
+
+We fixed a small BrighterScript plugin bug where where the `ProgramBuilder` doesn't have a reference to `.program` when the `afterProgramCreate` event fires. We solved this by assigning `.program` _before_ emitting the event.
+
+
+## adds support for libpkg prefix
+<!-- 2024-01-16 (for v0.65.17 released on 2024-01-16), https://github.com/RokuCommunity/brighterscript/pull/1017 -->
+
+BrighterScript has fixed a bug where component libraries that use `libpkg:/path/file.brs` in the script imports would result in files not being found.
+
+You can now use `libpkg:/` in xml script imports as well as brighterscript import statements.
+
+These both work now!
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/8c271506-bfe0-48cc-b610-2e0ad5ae93e3)
+
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/b34f6414-18eb-4891-a1a1-4dd26381399d)
+
+
+## Prevent overwriting the Program._manifest if already set on startup
+<!-- 2024-01-24 (for v0.65.18 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1027 -->
+
+BrighterScript has added some safeguards around manifest loading to improve the way plugins can interact with it. There's a hidden `_manifest` file on the `Program` class in BrighterScript. Some plugins use/abuse this to modify manifest values (to apply some preprocessing or sanitization).
+
+However, there have historically been some strange timing issues around this process. To mitigate those issues, BrighterScript will now _avoid_ replacing the manifest on startup if a plugin has already overwritten it.
+
+## Backport v1 syntax changes
+<!-- 2024-01-30 (for v0.65.19 released on 2024-01-30), https://github.com/RokuCommunity/brighterscript/pull/1034 -->
+
+If you weren't aware, we're working on a major revision of BrighterScript that includes type tracking, much better type safety, and many other improvements.
+
+Some of the new features are things like:
+- typed array syntax
+- union type syntax
+- using built-in component/object/interface/event types
+- type cast syntax
+
+To make it easier to test out brighterscript v1 and then switch back to the v0 line, we've backported the above syntaxes into the v0 release line. This means you can write newer syntax and commit that code without needing to undo it.
+
+Now keep in mind, these new syntax features provide _NO_ additional validation in the v0 release line.
+
+In transpiled code:
+- Typed Arrays are converted to `dynamic`
+- Union types are converted to `dynamic`
+- Built in types are converted to `object` (just like Classes/interfaces)
+- Type casts are completely ignored and removed
+
+Even if you're not using/testing the v1 alphas, it might be worth using some of this new syntax just to more cleanly document your code. You can view all of the supported syntax in [this unit test](https://github.com/rokucommunity/brighterscript/blob/d3465c2d686758fd41a3fcf2445e4fd031f365b6/src/files/BrsFile.spec.ts#L3641), but here are some examples:
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/cc13fff0-71fc-4742-9cb8-98319e8e6aeb)
+
+## Add plugin hooks for getDefinition
+<!-- 2024-01-30 (for v0.65.20 released on 2024-01-30), https://github.com/RokuCommunity/brighterscript/pull/1045 -->
+
+We've added a new BrighterScript plugin hook for `go to definition`. Plugins can define `beforeProvideDefinition`, `provideDefinition`, or `afterProvideDefinition` to add more entries into the results of that operation.
+
+We converted the internal brighterscript `go to definition` to leverage these same plugin hooks. You can check that out in [BscPlugin.ts](https://github.com/rokucommunity/brighterscript/blob/c92a2697b1fcc1ab6b50ff657be300a3d348b3b8/src/bscPlugin/BscPlugin.ts#L32), but here's a sample:
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/99f4c105-8fe5-4aad-aedc-cba67f7ab61a)
+
+
+## Fix parsing issues with multi-index IndexedSet and IndexedGet
+<!-- 2024-01-31 (for v0.65.21 released on 2024-01-31), https://github.com/RokuCommunity/brighterscript/pull/1050 -->
+
+We've fixed parsing and transpile issues with mutli-index `IndexedGetExpression` and `IndexedSetStatement`.
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/b3051453-1374-4599-8232-ffb07345e8a7)
+
+
+# Community Tools
+
+## brs
+## Fixed #16 Print leading space before positive numbers
+<!-- 2023-12-11 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/39 -->
+We've made a few improvements to the brs emulator:
+- fixed the printing of positive number to show a leading space before positive numbers, just like Roku.
+- Fixed the comparison involving Long numbers
+- Updated all affected test cases.
+
+You can check out the [@rokucommunity/brs#39](https://github.com/RokuCommunity/brs/pull/39) for more information.
+
+
+## Fixed #38 - Improved context handling for Callables
+<!-- 2023-12-11 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/40 -->
+
+The original solution to identify the context (`m` object) for Callables was relying on re-evaluating the source on a dot chained call, that had performance issues, and caused the side effect of issue [#9](https://github.com/rokucommunity/brs/issues/9). That solution did not solved the performance issue fully.
+
+So this new solution saves a reference for the context for each callable, eliminating the need of re-evaluation, and fixed all side effects.
+
+The end result is that there should no longer be a performance issue for calling dot chained calls.
+
+## Fixed #41 - Global functions `GetInterface()` and `FindMemberFunction()` are not properly boxing parameters
+<!-- 2024-01-18 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/42 -->
+
+Both of the methods `GetInterface()` and `FindMemberFunction()` were not properly boxing parameters to behave like a Roku device. These have been fixed as of @rokucommunity/brs v0.45.4
+
+
+
+## allow spacing on dotted get paths
+<!-- 2024-01-17 (for v1.6.39 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript-formatter/pull/83 -->
+
+We've improved how the brightscript and brighterscript formatter handles spaces between objects. It should now properly remove whitespace between anything separated by a dot. Here are some examples:
+
+![format](https://github.com/rokucommunity/brighterscript-formatter/assets/2544493/35b360d3-40b0-4844-94fc-331a858b916a)
+
+
+
+# Preview features
+<!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->
 
 
 ## Fixes transpiles of Typecasts wrapped in parens
@@ -186,7 +258,6 @@ end sub
 This PR changes `GroupedExpression` so that if the expression that is grouped is a typecast, it does not include the parens.
 
 
-
 ## Adds Diagnostics for Member Accessibility
 <!-- 2024-01-09 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1004 -->
 
@@ -210,18 +281,6 @@ Solves #918
 
 
 
-## Adds a `findChildren` function on AstNode
-<!-- 2024-01-11 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1010 -->
-
-Adds a `.findChildren()` method on `AstNode` to help look for all nodes of a specific type (like namespaces, classes, consts, etc). The matcher is just a function, so the evaluation can work for anything.
-
-
-## Assign `.program` to the builder BEFORE emitting `afterProgramCreate` event
-<!-- 2024-01-11 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1011 -->
-
-There's a small bug where the ProgramBuilder doesn't have a reference to .program when the afterProgramCreate. This solves that by assigning `.program` before emitting the event.
-
-
 ## Adds missing Completion Items
 <!-- 2024-01-11 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1009 -->
 
@@ -236,54 +295,10 @@ There's a small bug where the ProgramBuilder doesn't have a reference to .progra
 solves #988
 
 
+## Remove `Parser.references`
+<!-- 2024-01-22 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1021 -->
 
-
-## add documentation on pruneEmptyCodeFiles to the README
-<!-- 2024-01-12 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1012 -->
-
-Adds documentation on the new `pruneEmptyCodeFiles` bsconfig option to the README.
-
-The bsconfig section of the README is a little long. Would you prefer that it get moved under the docs folder, maybe just leaving the shell of the most minimal `bsconfig.json` file on the main README?
-
-
-## Updates the Member types for Component Fields
-<!-- 2024-01-13 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1014 -->
-
-Includes all the fields types as defined here: https://developer.roku.com/en-ca/docs/references/scenegraph/xml-elements/interface.md#attributes
-
-Fixes (in particular) the `type="array"` isse @georgejecook has.
-
-
-
-
-## adds support for libpkg prefix
-<!-- 2024-01-16 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1017 -->
-
-We found that component libraries that use libpkg:/path/file.brs in the script imports would result in files not being found.
-
-This pr adds support for both pkg types.
-
-
-## XML fields of type color can accept strings or integers
-<!-- 2024-01-18 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1016 -->
-
-![image](https://github.com/rokucommunity/brighterscript/assets/810290/43f5bbc0-9d6c-4089-82cc-a5c806d37883)
-
-
-
-## Fix cross namespace collision detection
-<!-- 2024-01-19 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1008 -->
-
-Fixes a bug where a const and a function are not allowed to have the same name across different namespaces.
-
-
-## Renamed `File` interface to `BscFile`
-<!-- 2024-01-19 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1013 -->
-
-Resolves #1005
-
-Renames `File` interface to `BscFile` and removes the `BscFile` type. This is so this project does not clash with the Javascript `File` type.
-
+Basically, removes all the hard-coded/static lists in `Parser.references` and instead uses cached AST walks, that are invalidated during BRS File Validation time... At that point in time, all changes from plugins should be done, and we can trust the walk for finding quick lookups for various types of expressions/statements.
 
 
 
@@ -299,30 +314,49 @@ We can't make that assumption at the top level, because we have to do checks at 
 
 
 
-## Remove `Parser.references`
-<!-- 2024-01-22 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1021 -->
 
-Basically, removes all the hard-coded/static lists in `Parser.references` and instead uses cached AST walks, that are invalidated during BRS File Validation time... At that point in time, all changes from plugins should be done, and we can trust the walk for finding quick lookups for various types of expressions/statements.
+## Renamed `File` interface to `BscFile`
+<!-- 2024-01-19 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1013 -->
 
+Resolves #1005
 
-
-
-## Improving null safety: Add FinalizedBsConfig and tweak plugin events
-<!-- 2024-01-22 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1000 -->
-
-This only reduces the total number of null check errors by 30, but it pushes the errors a little farther towards the edges. I've resolved most of the errors in `Program` and `ProgramBuilder`. I believe this may be a breaking change, if plugins are allowed to call `new Program()`, because the interface to `Program`'s constructor is now more strict.
-
-I'm a little unsure of what to do about `FinalizedBsConfig.rootDir` and `FinalizedBsConfig.stagingDir`. I'd like to make them required, because a number of places assume that they exist. AFAICT their default values come from roku-deploy though, rather than anywhere in `bsc`, and if I add the default values from roku-deploy to `normalizeConfig`, tons of tests break. I'm figuring that it's better to make incremental progress by making the other fields required than it is to risk breakage by making a more significant change to runtime behavior.
-
-I've added a unit test that asserts that the return value of `normalizeConfig` deeply matches an exact object. I added this test and confirmed that it was passing before making any changes to `normalizeConfig`. This is to give some level of confidence that behavior is unchanged, even though I've had to update the configs in a lot of other tests to satisfy the more strict types.
-
-The changes to the plugin interface are as I mentioned in Slack, and shouldn't be more restrictive than what already exists. I made the name a little prettier than what I originally used in the Slack thread.
+Renames `File` interface to `BscFile` and removes the `BscFile` type. This is so this project does not clash with the Javascript `File` type.
 
 
-## Prevent overwriting the Program._manifest if already set on startup
-<!-- 2024-01-24 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1027 -->
 
-Some plugins might want to load the manifest and preprocess it before the program gets to it. However, sometimes there are timing issues, so now we don't replace the manifest on startup if a plugin has already overwritten it.
+
+## Fix cross namespace collision detection
+<!-- 2024-01-19 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1008 -->
+
+Fixes a bug where a const and a function are not allowed to have the same name across different namespaces.
+
+
+## XML fields of type color can accept strings or integers
+<!-- 2024-01-18 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1016 -->
+
+![image](https://github.com/rokucommunity/brighterscript/assets/810290/43f5bbc0-9d6c-4089-82cc-a5c806d37883)
+
+
+
+## Updates the Member types for Component Fields
+<!-- 2024-01-13 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1014 -->
+
+Includes all the fields types as defined here: https://developer.roku.com/en-ca/docs/references/scenegraph/xml-elements/interface.md#attributes
+
+Fixes (in particular) the `type="array"` isse @georgejecook has.
+
+
+
+## Adds a `findChildren` function on AstNode
+<!-- 2024-01-11 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1010 -->
+
+Adds a `.findChildren()` method on `AstNode` to help look for all nodes of a specific type (like namespaces, classes, consts, etc). The matcher is just a function, so the evaluation can work for anything.
+
+
+
+
+# Documentation
+
 
 
 ## Refactor bsconfig documentation
@@ -348,109 +382,51 @@ Other than these changes, the text is solely rearranged from the current version
 I've manually tested all of the links within the bsconfig documentation page but the use of absolute hyperlinks prevents me from manually testing the links from the error suppression documentation page to the bsconfig documentation page.
 
 
-## Backport v1 syntax changes
-<!-- 2024-01-30 (for v0.65.19 released on 2024-01-30), https://github.com/RokuCommunity/brighterscript/pull/1034 -->
-
-Allows:
-- typed array syntax
-- union type syntax
-- using built-in component/object/interface/event types
-- type cast syntax
-
-This does NO additional validation. Use this syntax at your own risk.
-
-In transpiled code:
-- Typed Arrays are converted to `dynamic`
-- Union types are converted to `dynamic`
-- Built in types are converted to `object` (just like Classes/interfaces)
-- Type casts are completely ignored and removed
-
-
-
-
-## Add plugin hooks for getDefinition
-<!-- 2024-01-30 (for v0.65.20 released on 2024-01-30), https://github.com/RokuCommunity/brighterscript/pull/1045 -->
-
-Allow plugins to contribute to `go to definition` results in the language server
-
-
-## Fix parsing issues with multi-index IndexedSet and IndexedGet
-<!-- 2024-01-31 (for v0.65.21 released on 2024-01-31), https://github.com/RokuCommunity/brighterscript/pull/1050 -->
-
-Fixes parsing and transpile issues with mutli-index `IndexedGetExpression` and `IndexedSetStatement`.
-
-The solution is a little "icky", because we can't break backwards compatability, so I had to add `additionalIndexes` to the two AST node types. In v1, we should merge those into a single `.indexes` prop on the nodes instead.
-
-Fixes #1048
-
-![image](https://github.com/rokucommunity/brighterscript/assets/2544493/b3051453-1374-4599-8232-ffb07345e8a7)
-
-
-
-
-# Community Tools
-
-## bslint
-## Add `create-package` github action support
-<!-- 2024-01-26 (for v0.8.17 released on 2024-01-30), ([ebea19b](https://github.com/RokuCommunity/bslint/commit/ebea19b)) -->
-
-
-
-
-## brs
-## Fixed #16 Print leading space before positive numbers
-<!-- 2023-12-11 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/39 -->
-
-Updated 3 things:
-
-- Fixed the printing of positive number to show a leading space before positive numbers, just like Roku.
-- Fixed the comparison involving Long numbers
-- Updated all affected test cases.
-
-
-## Fixed #38 - Improved context handling for Callables
-<!-- 2023-12-11 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/40 -->
-
-The original solution to identify the context (m object) for Callables was relying on re-evaluating the source on a dot chained call, that had performance issues, and caused the side effect of issue #9, the solution I implemented for it was partial, and did not solved the performance issue fully.
-
-Now I saved a reference for the context for each callable, eliminating the need of re-evaluation, and fixed all side effects.
-
-I added a couple of. new scenarios to the e2e test cases.
-
-
-## Fixed #41 - Global functions `GetInterface()` and `FindMemberFunction()` are not properly boxing parameters
-<!-- 2024-01-18 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/42 -->
-
-Both of the methods `GetInterface()` and `FindMemberFunction()` were not properly boxing parameters to behave like a Roku device.
-
-
-
-# Community Libraries
-
-
-# Formatting
-
-## Add create-package script
-<!-- 2024-01-17 (for v1.6.39 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript-formatter/pull/84 -->
-
-Add support for the `create-package` github action.
-
-
-## allow spacing on dotted get paths
-<!-- 2024-01-17 (for v1.6.39 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript-formatter/pull/83 -->
-
-
-
-
-
-# Preview features
-<!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->
-
-# Documentation
 
 # Misc
 
 # For Contributors
+
+## Improve null safety
+<!-- 2024-01-08 (for v0.65.16 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/996 -->
+
+This adds a second tsconfig which can be used to view null safety errors, and fixes a handful of them. Nothing here should change runtime behavior and I've aimed to make the changes as noninvasive as possible.
+
+- I've been loose with test files, preferring unsafe assertions to code changes in them
+- When possible, I've added annotations rather than modify runtime code
+
+I've added explicit type annotations and intermediate interfaces for the return types of some functions and methods which were previously implicit. In some cases this helps inference go through without changes and in other cases it just made it easier for me to determine what exactly was undefined in a nested object.
+
+I've skipped a couple of the harder errors. Most notably, there seems to be an implicit distinction between an "input BsConfig" and an "initialized BsConfig", in that many fields in the BsConfig class are optional but assumed to be present during actual processing. The potentially pedantic way to address this would be to make a second `InitializedBsConfig` type which is used internally and is produced by parsing a BsConfig, but this would be significantly more invasive than what I am aiming for here.
+
+Please let me know if you would prefer any modifications to my approach.
+
+
+## Improving null safety: Add FinalizedBsConfig and tweak plugin events
+<!-- 2024-01-22 (for v0.65.18 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1000 -->
+
+This only reduces the total number of null check errors by 30, but it pushes the errors a little farther towards the edges. I've resolved most of the errors in `Program` and `ProgramBuilder`. I believe this may be a breaking change, if plugins are allowed to call `new Program()`, because the interface to `Program`'s constructor is now more strict.
+
+I'm a little unsure of what to do about `FinalizedBsConfig.rootDir` and `FinalizedBsConfig.stagingDir`. I'd like to make them required, because a number of places assume that they exist. AFAICT their default values come from roku-deploy though, rather than anywhere in `bsc`, and if I add the default values from roku-deploy to `normalizeConfig`, tons of tests break. I'm figuring that it's better to make incremental progress by making the other fields required than it is to risk breakage by making a more significant change to runtime behavior.
+
+I've added a unit test that asserts that the return value of `normalizeConfig` deeply matches an exact object. I added this test and confirmed that it was passing before making any changes to `normalizeConfig`. This is to give some level of confidence that behavior is unchanged, even though I've had to update the configs in a lot of other tests to satisfy the more strict types.
+
+The changes to the plugin interface are as I mentioned in Slack, and shouldn't be more restrictive than what already exists. I made the name a little prettier than what I originally used in the Slack thread.
+
+
+## Fix create-vsix
+<!-- 2024-01-19 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/540 -->
+
+Overhauls the `create-vsix` github action, it should be much better at building vsix that depend on changes that span multiple projects all having the same branch name.
+
+
+## Fix the install-local and watch-all scripts
+<!-- 2024-01-24 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/541 -->
+
+The install-local script currently only links the sibling projects into vscode-brightscript-language. However, some of the other projects depend on each other as well, so they should all be inter-linked.
+
+Updates the watch-all script to run the projects in order as well so we ensure the dependent projects are built before spinning up the next watcher.
+
 
 ***
 
