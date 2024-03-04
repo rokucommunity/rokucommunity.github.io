@@ -5,6 +5,7 @@ layout: ../../layouts/WhatsNewPost.astro
 ---
 
 # Overview
+Welcome to the September 2023 edition of "What's New in RokuCommunity". Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 ## We need your help
 

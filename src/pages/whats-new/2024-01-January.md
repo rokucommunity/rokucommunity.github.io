@@ -4,6 +4,9 @@ summary: Changes to vscode-brightscript-language, brighterscript, roku-debug, br
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
+Welcome to the January 2024 edition of "What's New in RokuCommunity". Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
+
+
 ## We need your help
 The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
 
@@ -23,16 +26,19 @@ The RokuCommunity projects are maintained by a relatively small group of develop
 
 In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the various RokuCommunity codebases.
 
-This month, we'd like to draw attention to [bslint#41](https://github.com/rokucommunity/bslint/issues/41). Many linters support enforcing that all files have a trailing newline which encourages consistency across your project. @rokucommunity/bslint does not currently have a rule for this, which is something we'd love to see added. Here's how the error looks in a typescript project using eslint:
+This month, we'd like to draw attention to [bslint#41](https://github.com/rokucommunity/bslint/issues/41). Many linters support enforcing that all files have a trailing newline, which ensures consistency across your project. @rokucommunity/bslint does not currently have a rule for this, which is something we'd love to see added. Here's how the error looks in a typescript project using eslint:
 
 ![image](https://github.com/rokucommunity/bslint/assets/2544493/e5458612-4667-4a03-a1af-21f7c6536a3e)
 
 If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/bslint/issues/41) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
+
+
+
 # Editor
 ## Always request screenshot on initial load, add ability to copy screenshot
 <!-- 2023-12-20 (for v2.45.10 released on 2024-01-10), https://github.com/RokuCommunity/vscode-brightscript-language/pull/536 -->
 
-We fixed a few bugs in the "Device View" panel related to downloading a screenshot. Previously, if you didn't have the continuous screenshot capture enabled, it would not request any on its own unless you clicked refresh. Now it requests an initial screenshot which mitigates the issue.
+We fixed a few bugs in the "Device View" panel related to downloading a screenshot. Previously, if you didn't have the continuous screenshot capture enabled, it wouldn't have downloaded the very first screenshot, requiring you to click "refresh" in order for this functionality to work. Now it requests an initial screenshot which mitigates the issue.
 
 ![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/2d45bf7c-ce14-4f4f-a5cc-e15b69687f97)
 
@@ -41,9 +47,9 @@ We fixed a few bugs in the "Device View" panel related to downloading a screensh
 ## Pass the modal property from the PopupMessageEvent
 <!-- 2024-01-08 (for v2.45.10 released on 2024-01-10), https://github.com/RokuCommunity/vscode-brightscript-language/pull/537 -->
 
-This change utilizes the modal property that was added to the `PopupMessageEvent`. The modal property is being added to make any errors more visible when VSCode fails to launch a channel. The most common example of this is a bad password.
+We've improved the way certain errors are presented in vscode by showing them in a modal dialog box. Previously many of these errors were shown in a little toast popup at the bottom right of vscode which can easily be missed. Users were regularly frustrated when vscode would fail to launch a debug session, so hopefully this will help draw more visibility to certain types of errors. The most common error is a bad password.
 
-Here's a screen shot of the modal.
+Here's a screenshot of the new popup:
 <img width="1100" alt="Screenshot 2024-01-08 091210" src="https://github.com/rokucommunity/vscode-brightscript-language/assets/118202694/c6d95683-7c9d-4fff-afa8-c89b93bf09f8">
 
 
