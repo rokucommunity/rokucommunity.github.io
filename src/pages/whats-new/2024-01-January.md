@@ -4,11 +4,11 @@ summary: Changes to vscode-brightscript-language, brighterscript, roku-debug, br
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
-Welcome to the January 2024 edition of "What's New in RokuCommunity". Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
+Welcome to the January 2024 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 
 ## We need your help
-The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
+The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
 
 -   [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language/issues)
 -   [brighterscript](https://github.com/rokucommunity/brighterscript/issues)
@@ -26,7 +26,7 @@ The RokuCommunity projects are maintained by a relatively small group of develop
 
 In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the various RokuCommunity codebases.
 
-This month, we'd like to draw attention to [bslint#41](https://github.com/rokucommunity/bslint/issues/41). Many linters support enforcing that all files have a trailing newline, which ensures consistency across your project. @rokucommunity/bslint does not currently have a rule for this, which is something we'd love to see added. Here's how the error looks in a typescript project using eslint:
+This month, we'd like to highlight [bslint#41](https://github.com/rokucommunity/bslint/issues/41). Many linters support enforcing that all files have a trailing newline, which ensures consistency across your project. @rokucommunity/bslint does not currently have a rule for this, which is something we'd love to see added. Here's how the error looks in a typescript project using eslint:
 
 ![image](https://github.com/rokucommunity/bslint/assets/2544493/e5458612-4667-4a03-a1af-21f7c6536a3e)
 
@@ -38,7 +38,7 @@ If you're interested in working on this feature, please comment on the [github i
 ## Always request screenshot on initial load, add ability to copy screenshot
 <!-- 2023-12-20 (for v2.45.10 released on 2024-01-10), https://github.com/RokuCommunity/vscode-brightscript-language/pull/536 -->
 
-We fixed a few bugs in the "Device View" panel related to downloading a screenshot. Previously, if you didn't have the continuous screenshot capture enabled, it wouldn't have downloaded the very first screenshot, requiring you to click "refresh" in order for this functionality to work. Now it requests an initial screenshot which mitigates the issue.
+We fixed a few bugs in the "Device View" panel related to downloading a screenshot. Previously, without continuous screenshot capture enabled, the first screenshot would not download automatically, requiring a manual 'refresh' to initiate the download. Now it requests an initial screenshot which mitigates the issue.
 
 ![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/2d45bf7c-ce14-4f4f-a5cc-e15b69687f97)
 
@@ -64,10 +64,10 @@ Along with that, we also fixed a bug with debug sessions and `launch.json` files
 
 # Debugging
 
-## Display a modal message when the we fail to upload a package to the device
+## Display a modal message when we fail to upload a package to the device
 <!-- 2024-01-02 (for v0.20.15 released on 2024-01-08), https://github.com/RokuCommunity/roku-debug/pull/178 -->
 
-We've added better error detection around certain debug session failures, specifically when uploading the zip fails. You should now see a nice popup with a better error message.
+We added better error detection for specific debug session failures, especially when uploading the ZIP file fails. You should now see a nice popup with a better error message.
 
 ![image](https://github.com/rokucommunity/roku-debug/assets/2544493/0f12267d-9053-4593-a95c-2324842de769)
 
@@ -83,7 +83,7 @@ Most developers won't need to change this, but if you're debugging through port 
 ## Add cli flag to run dap as standalone process
 <!-- 2024-01-10 (for v0.21.0 released on 2024-01-10), https://github.com/RokuCommunity/roku-debug/pull/173 -->
 
-We added support for running roku-debug in "debug adapter protocol" (i.e. "DAP") mode for use in IDEs.
+We added support for running roku-debug in Debug Adapter Protocol (DAP) mode for use in IDEs.
 
 `roku-debug` is the library that powers the debug session within vscode. However, with this setting, you can now use `roku-debug` to power debug sessions in other IDEs (like eclipse, vim/neovim, emacs, etc.). This should work with any editor that supports the [debug adapter protocol](https://microsoft.github.io/debug-adapter-protocol/implementors/adapters/).
 
@@ -93,7 +93,7 @@ You can activate this mode like this:
 npx roku-debug --dap
 ```
 
-You'll typically need to configure your IDE to call the above command. If you've integrated this functionality into an IDE, please let us know so we can update our documentation to show how to configure it! [Here's](https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#brightscript) an example of how to configure DAP mode in neovim.
+You'll typically need to configure your IDE to execute the command mentioned above. If you've integrated this functionality into an IDE, please let us know so we can update our documentation to show how to configure it! [Here's](https://github.com/mfussenegger/nvim-dap/wiki/Debug-Adapter-installation#brightscript) an example of how to configure DAP mode in Neovim.
 
 
 # BrighterScript
@@ -105,7 +105,7 @@ We've added a new BrighterScript config property called `pruneEmptyCodeFiles` wh
 
 Currently Brs files are considered empty if they don't contain a `FunctionStatement`, `MethodStatement`, or a `ClassStatement`. I might have missed something here.
 
-This also will remove imports of empty scripts. If a brightscript file that an xml files references has their `canBePruned` field return false, the associated import will be removed too.
+This will also remove imports of empty scripts. If a brightscript file that an xml files references has their `canBePruned` field return false, the associated import will be removed too.
 
 On a large internal project, this resulted in significant compile-time speedups.
 
@@ -130,9 +130,9 @@ We fixed a small BrighterScript plugin bug where where the `ProgramBuilder` does
 ## adds support for libpkg prefix
 <!-- 2024-01-16 (for v0.65.17 released on 2024-01-16), https://github.com/RokuCommunity/brighterscript/pull/1017 -->
 
-BrighterScript has fixed a bug where component libraries that use `libpkg:/path/file.brs` in the script imports would result in files not being found.
+BrighterScript has fixed a bug where component libraries that use `libpkg:/` scheme for script imports would fail to find files.
 
-You can now use `libpkg:/` in xml script imports as well as brighterscript import statements.
+You can now use `libpkg:/` in xml script imports as well as BrighterScript import statements.
 
 These both work now!
 
@@ -160,7 +160,7 @@ Some of the new features are things like:
 - using built-in component/object/interface/event types
 - type cast syntax
 
-To make it easier to test out brighterscript v1 and then switch back to the v0 line, we've backported the above syntaxes into the v0 release line. This means you can write newer syntax and commit that code without needing to undo it.
+To simplify testing BrighterScript v1 and facilitate switching back to v0, we backported the above syntaxes into the v0 releases. This means you can write newer syntax and commit that code without needing to undo it.
 
 Now keep in mind, these new syntax features provide _NO_ additional validation in the v0 release line.
 
@@ -179,7 +179,7 @@ Even if you're not using/testing the v1 alphas, it might be worth using some of 
 
 We've added a new BrighterScript plugin hook for `go to definition`. Plugins can define `beforeProvideDefinition`, `provideDefinition`, or `afterProvideDefinition` to add more entries into the results of that operation.
 
-We converted the internal brighterscript `go to definition` to leverage these same plugin hooks. You can check that out in [BscPlugin.ts](https://github.com/rokucommunity/brighterscript/blob/c92a2697b1fcc1ab6b50ff657be300a3d348b3b8/src/bscPlugin/BscPlugin.ts#L32), but here's a sample:
+We converted the internal BrighterScript `go to definition` to leverage these same plugin hooks. You can check that out in [BscPlugin.ts](https://github.com/rokucommunity/brighterscript/blob/c92a2697b1fcc1ab6b50ff657be300a3d348b3b8/src/bscPlugin/BscPlugin.ts#L32), but here's a sample:
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/2544493/99f4c105-8fe5-4aad-aedc-cba67f7ab61a)
 
@@ -187,7 +187,7 @@ We converted the internal brighterscript `go to definition` to leverage these sa
 ## Fix parsing issues with multi-index IndexedSet and IndexedGet
 <!-- 2024-01-31 (for v0.65.21 released on 2024-01-31), https://github.com/RokuCommunity/brighterscript/pull/1050 -->
 
-We've fixed parsing and transpile issues with mutli-index `IndexedGetExpression` and `IndexedSetStatement`.
+We've fixed parsing and transpile issues with multi-index `IndexedGetExpression` and `IndexedSetStatement`.
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/2544493/b3051453-1374-4599-8232-ffb07345e8a7)
 
@@ -208,7 +208,7 @@ You can check out the [@rokucommunity/brs#39](https://github.com/RokuCommunity/b
 ## Fixed #38 - Improved context handling for Callables
 <!-- 2023-12-11 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/40 -->
 
-The original solution to identify the context (`m` object) for Callables was relying on re-evaluating the source on a dot chained call, that had performance issues, and caused the side effect of issue [#9](https://github.com/rokucommunity/brs/issues/9). That solution did not solved the performance issue fully.
+The original method for identifying the context (`m` object) for Callables relied on re-evaluating the source during a dot-chained call, that had performance issues, and caused the side effect of issue [#9](https://github.com/rokucommunity/brs/issues/9). That solution did not solved the performance issue fully.
 
 So this new solution saves a reference for the context for each callable, eliminating the need of re-evaluation, and fixed all side effects.
 
@@ -224,7 +224,7 @@ Both of the methods `GetInterface()` and `FindMemberFunction()` were not properl
 ## allow spacing on dotted get paths
 <!-- 2024-01-17 (for v1.6.39 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript-formatter/pull/83 -->
 
-We've improved how the brightscript and brighterscript formatter handles spaces between objects. It should now properly remove whitespace between anything separated by a dot. Here are some examples:
+We've improved how the brightscript and BrighterScript formatter handles spaces between objects. It should now properly remove whitespace between anything separated by a dot. Here are some examples:
 
 ![format](https://github.com/rokucommunity/brighterscript-formatter/assets/2544493/35b360d3-40b0-4844-94fc-331a858b916a)
 
@@ -233,8 +233,8 @@ We've improved how the brightscript and brighterscript formatter handles spaces 
 # BrighterScript Preview features
 <!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->
 
-## Renaming brighterscript v0.66 alphas to v1
-We've decided to transition BrighterScript towards a v1.0.0 release!
+## Renaming BrighterScript v0.66 alphas to v1
+We're transitioning BrighterScript towards a v1.0.0 release!
 
 As we've been working on the BrighterScript v0.66 alphas, we noticed that there were more and more breaking changes that we wanted to implement. It became clear that we were actually implementing a full major version change.
 
@@ -242,13 +242,13 @@ BrighterScript was introduced as an experiment, that slowly grew into a product 
 
 We're _hopeful_ that the v1 release will be ready by this summer, but we can't guarantee a release date at this time (we're very busy here at RokuCommunity). You can track our progress in the [v1.0.0 milestone](https://github.com/rokucommunity/brighterscript/milestone/1).
 
-At the time of this publication, the latest brighterscript v1 alpha is `v1.0.0-alpha.27`. You can try out the latest version of brighterscript v1 alphas by running:
+At the time of this publication, the latest BrighterScript v1 alpha is `v1.0.0-alpha.27`. You can try out the latest version of BrighterScript v1 alphas by running:
 ```bash
 npm install brighterscript@next
 ```
 
 
-## Fixes transpiles of Typecasts wrapped in parens
+## Fixes transpile bug for typecast expressions wrapped in parentheses
 <!-- 2024-01-08 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/998 -->
 
 Fixes #986
@@ -386,9 +386,9 @@ We've started the process of converting the entire BrighterScript codebase to be
 
 We've overhauled the `create-vsix` github action to improve inter-project linking when building custom vsix. It should be much better at building vsix that depend on changes that span multiple projects all having the same branch name.
 
-For contributors, all you really need to know is:
+For contributors, here's what you need to know:
  - add the `create-vsix` tag to a PR
- - make sure inter-dependent projects all have the same branch name(like vscode-brightscript-language, roku-deploy, brighterscript, etc...)
+ - make sure inter-dependent projects all have the same branch name(like vscode-brightscript-language, roku-deploy, BrighterScript, etc...)
 
 GitHub Actions will auto-generate a new vsix every time you push code to the PR, and a bot will comment with instructions on how to install that vsix.
 
@@ -452,7 +452,7 @@ Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscrip
 Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
 
 -   [@Christian-Holbrook (Christian-Holbrook)](https://github.com/Christian-Holbrook)
-    -   Display a modal message when the we fail to upload a package to the device ([PR #178](https://github.com/RokuCommunity/roku-debug/pull/178))
+    -   Display a modal message when we fail to upload a package to the device ([PR #178](https://github.com/RokuCommunity/roku-debug/pull/178))
 -   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
     -   Expose debug protocol port ([PR #182](https://github.com/RokuCommunity/roku-debug/pull/182))
     -   Add cli flag to run dap as standalone process ([PR #173](https://github.com/RokuCommunity/roku-debug/pull/173))
