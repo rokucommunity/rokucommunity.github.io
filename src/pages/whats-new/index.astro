@@ -1,0 +1,15 @@
+---
+//find all whats-new posts, discard unwanted files, then sort newest-to-oldest
+const posts = (await Astro.glob('/src/pages/whats-new/**/*.md*'))
+    // Exclude the readme and any .md files starting with "_".
+    .filter(
+        (p) =>
+            !p.file.includes('readme.md') &&
+            !p.file.split('/').pop()?.startsWith('_')
+    )
+    .reverse();
+---
+
+<head>
+    <meta http-equiv="refresh" content={ `0; url=${posts[0]?.url}` } />
+</head>

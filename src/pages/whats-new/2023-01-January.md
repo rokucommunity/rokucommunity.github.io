@@ -5,6 +5,7 @@ layout: ../../layouts/WhatsNewPost.astro
 ---
 
 # Overview
+Welcome to the January 2023 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 This month we made some great improvements to the debugging experience, such as support for [executing complex expressions in the REPL and watch panels](#allow-relative-rale-tracker-task-path), fixing that frustrating [infinite spin](#fix-infinite-spin-for-unloaded-vars) issue in the variables panel, and some nice new features in [SceneGraph Inspector](#scenegraph-inspector-improvements).
 
