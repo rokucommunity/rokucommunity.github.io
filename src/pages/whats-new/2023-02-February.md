@@ -5,6 +5,7 @@ layout: ../../layouts/WhatsNewPost.astro
 ---
 
 # Overview
+Welcome to the February 2023 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 Not much happened this month in terms of released features. However, behind the scenes, [Bronley](https://github.com/TwitchBronBron) and [Chris](https://github.com/chrisdp) were hard at work on a massive overhaul of the debugger to improve testability and also to prepare for Roku's spring 2023 OS release. You can read a little more about it [here](#debug-protocol-refactor). We'll go into more detail once the pull request is finally merged.
 

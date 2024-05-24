@@ -4,6 +4,8 @@ summary: Warn when developer mode is disabled, auto-enable debug protocol testin
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
+Welcome to the November 2023 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
+
 This month we ran a trial of auto-enabling the debug protocol by default. We added several much-needed performance improvements in the brighterscript v0.66 alphas. We fixed a few bugs in the brs emulator, improved our telemetry tracking, added a few improvements to the dev experience for our RokuCommunity contributors, and a lot more! As always, many thanks to all who have worked so hard and contributed this month!
 
 
