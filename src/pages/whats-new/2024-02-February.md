@@ -4,57 +4,53 @@ summary: Changes to vscode-brightscript-language, brighterscript, roku-deploy, r
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
+Welcome to the February 2024 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
+
+## We need your help
+The RokuCommunity projects are maintained by a relatively small group of developers (mostly volunteers), and we have a growing list of unresolved issues. We need your help! There are many different ways you can contribute. Whether it's addressing bugs, improving documentation, introducing new features, or simply helping us manage our expanding list of GitHub issues, your involvement would be greatly appreciated. We are more than happy to guide you in finding the most suitable contribution method that aligns with your interests. To learn more about how you can contribute, feel free to reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA), or explore the existing GitHub issues:
+
+-   [vscode-brightscript-language](https://github.com/rokucommunity/vscode-brightscript-language/issues)
+-   [brighterscript](https://github.com/rokucommunity/brighterscript/issues)
+-   [brighterscript-formatter](https://github.com/rokucommunity/brighterscript-formatter/issues)
+-   [roku-deploy](https://github.com/rokucommunity/roku-deploy/issues)
+-   [roku-debug](https://github.com/rokucommunity/roku-debug/issues)
+-   [bslint](https://github.com/rokucommunity/bslint/issues)
+-   [ropm](https://github.com/rokucommunity/ropm/issues)
+-   [brs](https://github.com/rokucommunity/brs/issues)
+-   [roku-report-analyzer](https://github.com/rokucommunity/roku-report-analyzer/issues)
+-   [@rokucommunity/promises](https://github.com/rokucommunity/promises/issues)
+-   [roku-http](https://github.com/rokucommunity/roku-http)
+
+## Issue of the month
+
+In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the various RokuCommunity codebases.
+
+This month, we'd like to highlight [SOME_GH_ISSUE](SOME_URL). SOME_DESCRIPTION
+
+
+If you're interested in working on this feature, please comment on the [github issue](SOME_LINK) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
 
 # Editor
-## Remove duplicate 'clearLogOutput' command
-<!-- 2024-02-06 (for v2.45.17 released on 2024-02-09), https://github.com/RokuCommunity/vscode-brightscript-language/pull/544 -->
-
-Removes a duplicate command called `clearLogOutput` that was duplicated in the package.json for some reason. 
-
-
 
 # Debugging
 
 ## Support relaunch debug protocol
 <!-- 2024-01-31 (for v0.21.4 released on 2024-02-29), https://github.com/RokuCommunity/roku-debug/pull/181 -->
 
-Persist the debug session for debug protocol. This is accomplished by parsing the telnet logs for the line "Waiting for debugging connection" and then creating the control port. When the application is closed, we continue to parse the telnet logs for that line. When that line is detected the control port will be created again.
+One of the major issues we encountered during our [debug protocol testing](https://rokucommunity.github.io/whats-new/2023-11-November/#testing-auto-enabled-debug-protocol-on-125-devices) back in November was that the output logs would stop showing once you closed the app during a debug protocol session. This has now been fixed.
 
-A new signal `app-ready` is emitted to let `BrightScriptDebugSession` know the debug adapters are ready. Both adapters have to emit this signal.
+The underlying problem is that debug protocol sessions are terminated when you close the app, so we had no way of knowing when you re-launched the app since we had already disconnected. However, we discovered that Roku devices will print `"Waiting for debugging connection"` anytime you open a previously-sideloaded app using the debug protocol. That allowed us to scan the telnet logs for that entry, and auto-reconnect a new debug protocol session at that time.
 
-When the app is closed via a home key press, reset the breakpoint managers state for the debug protocol.
+While this is not the same as "remain connected", it does simulate that behavior, and should be seamless to the user.
 
 
 ## DebugProtocol fixes
 <!-- 2024-02-26 (for v0.21.4 released on 2024-02-29), https://github.com/RokuCommunity/roku-debug/pull/186 -->
 
-Reorder when the DebugProtocolClient connects.
-Reorder when 'App-Ready' event is emitted.
-Add retry logic and force pause when ThreadsRequest fails with error code 4
-
+We fixed a bug in the debug protocll that whenever the ThreadsRequest fails with error code 4, we try to pause again. This has added significant stability to debug protocol sessions.
 
 
 # BrighterScript
-
-## Backport v1 syntax changes
-<!-- 2024-01-30 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1034 -->
-
-Allows:
-- typed array syntax
-- union type syntax
-- using built-in component/object/interface/event types
-- type cast syntax
-
-This does NO additional validation. Use this syntax at your own risk.
-
-In transpiled code:
-- Typed Arrays are converted to `dynamic`
-- Union types are converted to `dynamic`
-- Built in types are converted to `object` (just like Classes/interfaces)
-- Type casts are completely ignored and removed
-
-
-
 
 ## Built-in Objects have their interfaces as members
 <!-- 2024-01-30 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1039 -->
@@ -65,13 +61,7 @@ Adds all the interfaces a built-in object has as accessible members.
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/128301d7-b8e6-4346-a9d2-f8ec2794acbd)
 
 
-addresses: #1038 
-
-
-## Add plugin hooks for getDefinition
-<!-- 2024-01-31 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1045 -->
-
-Allow plugins to contribute to `go to definition` results in the language server
+addresses: #1038
 
 
 ## Do not do validation on dotted sets of AAs
@@ -82,7 +72,7 @@ Allow plugins to contribute to `go to definition` results in the language server
 
 We agreed that since AAs can change and have their properties overwritten, there will be no validation on invalid types on dotted-set's and dotted-gets of AAs
 
-Addresses #1037 
+Addresses #1037
 
 
 ## Changed adding invalid as arg to empty callfunc invocations by default
@@ -101,21 +91,8 @@ New `bsconfig.json` option:
 addresses #1018
 
 
-## Fix parsing issues with multi-index IndexedSet and IndexedGet
-<!-- 2024-01-31 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1050 -->
-
-Fixes parsing and transpile issues with mutli-index `IndexedGetExpression` and `IndexedSetStatement`.
-
-The solution is a little "icky", because we can't break backwards compatability, so I had to add `additionalIndexes` to the two AST node types. In v1, we should merge those into a single `.indexes` prop on the nodes instead. 
-
-Fixes #1048 
-
-![image](https://github.com/rokucommunity/brighterscript/assets/2544493/b3051453-1374-4599-8232-ffb07345e8a7)
-
-
-
 ## Standardize AST Constructors
-<!-- 2024-02-01 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1025 -->
+<!-- 2024-01-31 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1025 -->
 
 Standardizes all AstNodes such that they:
 
@@ -137,7 +114,7 @@ Addresses: #1007
 ## Indexed get set multi index
 <!-- 2024-02-01 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1054 -->
 
-#1050 fixed the indexedGet and indexedSet AST parsing in a backwards compatible way (`additionalIndexes`). But this PR refactors that in a breaking way for v1 into a single prop called `.indexes`. 
+#1050 fixed the indexedGet and indexedSet AST parsing in a backwards compatible way (`additionalIndexes`). But this PR refactors that in a breaking way for v1 into a single prop called `.indexes`.
 
 
 ## Remove unnecessary logging
@@ -190,15 +167,15 @@ Anyway, that's fixed in this PR. More work needs to be done to handle *general* 
 ## Add support for `provideReferences` in plugins
 <!-- 2024-02-09 (for v0.65.22 released on 2024-02-09), https://github.com/RokuCommunity/brighterscript/pull/1066 -->
 
-Add support for plugins to contribute `references` when running as part of a language server. 
+Add support for plugins to contribute `references` when running as part of a language server.
 
 
 ## Simplify the plugin method signatures.
 <!-- 2024-02-09 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1067 -->
 
-Simplify the plugin method signatures so that plugins get better code help when autocompleting new plugin events. 
+Simplify the plugin method signatures so that plugins get better code help when autocompleting new plugin events.
 
-Before: 
+Before:
 ```typescript
 beforeProgramCreate?: PluginHandler<BeforeProgramCreateEvent>;
 ```
@@ -212,7 +189,7 @@ beforeProgramCreate?(event: BeforeProgramCreateEvent): any;
 
 ![event-signature-better](https://github.com/rokucommunity/brighterscript/assets/2544493/877910ce-76bc-4df3-a64e-7dc96d6d18eb)
 
-Fixes #1022 
+Fixes #1022
 
 
 ## Add rsgpalette to scraped docs
@@ -300,7 +277,7 @@ Addresses: #1046
 <!-- 2024-02-28 (for v0.65.23 released on 2024-02-29), https://github.com/RokuCommunity/brighterscript/pull/1082 -->
 
 Fixes a bug where empty interfaces would break the parser
-Fixes #1081 
+Fixes #1081
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/2544493/c288363d-6cdd-48f5-aa98-15a4e7928ce5)
 
@@ -310,12 +287,6 @@ Fixes #1081
 # Community Tools
 
 ## bslint
-## Add `create-package` github action support
-<!-- 2024-01-26 (for v1.0.0-alpha.25 released on 2024-02-01), ([ebea19b](https://github.com/RokuCommunity/bslint/commit/ebea19b)) -->
-
-
-
-
 ## upgrade to 1.0.0 alpha.25
 <!-- 2024-02-01 (for v1.0.0-alpha.25 released on 2024-02-01), https://github.com/RokuCommunity/bslint/pull/97 -->
 
@@ -378,7 +349,6 @@ Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscrip
 -   [@fumer-fubotv (fumer-fubotv)](https://github.com/fumer-fubotv)
     -   Empty interfaces break the parser ([PR #1082](https://github.com/RokuCommunity/brighterscript/pull/1082))
 -   [@markwpearce (Mark Pearce)](https://github.com/markwpearce)
-    -   Backport v1 syntax changes ([PR #1034](https://github.com/RokuCommunity/brighterscript/pull/1034))
     -   Built-in Objects have their interfaces as members ([PR #1039](https://github.com/RokuCommunity/brighterscript/pull/1039))
     -   Do not do validation on dotted sets of AAs ([PR #1040](https://github.com/RokuCommunity/brighterscript/pull/1040))
     -   Changed adding invalid as arg to empty callfunc invocations by default ([PR #1043](https://github.com/RokuCommunity/brighterscript/pull/1043))
@@ -393,8 +363,6 @@ Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscrip
     -   Modifies all SG AST constructors to use named properties in objects ([PR #1070](https://github.com/RokuCommunity/brighterscript/pull/1070))
     -   Fixes bad diagnostic on using class name as field name ([PR #1076](https://github.com/RokuCommunity/brighterscript/pull/1076))
 -   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
-    -   Add plugin hooks for getDefinition ([PR #1045](https://github.com/RokuCommunity/brighterscript/pull/1045))
-    -   Fix parsing issues with multi-index IndexedSet and IndexedGet ([PR #1050](https://github.com/RokuCommunity/brighterscript/pull/1050))
     -   Move `coveralls-next` to a devDependency since it's not needed at runtime ([PR #1051](https://github.com/RokuCommunity/brighterscript/pull/1051))
     -   Indexed get set multi index ([PR #1054](https://github.com/RokuCommunity/brighterscript/pull/1054))
     -   Remove unnecessary logging ([6f7f863e](https://github.com/RokuCommunity/brighterscript/commit/6f7f863e))
@@ -416,6 +384,5 @@ Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
 Contributions to [bslint](https://github.com/RokuCommunity/bslint):
 
 -   [@TwitchBronBron (Bronley Plumb)](https://github.com/TwitchBronBron)
-    -   Add `create-package` github action support ([ebea19b](https://github.com/RokuCommunity/bslint/commit/ebea19b))
     -   upgrade to 1.0.0 alpha.25 ([PR #97](https://github.com/RokuCommunity/bslint/pull/97))
     -   upgrade to brighterscript@1.0.0-alpha.26 ([04f98a9](https://github.com/RokuCommunity/bslint/commit/04f98a9))
