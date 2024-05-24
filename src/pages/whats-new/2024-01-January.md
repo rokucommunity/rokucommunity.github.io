@@ -62,6 +62,14 @@ We've deprecated the `stagingFolderPath` launch.json option in favor of the more
 Along with that, we also fixed a bug with debug sessions and `launch.json` files related to `stagingDir` and `stagingFolderPath` when `stagingDir` is also present in a root-level `bsconfig.json`. Now it should properly load the `stagingDir` and (deprecated) `stagingFolderPath` properly when specified by launch.json.
 
 
+## Allow spacing on dotted get paths
+<!-- 2024-01-17 (for v1.6.39 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript-formatter/pull/83 -->
+
+We've improved how the brightscript and BrighterScript formatter handles spaces between objects. It should now properly remove whitespace between anything separated by a dot. Here are some examples:
+
+![format](https://github.com/rokucommunity/brighterscript-formatter/assets/2544493/35b360d3-40b0-4844-94fc-331a858b916a)
+
+
 # Debugging
 
 ## Display a modal message when we fail to upload a package to the device
@@ -103,34 +111,34 @@ You'll typically need to configure your IDE to execute the command mentioned abo
 
 We've added a new BrighterScript config property called `pruneEmptyCodeFiles` which defaults to `false`. When set to `true`, brightscript files that are considered empty won't be published during transpilation. It also adds a `canBePruned` property to the Brs and XML files.
 
-Currently Brs files are considered empty if they don't contain a `FunctionStatement`, `MethodStatement`, or a `ClassStatement`. I might have missed something here.
+Currently Brs files are considered empty if they don't contain a `FunctionStatement`, `MethodStatement`, or a `ClassStatement`. (let us know if we missed one)
 
 This will also remove imports of empty scripts. If a brightscript file that an xml files references has their `canBePruned` field return false, the associated import will be removed too.
 
 On a large internal project, this resulted in significant compile-time speedups.
 
 - **ultra 4800x (OS 12.5):**
-    - pruning off: 7250ms
-    - pruning on:  4965ms
+    - pruning off: `7250ms`
+    - pruning on:  `4965ms`
 
 - **stick4k 3800x (OS 12.5):**
-    - pruning off: 5789ms
-    - pruning on:  4342ms
+    - pruning off: `5789ms`
+    - pruning on:  `4342ms`
 
 - **express 3960x (OS 11.5):**
-    - pruning off: 8232ms
-    - pruning on:  6111ms
+    - pruning off: `8232ms`
+    - pruning on:  `6111ms`
 
 ## Assign `.program` to the builder BEFORE emitting `afterProgramCreate` event
 <!-- 2024-01-11 (for v0.65.17 released on 2024-01-16), https://github.com/RokuCommunity/brighterscript/pull/1011 -->
 
-We fixed a small BrighterScript plugin bug where where the `ProgramBuilder` doesn't have a reference to `.program` when the `afterProgramCreate` event fires. We solved this by assigning `.program` _before_ emitting the event.
+For [BrighterScript plugin](https://github.com/rokucommunity/brighterscript/blob/master/docs/plugins.md) authors, we fixed a small bug where where the `ProgramBuilder` doesn't have a reference to `.program` when the `afterProgramCreate` event fires. We solved this by assigning `.program` _before_ emitting the event.
 
 
-## adds support for libpkg prefix
+## Adds support for `libpkg:` prefix
 <!-- 2024-01-16 (for v0.65.17 released on 2024-01-16), https://github.com/RokuCommunity/brighterscript/pull/1017 -->
 
-BrighterScript has fixed a bug where component libraries that use `libpkg:/` scheme for script imports would fail to find files.
+We fixed a bug in where component libraries that use `libpkg:/` scheme for script imports would fail to find files.
 
 You can now use `libpkg:/` in xml script imports as well as BrighterScript import statements.
 
@@ -145,7 +153,7 @@ These both work now!
 ## Prevent overwriting the Program._manifest if already set on startup
 <!-- 2024-01-24 (for v0.65.18 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1027 -->
 
-BrighterScript has added some safeguards around manifest loading to improve the way plugins can interact with it. There's a hidden `_manifest` file on the `Program` class in BrighterScript. Some plugins use/abuse this to modify manifest values (to apply some preprocessing or sanitization).
+BrighterScript has added some safeguards around `manifest` loading to improve the way plugins can interact with it. There's a hidden `_manifest` file on the `Program` class in BrighterScript. Some plugins use/abuse this to modify manifest values (to apply some preprocessing or sanitization).
 
 However, there have historically been some strange timing issues around this process. To mitigate those issues, BrighterScript will now _avoid_ replacing the manifest on startup if a plugin has already overwritten it.
 
@@ -195,7 +203,7 @@ We've fixed parsing and transpile issues with multi-index `IndexedGetExpression`
 # Community Tools
 
 ## brs
-## Fixed #16 Print leading space before positive numbers
+## Print leading space before positive numbers
 <!-- 2023-12-11 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/39 -->
 We've made a few improvements to the brs emulator:
 - fixed the printing of positive number to show a leading space before positive numbers, just like Roku.
@@ -205,29 +213,19 @@ We've made a few improvements to the brs emulator:
 You can check out the [@rokucommunity/brs#39](https://github.com/RokuCommunity/brs/pull/39) for more information.
 
 
-## Fixed #38 - Improved context handling for Callables
+## Improved context handling for Callables
 <!-- 2023-12-11 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/40 -->
 
 The original method for identifying the context (`m` object) for Callables relied on re-evaluating the source during a dot-chained call, that had performance issues, and caused the side effect of issue [#9](https://github.com/rokucommunity/brs/issues/9). That solution did not solved the performance issue fully.
 
-So this new solution saves a reference for the context for each callable, eliminating the need of re-evaluation, and fixed all side effects.
+In the new solution, we save a reference for the context for each callable, eliminating the need of re-evaluation, and fixed all side effects.
 
 The end result is that there should no longer be a performance issue for calling dot chained calls.
 
-## Fixed #41 - Global functions `GetInterface()` and `FindMemberFunction()` are not properly boxing parameters
+## Global functions `GetInterface()` and `FindMemberFunction()` now properly boxing parameters
 <!-- 2024-01-18 (for v0.45.4 released on 2024-01-18), https://github.com/RokuCommunity/brs/pull/42 -->
 
 Both of the methods `GetInterface()` and `FindMemberFunction()` were not properly boxing parameters to behave like a Roku device. These have been fixed as of @rokucommunity/brs v0.45.4
-
-
-
-## allow spacing on dotted get paths
-<!-- 2024-01-17 (for v1.6.39 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript-formatter/pull/83 -->
-
-We've improved how the brightscript and BrighterScript formatter handles spaces between objects. It should now properly remove whitespace between anything separated by a dot. Here are some examples:
-
-![format](https://github.com/rokucommunity/brighterscript-formatter/assets/2544493/35b360d3-40b0-4844-94fc-331a858b916a)
-
 
 
 # BrighterScript Preview features
@@ -236,9 +234,9 @@ We've improved how the brightscript and BrighterScript formatter handles spaces 
 ## Renaming BrighterScript v0.66 alphas to v1
 We're transitioning BrighterScript towards a v1.0.0 release!
 
-As we've been working on the BrighterScript v0.66 alphas, we noticed that there were more and more breaking changes that we wanted to implement. It became clear that we were actually implementing a full major version change.
+As we've been working on the BrighterScript `v0.66` alphas, we noticed that there were more and more breaking changes that we wanted to implement. It became clear that we were actually implementing a full major version change.
 
-BrighterScript was introduced as an experiment, that slowly grew into a product that is relied on by many production applications on a daily basis. At this point, we owe it to the community to signal that we have confidence in the project. We can think of no better way to do that than to move to a v1 release.
+BrighterScript was introduced as an experiment, that slowly grew into a product that is relied on by many production applications on a daily basis. At this point, we owe it to the community to signal that we have confidence in the project. We can think of no better way to do that than to move to a `v1` release.
 
 We're _hopeful_ that the v1 release will be ready by this summer, but we can't guarantee a release date at this time (we're very busy here at RokuCommunity). You can track our progress in the [v1.0.0 milestone](https://github.com/rokucommunity/brighterscript/milestone/1).
 
@@ -247,11 +245,10 @@ At the time of this publication, the latest BrighterScript v1 alpha is `v1.0.0-a
 npm install brighterscript@next
 ```
 
+Here are some enhancements that we've added to the brighterscript v1 alphas this month:
 
 ## Fixes transpile bug for typecast expressions wrapped in parentheses
 <!-- 2024-01-08 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/998 -->
-
-Fixes #986
 
 The BrightScript runtime doesn't like when parentheses are used exclusively to wrap a variable. For example, this will cause a run-time error:
 
@@ -271,7 +268,7 @@ end sub
 So to mitigate that, we've fixed the transpiler to so that if an expression that is grouped is a typecast, it does not include the parentheses.
 
 
-## Adds Diagnostics for Member Accessibility
+## Diagnostics for Member Accessibility
 <!-- 2024-01-09 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1004 -->
 
 We've added diagnostics for setting unknown fields of classes
@@ -291,13 +288,20 @@ Private members are available in the class that defined them.
 Protected members are available in the class that defined them, and all sub classes.
 
 
-https://github.com/rokucommunity/brighterscript/assets/810290/bcb37181-ea2f-4f7f-8892-47e4105ca37a
+<video src="https://github.com/rokucommunity/brighterscript/assets/2544493/098d0bce-35ee-4b2f-9a53-cd976140eff6" data-canonical-src="https://github.com/rokucommunity/brighterscript/assets/2544493/098d0bce-35ee-4b2f-9a53-cd976140eff6" controls="controls" muted="muted" class="d-block rounded-bottom-2 border-top width-fit" style="max-height:640px; min-height: 200px">
+</video>
 
 
-## Adds missing Completion Items
+## Add `true`, `false`, `invalid` to completion results
 <!-- 2024-01-11 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1009 -->
 
-We've added Adds `true` `false` and `invalid` to completion items when appropriate. We also ensure that function parameters are included in completion results, even if you're at the end of the function block. `private` and `protected` class members only are included in completion results when they are accessible
+We've added `true`, `false`, and `invalid` to completion items when appropriate.
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/ca98e9b8-7976-442c-8b61-90c1152d0190)
+
+## Include function parameters in completion results
+<!-- 2024-01-11 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1009 -->
+
+We now ensure that function parameters are included in completion results, even if you're at the end of the function block. `private` and `protected` class members only are included in completion results when they are accessible
 
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/352c9685-43e6-4b99-94db-9cd28395c9cd)
@@ -310,8 +314,7 @@ We've completely removed the `Parser.references` collection from BrighterScript.
 
 We've removed it because it causes confusion for plugins when trying to figure out how to properly make AST edits. Often an AST edit wouldn't update the `Parser.references` collection and thus making future plugin modifications complicated or out of sync.
 
-If you're using this in your plugin, please consider switching to an AST walk function.
-
+If you're using this in your plugin, please consider switching to an AST walk function to find these items.
 
 
 ## Renamed `File` interface to `BscFile`
@@ -337,7 +340,7 @@ XML fields with `type="color"` can now accept strings _or_ integers.
 
 
 
-## Updates the Member types for Component Fields
+## Improve member types for component fields
 <!-- 2024-01-13 (for v1.0.0-alpha.25 released on 2024-01-25), https://github.com/RokuCommunity/brighterscript/pull/1014 -->
 
 We updated BrighterScript's internal understanding of `<interface>` function and field entries as defined here: https://developer.roku.com/docs/references/scenegraph/xml-elements/interface.md#attributes
@@ -388,7 +391,7 @@ We've overhauled the `create-vsix` github action to improve inter-project linkin
 
 For contributors, here's what you need to know:
  - add the `create-vsix` tag to a PR
- - make sure inter-dependent projects all have the same branch name(like vscode-brightscript-language, roku-deploy, BrighterScript, etc...)
+ - make sure inter-dependent projects (such as `vscode-brightscript-language`, `roku-deploy`, `BrighterScript`, etc...) all have the same branch name
 
 GitHub Actions will auto-generate a new vsix every time you push code to the PR, and a bot will comment with instructions on how to install that vsix.
 
@@ -397,12 +400,12 @@ You can see an example on [this PR](https://github.com/rokucommunity/vscode-brig
 ![image](https://github.com/rokucommunity/vscode-brightscript-language/assets/2544493/d51ce6b3-030f-4d45-835a-5d005b27d64e)
 
 
-## Fix the install-local and watch-all scripts
+## Fix the `install-local` and `watch-all` scripts
 <!-- 2024-01-24 (for v2.45.12 released on 2024-01-26), https://github.com/RokuCommunity/vscode-brightscript-language/pull/541 -->
 
-The install-local script was only creating links between sibling projects into vscode-brightscript-language. However, some of the other projects depend on each other as well, so they should all be inter-linked.
+The `install-local` script was only creating links between sibling projects into vscode-brightscript-language. However, some of the other projects depend on each other as well, so they should all be inter-linked.
 
-So we updated the watch-all script to run the projects in order as well so we ensure the dependent projects are built before spinning up the next watcher. This _does_ have the downside of showing all package.json and package-lock.json files as modified, but you can just undo the changes and run `npm install local` again when you need to get changes.
+So we updated the `watch-all` script to run the projects in order as well so we ensure the dependent projects are built before spinning up the next watcher. This _does_ have the downside of showing all `package.json` and `package-lock.json` files as modified, but you can just undo the changes and run `npm install local` again when you need to get changes.
 
 
 # Thank you
