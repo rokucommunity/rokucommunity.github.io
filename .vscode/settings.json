@@ -14,10 +14,14 @@
     "typescript", // Enable .ts
   ],
   "cSpell.words": [
+    "backported",
     "Bron",
     "Bronley",
     "bsconfig",
+    "Callables",
     "chrisdp",
+    "codebases",
+    "consts",
     "Dwyer",
     "georgejecook",
     "Holbrook",
@@ -26,14 +30,19 @@
     "jeanbenitezu",
     "josephjunker",
     "Klass",
+    "Leighty",
+    "libpkg",
     "luxon",
     "lvcabral",
     "markwpearce",
     "Milap",
     "Naik",
+    "Neovim",
     "noproject",
     "oneline",
+    "parens",
     "Pearce",
+    "philanderson",
     "posix",
     "rokucommunity",
     "sideload",
@@ -42,8 +51,11 @@
     "soares",
     "templatestrings",
     "Timespan",
+    "transpiles",
     "transpiling",
+    "triwav",
     "userbase",
-    "validatable"
+    "validatable",
+    "vsix"
   ]
 }
