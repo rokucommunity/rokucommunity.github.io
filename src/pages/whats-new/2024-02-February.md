@@ -25,10 +25,17 @@ The RokuCommunity projects are maintained by a relatively small group of develop
 
 In this section, we highlight a specific issue where we could benefit from the community's assistance in finding a solution. These problems are generally straightforward to address, and serve as an excellent opportunity to become acquainted with the various RokuCommunity codebases.
 
-This month, we'd like to highlight [SOME_GH_ISSUE](SOME_URL). SOME_DESCRIPTION
+This month, we'd like to highlight [brighterscript#1062](https://github.com/rokucommunity/brighterscript/issues/1062). A few years ago, Roku added the [optional chaining operator](https://developer.roku.com/docs/references/brightscript/language/expressions-variables-types.md#optional-chaining-operators). However, there's a limitation where you can't optionally call a function on its own with this operator. Here are some examples:
 
+```brightscript
+f = { g: function() print "hello world": end function }
+print f?.g?() ' totally fine, prints "hello world"
+f?.g?() ' Syntax Error
+```
 
-If you're interested in working on this feature, please comment on the [github issue](SOME_LINK) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
+We'd love to add support for the `f?.g?()` example by transpiling it to an assignment instead: `_ = f?.g?()`. This would allow developers to safely optionally call their functions.
+
+If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/brighterscript/issues/1062) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
 
 # Editor
 
@@ -47,7 +54,7 @@ While this is not the same as "remain connected", it does simulate that behavior
 ## DebugProtocol fixes
 <!-- 2024-02-26 (for v0.21.4 released on 2024-02-29), https://github.com/RokuCommunity/roku-debug/pull/186 -->
 
-We fixed a bug in the debug protocll that whenever the ThreadsRequest fails with error code 4, we try to pause again. This has added significant stability to debug protocol sessions.
+We fixed a bug in the debug protocll that whenever the ThreadsRequest fails with error code 4, we try to suspend again. This has added significant stability to debug protocol sessions.
 
 
 # BrighterScript
