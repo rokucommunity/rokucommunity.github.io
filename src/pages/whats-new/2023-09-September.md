@@ -5,6 +5,7 @@ layout: ../../layouts/WhatsNewPost.astro
 ---
 
 # Overview
+Welcome to the September 2023 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 ## We need your help
 
@@ -70,7 +71,7 @@ Here's a quick example of some of the awesome things you can do with promises. A
 
 Here's an example of how you can do that using promises:
 
-```vb
+```brightscript
 function logIn()
     context = {
         username: invalid,
@@ -171,7 +172,7 @@ There's a new option in brighterscript called `bslibDestinationDir` which you ca
 
 **bsconfig.json**
 
-```jsonc
+```json
 {
     "rootDir": "./src",
     "bslibDestinationDir": "./dist/roku_modules/bslib"
@@ -200,7 +201,7 @@ We hope to eventually have these values be included in the generated ouptput man
 
 **bsconfig.json**
 
-```jsonc
+```json
 {
     "rootDir": "./src",
     "bs_const": {

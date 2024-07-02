@@ -30,9 +30,9 @@ export const companies = [
         href: 'https://www.miraclechannel.ca/corcoplus'
     },
     {
-        img: '/images/logos/phototv.png',
-        alt: 'Photo Tv',
-        href: 'https://channelstore.roku.com/details/222212/phototv'
+        img: '/images/logos/digital-picture-frame.png',
+        alt: 'Digital Picture Frame',
+        href: 'https://digitalpictureframe.tv'
     },
     {
         img: '/images/logos/haystacknews.png',
