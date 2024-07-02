@@ -37,8 +37,6 @@ We'd love to add support for the `f?.g?()` example by transpiling it to an assig
 
 If you're interested in working on this feature, please comment on the [github issue](https://github.com/rokucommunity/brighterscript/issues/1062) or reach out to us on [Slack](https://join.slack.com/t/rokudevelopers/shared_invite/zt-4vw7rg6v-NH46oY7hTktpRIBM_zGvwA)
 
-# Editor
-
 # Debugging
 
 ## Support relaunch debug protocol
@@ -54,93 +52,19 @@ While this is not the same as "remain connected", it does simulate that behavior
 ## DebugProtocol fixes
 <!-- 2024-02-26 (for v0.21.4 released on 2024-02-29), https://github.com/RokuCommunity/roku-debug/pull/186 -->
 
-We fixed a bug in the debug protocll that whenever the ThreadsRequest fails with error code 4, we try to suspend again. This has added significant stability to debug protocol sessions.
+We fixed a bug in the debug protocol that whenever the ThreadsRequest fails with error code 4, we try to suspend again. This has added significant stability to debug protocol sessions. There's not much to show here, but just know debug sessions should crash and get into invalid states much less frequently
 
 
 # BrighterScript
 
-## Built-in Objects have their interfaces as members
-<!-- 2024-01-30 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1039 -->
-
-Adds all the interfaces a built-in object has as accessible members.
-
-
-![image](https://github.com/rokucommunity/brighterscript/assets/810290/128301d7-b8e6-4346-a9d2-f8ec2794acbd)
-
-
-addresses: #1038
-
-
-## Do not do validation on dotted sets of AAs
-<!-- 2024-01-31 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1040 -->
-
-![image](https://github.com/rokucommunity/brighterscript/assets/810290/97b37225-8181-477d-a72a-a5b96ad6e6b0)
-
-
-We agreed that since AAs can change and have their properties overwritten, there will be no validation on invalid types on dotted-set's and dotted-gets of AAs
-
-Addresses #1037
-
-
-## Changed adding invalid as arg to empty callfunc invocations by default
-<!-- 2024-01-31 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1043 -->
-
-New `bsconfig.json` option:
-
-```
-        "legacyCallfuncHandling": {
-            "description": "Legacy RokuOS versions required at least a single argument in callfunc() invocations. Previous brighterscript versions handled this by inserting invalid as an argument when no other args are present. This is not necessary in modern RokuOS versions.",
-            "type": "boolean",
-            "default": false
-        }
-```
-
-addresses #1018
-
-
-## Standardize AST Constructors
-<!-- 2024-01-31 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1025 -->
-
-Standardizes all AstNodes such that they:
-
-- take a single `options` object in the constructor
-- constructor options keys end in `token` if it is a token or an identifier
-- all tokens are accessible via a `.tokens` member on the node
-- optional and/or mandatory keyword tokens do not need to be included in the constructor
-- transpiles will just fill in a missing keyword if not included.
-
-Addresses: #1007
-
-
-## Move `coveralls-next` to a devDependency since it's not needed at runtime
-<!-- 2024-02-01 (for v0.65.22 released on 2024-02-09), https://github.com/RokuCommunity/brighterscript/pull/1051 -->
-
-`coveralls-next` is only needed at development time to report coverage issues during CI builds. Not sure how it made its way into the prod dependencies...
-
-
-## Indexed get set multi index
-<!-- 2024-02-01 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1054 -->
-
-#1050 fixed the indexedGet and indexedSet AST parsing in a backwards compatible way (`additionalIndexes`). But this PR refactors that in a breaking way for v1 into a single prop called `.indexes`.
-
-
-## Remove unnecessary logging
-<!-- 2024-02-01 (for v1.0.0-alpha.26 released on 2024-02-01), ([6f7f863e](https://github.com/RokuCommunity/brighterscript/commit/6f7f863e)) -->
-
-
-
-
 ## Allow Additional v1 Syntax:
 <!-- 2024-02-07 (for v0.65.22 released on 2024-02-09), https://github.com/RokuCommunity/brighterscript/pull/1059 -->
 
-Allows without diagnostic, but no deeper validation:
+With the BrighterScript v1 alphas under heavy development, we found it was sometimes difficult to test new features while also maintaining existing codebases. To mitigate this, we have backported many of the new v1 syntax changes into the mainline v0 releases. This means you can write the new v1 syntax, which will transpile to normal code.
 
-- built-in types for class member types
-- type declarations on LHS of assignments
+For example, one of the new features of v1 is that any assignment can support a type on the left-hand-side. So this syntax is now supported in the v0 releases (but without any validation support, you still need to use v1 for that).
 
-eg. this is now ok:
-
-```
+```vb
 class Foo
     node as roSGNode
 end class
@@ -150,21 +74,12 @@ sub someFunc()
 end sub
 ```
 
-
-## If a namespace shadows a function, still allow processing to continue
-<!-- 2024-02-08 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1063 -->
-
-This fixes an issue in the JellyFin-roku project
-
-The issue was that it was using the `roku-log` which declares the namespace `log`.
-Previously, this was a problem because it shadows the native function `log`, and `Scope.linkSymbolTable()` panicked when the type of something that should have been a namespace wasn't a namespace, and quit processing the rest of the namespaces.
-
-Anyway, that's fixed in this PR. More work needs to be done to handle *general* shadowing, but this fixes the specific issue for Jellyfin-roku
-
-
-
 ## Fix sourcemap comment and add `file` prop to map
 <!-- 2024-02-08 (for v0.65.22 released on 2024-02-09), https://github.com/RokuCommunity/brighterscript/pull/1064 -->
+
+We fixed some quirks in the sourcemaps generated by brighterscript. All of these should allow for more stable sourcemap usage across various sourcemap tooling (such as [source-map-visualization](https://twitchbronbron.github.io/source-map-visualization/)).
+
+Here are the changes we made related to sourcemaps:
 
 - Adds the `file` prop to sourcemaps to better align with the spec.
 - fixes the filename in the sourceMappingUrl comment at the bottom of every file
@@ -174,13 +89,95 @@ Anyway, that's fixed in this PR. More work needs to be done to handle *general* 
 ## Add support for `provideReferences` in plugins
 <!-- 2024-02-09 (for v0.65.22 released on 2024-02-09), https://github.com/RokuCommunity/brighterscript/pull/1066 -->
 
-Add support for plugins to contribute `references` when running as part of a language server.
+Add support for plugins to contribute `references` when running as part of a language server. References are used by the "Get all references" option in the editor:
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/4b0d1c8e-be31-4f1b-9da8-bec63bd0496d)
 
 
-## Simplify the plugin method signatures.
+## Empty interfaces break the parser
+<!-- 2024-02-28 (for v0.65.23 released on 2024-02-29), https://github.com/RokuCommunity/brighterscript/pull/1082 -->
+We fixed a bug where empty interfaces would cause exceptions in the brighterscript parser.
+
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/c288363d-6cdd-48f5-aa98-15a4e7928ce5)
+
+# Community Tools
+
+## bslint
+### Support for latest BrighterScript alphas
+<!-- 2024-02-01 (for v1.0.0-alpha.25 released on 2024-02-01), https://github.com/RokuCommunity/bslint/pull/97 -->
+<!-- 2024-02-01 (for v1.0.0-alpha.26 released on 2024-02-01), ([04f98a9](https://github.com/RokuCommunity/bslint/commit/04f98a9)) -->
+
+This month we updated the bslint v1 alphas to support brighterscript `v1.0.0-alpha.25` and  `v1.0.0-alpha.26`. Please be sure to keep the bslint and brighterscript alpha versions in sync (i.e. when using bslint `v1.0.0-alpha.26`, be sure to install the same version of brighterscript).
+
+## roku-deploy
+### Retry the convertToSquashfs request given the HPE_INVALID_CONSTANT error
+<!-- 2024-02-26 (for v3.11.3 released on 2024-02-29), https://github.com/RokuCommunity/roku-deploy/pull/145 -->
+
+We occasionally see the `convertToSquashfs` request fail in RokuDeploy. It seems to be caused by some specific set of zip sizes and filename length. The squashfs conversion appears to be successful, but for some reason the Roku returns a truncated response, preventing us from recognizing a successful operation.
+
+To work around this, we send a second squashfs request any time we see the `HPE_INVALID_CONSTANT` error. If that response includes `'fileType': 'squashfs'` then we return the result saying it succeeded.
+
+
+
+# Preview features
+<!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->
+## BrighterScript v1
+We made a lot of progress on the brighterscript v1 alphas again this month. Here are some of the highlights:
+
+### Built-in Objects have their interfaces as members
+<!-- 2024-01-30 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1039 -->
+
+Adds all the interfaces a built-in object has as accessible members.
+
+
+![image](https://github.com/rokucommunity/brighterscript/assets/810290/128301d7-b8e6-4346-a9d2-f8ec2794acbd)
+
+
+### Do not do validation on dotted sets of AAs
+<!-- 2024-01-31 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1040 -->
+
+Since AAs can change and have their properties overwritten, there will be no validation on invalid types for dotted-set's and dotted-gets of AAs
+
+![image](https://github.com/rokucommunity/brighterscript/assets/810290/97b37225-8181-477d-a72a-a5b96ad6e6b0)
+
+
+### Changed adding invalid as arg to empty callfunc invocations by default
+<!-- 2024-01-31 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1043 -->
+
+New `bsconfig.json` option:
+
+```json
+"legacyCallfuncHandling": {
+    "description": "Legacy RokuOS versions required at least a single argument in callfunc()
+        invocations. Previous brighterscript versions handled this by inserting invalid as an argument when
+        no other args are present. This is not necessary in modern RokuOS versions.",
+    "type": "boolean",
+    "default": false
+}
+```
+
+### Standardize AST Constructors
+<!-- 2024-01-31 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1025 -->
+As part of the v1 release initiative, we needed to make some breaking changes that have been bugging us for a while. One such breaking change is related to the AstNode structure. Here are the changes:
+
+- take a single `options` object in the constructor
+- constructor options keys end in `token` if it is a token or an identifier
+- all tokens are accessible via a `.tokens` member on the node
+- optional and/or mandatory keyword tokens do not need to be included in the constructor
+- transpiles will just fill in a missing keyword if not included.
+
+This was a fairly significant change, and plugins will absolutely be affected by this. So it is worth looking over [brighterscript#1025](https://github.com/RokuCommunity/brighterscript/pull/1025) if you're interested in knowing exactly what changed.
+
+
+### Indexed get set multi index
+<!-- 2024-02-01 (for v1.0.0-alpha.26 released on 2024-02-01), https://github.com/RokuCommunity/brighterscript/pull/1054 -->
+
+The mainline brighterscript branch received a fix in [#1054](https://github.com/RokuCommunity/brighterscript/pull/1054) which added support for multi-indexed arrays (i.e. `multiArray[[["hello"]]]`). However, we did it in a backwards compatible way (see the new `additionalIndexes` property) but it wasn't our preferred implementation. In order to conform to the new v1 AST Structure, we needed to refactor that again in a breaking way. So that has been merged into a single property called `.indexes`. This should only impacts plugin authors.
+
+### Simplify the plugin method signatures.
 <!-- 2024-02-09 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1067 -->
 
-Simplify the plugin method signatures so that plugins get better code help when autocompleting new plugin events.
+For plugin authors, we've improved the plugin signatures in our typescript type definition files. This should provide much better autocomplete support when writing brighterscript plugins.
 
 Before:
 ```typescript
@@ -196,32 +193,23 @@ beforeProgramCreate?(event: BeforeProgramCreateEvent): any;
 
 ![event-signature-better](https://github.com/rokucommunity/brighterscript/assets/2544493/877910ce-76bc-4df3-a64e-7dc96d6d18eb)
 
-Fixes #1022
-
-
-## Add rsgpalette to scraped docs
+### Add rsgpalette to scraped docs
 <!-- 2024-02-09 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1065 -->
 
-With this change, the only errors in `Jellyfin-Roku` are VALID type errors - missing functions, or bad return values.
+We added rsgpalette to the standard library, which should fix the following type of error:
 
-Big Change: Needed to move `SymbolTypeFlag` enum to its own file.
-
-
-
-Addresses: #1057
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/f59f926c-8e5a-4684-8e9a-152ae214d204)
 
 
-
-## Fix maestro link on readme
-<!-- 2024-02-11 (for v0.65.23 released on 2024-02-29), https://github.com/RokuCommunity/brighterscript/pull/1068 -->
-
-Current link gives a 404
-
-
-## Fix member hovers for classes, interfaces and enums
+### Fix member hovers for classes, interfaces and enums
 <!-- 2024-02-12 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1071 -->
 
-Fixes: #907
+We fixed bugs in the hover results that would show the incorrect variable name when showing the type.
+
+**Before:**
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/d0d69e82-06b4-4ffe-ac61-ef0ff1b9dbb9)
+
+**After:**
 
 Enums members
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/f810b8e3-2915-4015-a382-31a4db47d864)
@@ -232,113 +220,45 @@ Class Members (looks same as interfaces):
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/fcdc5147-f6cf-4e27-9be3-21c7944c71cb)
 
 
-
-
-## Adds validation when trying to access a class member directly on a class name
+### Adds validation when trying to access a class member directly on a class name
 <!-- 2024-02-14 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1073 -->
 
-Solves: #987
+We've added a new diagnostic that prevents you from referencing class properties and methods on the class _constructor_. This would have always resulted in `invalid` anyway, and is probably not what you intended to do. These members are also now excluded from the completions on the constructor.
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/d30f609e-d781-47df-b77b-25ff60638faf)
 
 
-
-## Adds validation for calling `new` on a non-class constructor
+### Adds validation for calling `new` on a non-class constructor
 <!-- 2024-02-14 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1075 -->
+
+We added several new validations related to the `new` operator. You should see diagnostics anytime you call `new` on something that's _not_ a class.
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/f66e7003-0a4f-48c4-a8e3-b4d7e5fbbef0)
 
 ![image](https://github.com/rokucommunity/brighterscript/assets/810290/4c034a3f-d882-4450-97f8-39ff207fee9b)
 
 
-Previously, the check for this was in `ClassValidator` and only checked for `new` with callables. It was moved to `ScopeValidator`, and made more general, so it catches ALL uses of `new` on non-classes
-
-As a result, `CachedLookups.newExpressions` was not used anymore, so it was removed.
-
-
-## Make All AST Props Readonly
+### Make All AST Props Readonly
 <!-- 2024-02-14 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1069 -->
+
+In efforts to make plugin authorship easier, we've marked many AST properties as `readonly`, as they need to be manipulated by the `AstEditor` and not modified directly. Here are some of the changes
 
 - Makes all the AST Props `readonly` - both tokens and any expressions referenced.
 - Removes `get BrsFile.functionCalls()` - was not used... also removed tests associated with it
 - Re-worked some parsing code so it gathers all tokens/expressions before building the node -- this has the consequence that there may be more diagnostics in some situations, because it doesn't end parsing as early as before (eg. try catch blocks)
-- A few more small AST tweaks (like renaming `ImportStatement.tokens.filePath` - > `ImportStatment.tokens.path`
+- A few more small AST tweaks (like renaming `ImportStatement.tokens.filePath` - > `ImportStatement.tokens.path`)
 
 
 
-## Modifies all SG AST constructors to use named properties in objects
+### Modifies all SG AST constructors to use named properties in objects
 <!-- 2024-02-14 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1070 -->
 
-Addresses: #1046
+For plugin authors, we've modified all of the SceneGraph AST nodes to accept named properties in their constructors to align with the BrighterScript AST design.
 
+Plugin authors will need to modify their SceneGraph node creation to things like this:
 
+![image](https://github.com/rokucommunity/brighterscript/assets/2544493/541221bc-5995-4460-a508-0edecf5be3af)
 
-
-## Fixes bad diagnostic on using class name as field name
-<!-- 2024-02-14 (for v1.0.0-alpha.27 released on 2024-02-27), https://github.com/RokuCommunity/brighterscript/pull/1076 -->
-
-
-
-
-## Empty interfaces break the parser
-<!-- 2024-02-28 (for v0.65.23 released on 2024-02-29), https://github.com/RokuCommunity/brighterscript/pull/1082 -->
-
-Fixes a bug where empty interfaces would break the parser
-Fixes #1081
-
-![image](https://github.com/rokucommunity/brighterscript/assets/2544493/c288363d-6cdd-48f5-aa98-15a4e7928ce5)
-
-
-
-
-# Community Tools
-
-## bslint
-## upgrade to 1.0.0 alpha.25
-<!-- 2024-02-01 (for v1.0.0-alpha.25 released on 2024-02-01), https://github.com/RokuCommunity/bslint/pull/97 -->
-
-Upgrades the latest v1 branch to bsc v1.0.0-alpha.25
-
-
-## upgrade to brighterscript@1.0.0-alpha.26
-<!-- 2024-02-01 (for v1.0.0-alpha.26 released on 2024-02-01), ([04f98a9](https://github.com/RokuCommunity/bslint/commit/04f98a9)) -->
-
-
-
-
-## roku-deploy
-## Retry the convertToSquahsfs request given the HPE_INVALID_CONSTANT error
-<!-- 2024-02-26 (for v3.11.3 released on 2024-02-29), https://github.com/RokuCommunity/roku-deploy/pull/145 -->
-
-We occasionally see the convertToSquashfs request fail. It seems determined by the size of the zip and the length of the file name. The Roku responds with half of the response body and roku-deploy cannot handle the bad data.
-
-The squashfs conversion looks like it successfully created, the error is in the response.
-
-The work around is to make a second request to squashfs when we see the 'HPE_INVALID_CONSTANT' error. If that response includes 'fileType': 'squashfs' then we return the result saying it succeeded.
-
-
-
-# Community Libraries
-
-
-# Formatting
-
-
-# Preview features
-<!-- any alpha/beta changes across all projects should be documented here and not in their primary area above-->
-
-# Documentation
-
-# Misc
-
-# For Contributors
-
-***
-
-# TODO
-***Move these items to an appropriate section above, then delete this section***
-
-***
 
 # Thank you
 
@@ -380,7 +300,7 @@ Contributions to [brighterscript](https://github.com/RokuCommunity/brighterscrip
 Contributions to [roku-deploy](https://github.com/RokuCommunity/roku-deploy):
 
 -   [@Christian-Holbrook (Christian-Holbrook)](https://github.com/Christian-Holbrook)
-    -   Retry the convertToSquahsfs request given the HPE_INVALID_CONSTANT error ([PR #145](https://github.com/RokuCommunity/roku-deploy/pull/145))
+    -   Retry the convertToSquashfs request given the HPE_INVALID_CONSTANT error ([PR #145](https://github.com/RokuCommunity/roku-deploy/pull/145))
 
 Contributions to [roku-debug](https://github.com/RokuCommunity/roku-debug):
 
