@@ -1,6 +1,6 @@
 ---
 date: February 2024
-summary: Changes to vscode-brightscript-language, brighterscript, roku-deploy, roku-debug, bslint
+summary: BrighterScript v1 syntax backported, fixed empty interface parsing, enhanced debug protocol stability, debug protocol auto-reconnect, and fixes for sourcemaps and empty interfaces.
 layout: ../../layouts/WhatsNewPost.astro
 ---
 # Overview
