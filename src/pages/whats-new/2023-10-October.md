@@ -5,6 +5,7 @@ layout: ../../layouts/WhatsNewPost.astro
 ---
 
 # Overview
+Welcome to the October 2023 edition of "What's New in RokuCommunity." Please consider <a target="_blank" href="https://rokucommunity.substack.com/">subscribing</a> to stay up to date with what's happening in RokuCommunity.
 
 This month has seen some very significant improvements to the brighterscript type tracking initiative, and a complete overhaul of the internals of the debug session logic, as well as many other smaller changes to bslint, the formatter, and the vscode extension. Many thanks to all who have worked so hard and contributed this month!
 
