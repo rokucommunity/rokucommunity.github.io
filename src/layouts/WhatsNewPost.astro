@@ -50,7 +50,7 @@ for (const post of allPosts) {
     });
 }
 
-const headings = thisPost?.getHeadings().filter((h) => h.depth < 3) ?? [];
+const headings = thisPost?.getHeadings().filter((h) => h.depth < 4) ?? [];
 ---
 
 <Layout title={`${thisPost?.frontmatter?.date ?? ''} - What's New`}>
