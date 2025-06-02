@@ -32,9 +32,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - name: Checkout your repository using git
-        uses: actions/checkout@v2
+        uses: actions/checkout@master
       - name: Install, build, and upload your site
-        uses: withastro/action@v0
+        uses: withastro/action@v4
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v1
+        uses: actions/deploy-pages@master
